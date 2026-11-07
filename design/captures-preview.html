@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Captures Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Caveat:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090b;--surface:#0f0f12;--line:#232327;--text:#e4e4e7;--muted:#a1a1aa;--dim:#71717a;--hi:#fafafa;
+  --sans:"Geist",system-ui,sans-serif;--mono:"Geist Mono",ui-monospace,monospace;--hand:"Caveat","Bradley Hand",cursive;
+  --paper:#f4f1ea;--ink:#3b3530;--safelight:#ff4b3a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* header */
+header{position:sticky;top:0;z-index:50;background:rgba(9,9,11,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;justify-content:space-between;align-items:center;height:56px}
+.mark{font-family:var(--mono);font-weight:700;font-size:20px;letter-spacing:-1px;color:var(--hi);text-decoration:none}
+nav{display:flex;gap:20px;font-size:13px;color:var(--muted)}
+nav a{text-decoration:none}nav a.on{color:var(--hi)}
+
+/* hero */
+.hero{padding:56px 0 16px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.hero h1{margin:0;font-family:var(--mono);font-weight:500;font-size:clamp(40px,7vw,72px);letter-spacing:-3px;color:var(--hi);line-height:1}
+.hero p{margin:12px 0 0;color:var(--muted);font-size:15px;max-width:420px}
+.stats{display:flex;gap:22px;font-family:var(--mono);font-size:12px;color:var(--dim)}
+.stats b{display:block;color:var(--hi);font-size:20px;font-weight:500;font-family:var(--sans)}
+
+/* table of prints */
+.table{position:relative;height:560px;margin:24px 0 8px;border-radius:14px;overflow:hidden;
+  background:radial-gradient(circle at 25% 15%,#2b2723 0%,#181512 55%,#110f0d 100%);border:1px solid #2a2622}
+.table::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;
+  background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,transparent 1px 3px)}
+.table-hint{position:absolute;left:18px;bottom:14px;z-index:2;font-family:var(--mono);font-size:11px;color:#8a7f73;pointer-events:none}
+.print{position:absolute;width:190px;perspective:1000px;cursor:grab;touch-action:none;user-select:none;
+  transition:transform .25s ease,filter .25s ease;opacity:0}
+.print.in{animation:drop .7s cubic-bezier(.2,.9,.25,1.15) forwards}
+@keyframes drop{from{opacity:0;transform:translateY(-60px) rotate(var(--r)) scale(1.15)}to{opacity:1;transform:translateY(0) rotate(var(--r)) scale(1)}}
+.print.dragging{cursor:grabbing;filter:drop-shadow(0 22px 26px rgba(0,0,0,.55))}
+.inner{position:relative;width:100%;height:232px;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.print.flip .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--paper);border-radius:3px;
+  padding:11px 11px 40px;box-shadow:0 10px 22px rgba(0,0,0,.45)}
+.face .img{width:100%;height:100%;border-radius:1px}
+.face .cap{position:absolute;bottom:9px;left:12px;right:12px;font-family:var(--hand);font-size:19px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.back{transform:rotateY(180deg);padding:18px;display:flex;flex-direction:column;justify-content:space-between;
+  background:repeating-linear-gradient(#f4f1ea 0 22px,#e6e0d4 22px 23px)}
+.back .t{font-family:var(--hand);font-size:20px;line-height:1.15;color:var(--ink)}
+.back .m{font-family:var(--mono);font-size:10px;color:#8a7f73;line-height:1.5}
+.tape{position:absolute;top:-9px;left:50%;width:54px;height:18px;margin-left:-27px;background:rgba(240,230,200,.55);transform:rotate(-4deg);z-index:2;backface-visibility:hidden}
+
+/* develop effect (signature) */
+.develop{filter:invert(1) sepia(.65) hue-rotate(165deg) brightness(.5) contrast(1.1);transition:filter 2.2s cubic-bezier(.3,.6,.2,1)}
+.develop.done{filter:none}
+
+/* collections */
+.section-h{display:flex;justify-content:space-between;align-items:baseline;margin:72px 0 6px;gap:12px;flex-wrap:wrap}
+.section-h h2{margin:0;font-family:var(--mono);font-weight:500;font-size:28px;letter-spacing:-1px;color:var(--hi)}
+.section-h span{font-family:var(--mono);font-size:12px;color:var(--dim)}
+.roll{margin:34px 0 0}
+.roll-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px}
+.roll-head h3{margin:0;font-size:18px;font-weight:500;color:var(--hi)}
+.roll-head .meta{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.film{background:#141414;border-radius:4px;position:relative;padding:16px 0}
+.film::before,.film::after{content:"";position:absolute;left:0;right:0;height:9px;
+  background-image:repeating-linear-gradient(90deg,transparent 0 9px,var(--bg) 9px 19px);opacity:.95}
+.film::before{top:3px}.film::after{bottom:3px}
+.film .edge{position:absolute;top:-1px;left:16px;font-family:var(--mono);font-size:9px;color:#d6a34a;letter-spacing:2px;z-index:2}
+.strip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:14px calc(50% - 130px)}
+.strip::-webkit-scrollbar{display:none}
+.cell{flex:0 0 260px;height:174px;margin:0 7px;scroll-snap-align:center;border-radius:2px;cursor:zoom-in;position:relative;
+  transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .45s ease;transform:scale(.86);opacity:.45}
+.cell.mid{transform:scale(1);opacity:1}
+.cell .no{position:absolute;bottom:-15px;left:2px;font-family:var(--mono);font-size:9px;color:#d6a34a;letter-spacing:1px}
+.strip-caption{text-align:center;margin-top:16px;min-height:42px}
+.strip-caption b{display:block;font-weight:500;color:var(--hi);font-size:15px}
+.strip-caption small{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.roll-nav{display:flex;justify-content:center;gap:8px;margin-top:6px}
+.roll-nav button{all:unset;cursor:pointer;width:30px;height:30px;border:1px solid var(--line);border-radius:999px;display:grid;place-items:center;color:var(--muted)}
+.roll-nav button:hover{color:var(--hi);border-color:#3f3f46}
+.roll-nav button:focus-visible{outline:2px solid var(--hi);outline-offset:2px}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:100;background:rgba(5,5,6,.94);display:none;align-items:center;justify-content:center;padding:24px}
+.lb.open{display:flex}
+.lb-card{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:28px;max-width:1040px;width:100%;align-items:center}
+.lb-img{width:100%;aspect-ratio:3/2;border-radius:4px;animation:pop .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes pop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+.lb-meta h4{margin:0;font-size:22px;font-weight:500;color:var(--hi)}
+.lb-meta .where{margin-top:6px;color:var(--muted);font-size:13px}
+.exif{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:8px;margin-top:18px;overflow:hidden}
+.exif div{padding:10px 12px;border-bottom:1px solid var(--line)}
+.exif div:nth-child(odd){border-right:1px solid var(--line)}
+.exif div:nth-last-child(-n+2){border-bottom:none}
+.exif .l{font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--dim)}
+.exif .v{font-family:var(--mono);font-size:13px;color:var(--text);margin-top:3px}
+.story{margin-top:18px;font-family:var(--hand);font-size:24px;line-height:1.2;color:#d9d3c7}
+.lb-x{position:absolute;top:18px;right:20px}
+.lb-btn{all:unset;cursor:pointer;width:38px;height:38px;border-radius:999px;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);background:#0f0f12}
+.lb-btn:hover{color:var(--hi)}
+.lb-btn:focus-visible{outline:2px solid var(--hi);outline-offset:2px}
+.lb-prev,.lb-next{position:absolute;top:50%;transform:translateY(-50%)}
+.lb-prev{left:16px}.lb-next{right:16px}
+
+footer{margin:90px 0 40px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--dim)}
+
+/* placeholder "photos" */
+.g1{background:linear-gradient(160deg,#5d7f9e 0%,#2a3f52 45%,#121d26 100%)}
+.g2{background:linear-gradient(140deg,#e0a35d 0%,#9a5524 50%,#3d1d0b 100%)}
+.g3{background:linear-gradient(180deg,#46684f 0%,#20362a 55%,#0b150f 100%)}
+.g4{background:linear-gradient(120deg,#e6d3b6 0%,#b08e6c 50%,#5e4532 100%)}
+.g5{background:linear-gradient(200deg,#8a73b5 0%,#3d2a5e 50%,#140c22 100%)}
+.g6{background:linear-gradient(150deg,#c3ced3 0%,#6c7b82 50%,#262e32 100%)}
+.g7{background:linear-gradient(170deg,#e0704f 0%,#8a3420 50%,#2b0f08 100%)}
+.g8{background:linear-gradient(130deg,#4f8297 0%,#1e3b47 55%,#081217 100%)}
+.g9{background:linear-gradient(160deg,#e3d28c 0%,#9b8a3e 50%,#3a3212 100%)}
+.g10{background:linear-gradient(190deg,#7fb0a3 0%,#2f5e52 55%,#0c1f1a 100%)}
+.g11{background:linear-gradient(140deg,#f0b3a1 0%,#a35a63 50%,#2e1520 100%)}
+.g12{background:linear-gradient(165deg,#9fb6d6 0%,#4a5f86 50%,#141b2e 100%)}
+
+@media (max-width:760px){
+  .table{height:520px}
+  .print{width:150px}.inner{height:186px}
+  .lb-card{grid-template-columns:1fr;gap:16px}
+  .cell{flex-basis:210px;height:140px}.strip{padding:14px calc(50% - 105px)}
+  nav{gap:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .print.in{animation:none;opacity:1;transform:rotate(var(--r))}
+  .develop{transition:none}
+  .inner,.cell{transition:none}
+  .lb-img{animation:none}
+}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="mark" href="#">TS</a>
+  <nav><a href="#">Home</a><a class="on" href="#">Captures</a><a href="#">Blog</a></nav>
+</div></header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <h1>Captures</h1>
+      <p>Things I noticed, mostly on the way somewhere else. Pick one up, flip it over, there's usually a story.</p>
+    </div>
+    <div class="stats"><div><b>142</b>photos</div><div><b>9</b>places</div><div><b>2021</b>since</div></div>
+  </section>
+
+  <div class="table" id="table" aria-label="Favorite photos scattered on a table. Drag to move, click to flip.">
+    <div class="table-hint">drag · click to flip · double-click to open</div>
+  </div>
+
+  <div class="section-h"><h2>Rolls</h2><span>one roll per trip · swipe or use arrows</span></div>
+  <div id="rolls"></div>
+
+  <footer>© 2026 Tapan Shah · if you scrolled this far, we should probably talk.</footer>
+</main>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo">
+  <button class="lb-btn lb-x" id="lbx" aria-label="Close">✕</button>
+  <button class="lb-btn lb-prev" id="lbp" aria-label="Previous photo">‹</button>
+  <button class="lb-btn lb-next" id="lbn" aria-label="Next photo">›</button>
+  <div class="lb-card">
+    <div class="lb-img develop" id="lbimg"></div>
+    <div class="lb-meta">
+      <h4 id="lbt"></h4>
+      <div class="where" id="lbw"></div>
+      <div class="exif" id="lbe"></div>
+      <div class="story" id="lbs"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PHOTOS=[
+ {g:'g1',t:'Tunnel View, after the rain',p:'Yosemite, CA',d:'Oct 12, 2025 · 6:42 PM',s:'Waited forty minutes for the clouds. They lifted for ninety seconds.',e:['iPhone 16 Pro','24mm','f/1.8 · 1/250','ISO 80'],roll:'yosemite'},
+ {g:'g2',t:'Pike Place, closing time',p:'Seattle, WA',d:'Mar 3, 2026 · 5:58 PM',s:'The fish guys were done throwing. The light wasn’t.',e:['Fujifilm X-T5','23mm','f/2 · 1/500','ISO 400'],roll:'seattle'},
+ {g:'g3',t:'Hoh rainforest',p:'Olympic NP, WA',d:'Jun 21, 2025 · 11:10 AM',s:'Everything was green. Including my lens.',e:['Fujifilm X-T5','16mm','f/4 · 1/60','ISO 800'],roll:'pnw'},
+ {g:'g4',t:'Sabarmati morning',p:'Ahmedabad, IN',d:'Dec 28, 2024 · 7:15 AM',s:'Chai in one hand, camera in the other.',e:['iPhone 15','26mm','f/1.6 · 1/1000','ISO 50'],roll:'india'},
+ {g:'g5',t:'Capitol Hill, 1 AM',p:'Seattle, WA',d:'Jan 18, 2026 · 1:04 AM',s:'Neon and rain. Seattle’s best combo.',e:['Fujifilm X-T5','33mm','f/1.4 · 1/60','ISO 3200'],roll:'seattle'},
+ {g:'g6',t:'Rainier from the ferry',p:'Puget Sound, WA',d:'Aug 9, 2025 · 4:30 PM',s:'The mountain was out. Everyone pointed.',e:['iPhone 16 Pro','120mm','f/2.8 · 1/800','ISO 64'],roll:'pnw'},
+ {g:'g7',t:'Long Beach sunset',p:'Long Beach, CA',d:'Apr 26, 2024 · 7:41 PM',s:'Last week of grad school. Felt like it.',e:['iPhone 14','26mm','f/1.5 · 1/2000','ISO 50'],roll:'yosemite'},
+ {g:'g8',t:'Blue hour on the Sound',p:'Seattle, WA',d:'Feb 14, 2026 · 5:52 PM',s:'Ten minutes of blue, then dark.',e:['Fujifilm X-T5','56mm','f/2 · 1/125','ISO 640'],roll:'seattle'},
+ {g:'g9',t:'Pol at Manek Chowk',p:'Ahmedabad, IN',d:'Dec 30, 2024 · 9:20 PM',s:'Midnight sandwiches are a personality trait here.',e:['iPhone 15','26mm','f/1.6 · 1/60','ISO 1250'],roll:'india'},
+ {g:'g10',t:'Mirror Lake',p:'Yosemite, CA',d:'Oct 13, 2025 · 8:02 AM',s:'No wind for exactly one photo.',e:['iPhone 16 Pro','24mm','f/1.8 · 1/500','ISO 64'],roll:'yosemite'},
+ {g:'g11',t:'Kite festival rooftops',p:'Ahmedabad, IN',d:'Jan 14, 2025 · 3:30 PM',s:'Uttarayan. The sky was busier than the streets.',e:['iPhone 15','77mm','f/2.8 · 1/1600','ISO 50'],roll:'india'},
+ {g:'g12',t:'Snoqualmie in fog',p:'Snoqualmie, WA',d:'Nov 2, 2025 · 10:12 AM',s:'You could hear the falls before you could see them.',e:['Fujifilm X-T5','23mm','f/5.6 · 1/30','ISO 200'],roll:'pnw'}
+];
+const ROLLS=[
+ {id:'yosemite',name:'Yosemite & California',meta:'Oct 2025 · ROLL 07'},
+ {id:'seattle',name:'Seattle, after dark',meta:'2026 · ROLL 09'},
+ {id:'pnw',name:'Pacific Northwest',meta:'2025 · ROLL 08'},
+ {id:'india',name:'Home, Ahmedabad',meta:'Dec 2024 · ROLL 05'}
+];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* develop-on-view (signature effect) */
+const devObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const el=e.target;setTimeout(()=>el.classList.add('done'),reduce?0:150+Math.random()*450);devObs.unobserve(el)}}),{threshold:.35});
+
+/* table of prints */
+const table=document.getElementById('table');
+const favs=[0,3,4,5,1,6];
+const spots=[[6,8],[30,32],[54,6],[74,30],[18,52],[48,50]];
+let z=10;
+favs.forEach((idx,i)=>{
+  const p=PHOTOS[idx];const el=document.createElement('div');el.className='print';
+  const r=((i*53)%19-9);el.style.setProperty('--r',r+'deg');el.style.transform='rotate('+r+'deg)';
+  el.style.left=spots[i][0]+'%';el.style.top=spots[i][1]+'%';el.style.zIndex=++z;
+  el.setAttribute('tabindex','0');el.setAttribute('role','button');el.setAttribute('aria-label',p.t+'. Press Enter to flip, O to open.');
+  el.innerHTML='<div class="inner"><div class="face"><span class="tape"></span><div class="img develop '+p.g+'"></div><div class="cap">'+p.p.split(',')[0]+'</div></div><div class="face back"><div class="t">'+p.s+'</div><div class="m">'+p.t+'<br>'+p.d+'</div></div></div>';
+  let sx=null,sy,ox,oy,moved=false;
+  el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId);sx=e.clientX;sy=e.clientY;ox=el.offsetLeft;oy=el.offsetTop;moved=false;el.style.zIndex=++z});
+  el.addEventListener('pointermove',e=>{if(sx==null)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(!moved&&Math.abs(dx)+Math.abs(dy)>5){moved=true;el.classList.add('dragging')}
+    if(moved){const maxX=table.clientWidth-el.offsetWidth,maxY=table.clientHeight-el.offsetHeight;el.style.left=Math.max(-20,Math.min(maxX+20,ox+dx))+'px';el.style.top=Math.max(-20,Math.min(maxY+20,oy+dy))+'px'}});
+  el.addEventListener('pointerup',()=>{if(!moved)el.classList.toggle('flip');el.classList.remove('dragging');sx=null});
+  el.addEventListener('dblclick',()=>openLB(idx));
+  el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.classList.toggle('flip')}if(e.key==='o'||e.key==='O')openLB(idx)});
+  table.appendChild(el);
+  devObs.observe(el.querySelector('.develop'));
+});
+const tableObs=new IntersectionObserver(es=>{if(es[0].isIntersecting){[...table.querySelectorAll('.print')].forEach((el,i)=>setTimeout(()=>el.classList.add('in'),reduce?0:i*140));tableObs.disconnect()}},{threshold:.2});
+tableObs.observe(table);
+
+/* rolls (film strips) */
+const rollsEl=document.getElementById('rolls');
+ROLLS.forEach(roll=>{
+  const items=PHOTOS.map((p,i)=>({...p,i})).filter(p=>p.roll===roll.id);
+  const sec=document.createElement('section');sec.className='roll';
+  sec.innerHTML='<div class="roll-head"><h3>'+roll.name+'</h3><span class="meta">'+items.length+' frames · '+roll.meta+'</span></div><div class="film"><span class="edge">KODAK PORTRA 400 · '+roll.meta.split('·')[1].trim()+'</span><div class="strip" tabindex="0" aria-label="'+roll.name+' photos"></div></div><div class="strip-caption"></div><div class="roll-nav"><button aria-label="Previous frame">‹</button><button aria-label="Next frame">›</button></div>';
+  const strip=sec.querySelector('.strip'),cap=sec.querySelector('.strip-caption');
+  items.forEach((p,k)=>{const c=document.createElement('div');c.className='cell develop '+p.g;c.innerHTML='<span class="no">'+String(k+1).padStart(2,'0')+'A</span>';c.onclick=()=>{if(c.classList.contains('mid'))openLB(p.i);else c.scrollIntoView({behavior:reduce?'auto':'smooth',inline:'center',block:'nearest'})};strip.appendChild(c);devObs.observe(c)});
+  let cur=0;
+  const mid=()=>{const r=strip.getBoundingClientRect(),cx=r.left+r.width/2;let best=0,bd=1e9;[...strip.children].forEach((c,i)=>{const b=c.getBoundingClientRect(),d=Math.abs(b.left+b.width/2-cx);if(d<bd){bd=d;best=i}});cur=best;[...strip.children].forEach((c,i)=>c.classList.toggle('mid',i===best));const p=items[best];cap.innerHTML='<b>'+p.t+'</b><small>'+p.p+' · '+p.d+'</small>'};
+  strip.addEventListener('scroll',()=>requestAnimationFrame(mid),{passive:true});
+  const go=d=>{const n=Math.max(0,Math.min(items.length-1,cur+d));strip.children[n].scrollIntoView({behavior:reduce?'auto':'smooth',inline:'center',block:'nearest'})};
+  const [b1,b2]=sec.querySelectorAll('.roll-nav button');b1.onclick=()=>go(-1);b2.onclick=()=>go(1);
+  strip.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();go(-1)}if(e.key==='ArrowRight'){e.preventDefault();go(1)}if(e.key==='Enter')openLB(items[cur].i)});
+  rollsEl.appendChild(sec);
+  requestAnimationFrame(mid);
+});
+
+/* lightbox */
+const lb=document.getElementById('lb'),lbimg=document.getElementById('lbimg');let lbi=0,lastFocus=null;
+function renderLB(){const p=PHOTOS[lbi];lbimg.className='lb-img develop '+p.g;void lbimg.offsetWidth;setTimeout(()=>lbimg.classList.add('done'),reduce?0:60);
+  document.getElementById('lbt').textContent=p.t;document.getElementById('lbw').textContent=p.p+' · '+p.d;
+  const L=['Camera','Lens','Exposure','ISO'];document.getElementById('lbe').innerHTML=p.e.map((v,i)=>'<div><div class="l">'+L[i]+'</div><div class="v">'+v+'</div></div>').join('');
+  document.getElementById('lbs').textContent='“'+p.s+'”'}
+function openLB(i){lbi=i;lastFocus=document.activeElement;lb.classList.add('open');renderLB();document.getElementById('lbx').focus();document.body.style.overflow='hidden'}
+function closeLB(){lb.classList.remove('open');document.body.style.overflow='';if(lastFocus)lastFocus.focus()}
+document.getElementById('lbx').onclick=closeLB;
+document.getElementById('lbp').onclick=()=>{lbi=(lbi-1+PHOTOS.length)%PHOTOS.length;renderLB()};
+document.getElementById('lbn').onclick=()=>{lbi=(lbi+1)%PHOTOS.length;renderLB()};
+lb.addEventListener('click',e=>{if(e.target===lb)closeLB()});
+document.addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;if(e.key==='Escape')closeLB();if(e.key==='ArrowLeft')document.getElementById('lbp').click();if(e.key==='ArrowRight')document.getElementById('lbn').click()});
+</script>
+</body>
+</html>
