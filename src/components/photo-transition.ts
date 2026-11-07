@@ -46,7 +46,20 @@ function cloneImage(dialog: HTMLElement, image: HTMLElement, from: ReturnType<ty
   return clone;
 }
 
-export async function transitionPhoto(change: () => void, print: HTMLElement | null, opening: boolean) {
+// URL updates commit asynchronously; wait for the URL-derived dialog before measuring.
+function waitForPhotoDialog() {
+  if (document.querySelector('.lb[open]')) return Promise.resolve();
+  return new Promise<void>((resolve) => {
+    const finish = () => { observer.disconnect(); clearTimeout(timeout); resolve(); };
+    const observer = new MutationObserver(() => {
+      if (document.querySelector('.lb[open]')) finish();
+    });
+    const timeout = setTimeout(finish, 2500);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['open'] });
+  });
+}
+
+export async function transitionPhoto(change: () => void | Promise<void>, print: HTMLElement | null, opening: boolean) {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const printCard = print?.closest<HTMLElement>('.pile-print');
   const rect = print?.getBoundingClientRect();
@@ -58,8 +71,8 @@ export async function transitionPhoto(change: () => void, print: HTMLElement | n
       await pause(reduced ? 150 : 250);
       restoreTransitionPrint();
     }
-    change();
-    if (opening) await pause(reduced ? 150 : 250);
+    await change();
+    if (opening) { await waitForPhotoDialog(); await pause(reduced ? 150 : 250); }
     return;
   }
   let clone: HTMLElement | null = null;
@@ -69,7 +82,7 @@ export async function transitionPhoto(change: () => void, print: HTMLElement | n
   try {
     // Read the source before opening can change scroll locking or focus.
     const start = opening ? geometry(print, true) : null;
-    if (opening) change();
+    if (opening) { await change(); await waitForPhotoDialog(); }
     const dialog = document.querySelector<HTMLElement>('.lb');
     image = dialog?.querySelector<HTMLElement>('.lb-img') ?? null;
     if (!dialog || !image) return;
@@ -132,7 +145,7 @@ export async function transitionPhoto(change: () => void, print: HTMLElement | n
       animations.push(handoff);
       await finished(handoff);
       clone.remove(); clone = null;
-      change();
+      await change();
     }
   } finally {
     clone?.remove();

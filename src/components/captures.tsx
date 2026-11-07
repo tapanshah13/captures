@@ -21,11 +21,13 @@ export function Captures() {
   const rawView = search.get("view");
   const view: View = rawView === "rolls" || rawView === "all" ? rawView : "table";
   const routePhoto = photos.find((item) => item.slug === search.get("photo"));
-  const [photo, setPhoto] = useState(routePhoto);
-  const [transitioning, setTransitioning] = useState(false);
+  const [closingPhoto, setClosingPhoto] = useState<Photo>();
+  const photo = routePhoto ?? closingPhoto;
   const openedHere = useRef(false);
   const transitionBusy = useRef(false);
-  const pendingRoute = useRef<string | null | undefined>(undefined);
+  const activeTransition = useRef<Promise<void>>(Promise.resolve());
+  const closing = useRef(false);
+  const ownHistoryBack = useRef(false);
   useEffect(() => () => restoreTransitionPrint(), []);
   const originPrint = useRef<HTMLElement | null>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
@@ -44,47 +46,57 @@ export function Captures() {
     if (transitionBusy.current) return;
     lastFocus.current = document.activeElement as HTMLElement;
     const print = lastFocus.current?.closest<HTMLElement>(".pile-print");
-    // The back has no visible photograph to snapshot; use the fade fallback there.
     originPrint.current = print && !print.classList.contains("is-flipped") ? print.querySelector<HTMLElement>(".photo-image") : null;
     openedHere.current = true;
-    pendingRoute.current = item.slug;
     transitionBusy.current = true;
-    setTransitioning(true);
-    void transitionPhoto(() => {
-      flushSync(() => setPhoto(item));
-      router.push(url({ photo: item.slug }), { scroll: false });
-    }, originPrint.current, true).finally(() => { transitionBusy.current = false; setTransitioning(false); });
+    activeTransition.current = transitionPhoto(() => {
+      // Native history is integrated with useSearchParams by the App Router.
+      window.history.pushState(null, "", url({ photo: item.slug }));
+    }, originPrint.current, true).finally(() => { transitionBusy.current = closing.current; });
   };
   const close = useCallback((fromHistory = false) => {
-    if (transitionBusy.current) return;
+    if (!photo || closing.current || (transitionBusy.current && !fromHistory)) return;
+    closing.current = true;
+    // Set in the close/popstate event, before the URL update can unmount the dialog.
+    flushSync(() => setClosingPhoto(photo));
+    const opening = activeTransition.current;
     transitionBusy.current = true;
-    pendingRoute.current = fromHistory ? undefined : null;
-    setTransitioning(true);
-    void transitionPhoto(() => {
-      flushSync(() => setPhoto(undefined));
-      if (fromHistory) return;
-      if (openedHere.current) router.back();
-      else router.replace(url({ photo: null }), { scroll: false });
-    }, originPrint.current, false).finally(() => { transitionBusy.current = false; setTransitioning(false); });
-  }, [router, url]);
-  const navigate = useCallback((direction: number) => {
-    if (!photo || transitionBusy.current) return;
-    const index = photos.indexOf(photo);
-    const next = photos[(index + direction + photos.length) % photos.length];
-    pendingRoute.current = next.slug;
-    setPhoto(next);
-    router.replace(url({ photo: next.slug }), { scroll: false });
-  }, [photo, router, url]);
-  // Retain the dialog through a history-driven close so the reverse morph can finish.
+    activeTransition.current = opening.then(() => transitionPhoto(async () => {
+      if (!fromHistory) {
+        if (openedHere.current) {
+          ownHistoryBack.current = true;
+          await new Promise<void>((resolve) => {
+            window.addEventListener("popstate", () => resolve(), { once: true });
+            window.history.back();
+          });
+        } else {
+          window.history.replaceState(null, "", url({ photo: null }));
+        }
+        // Allow useSearchParams to commit the history update before dropping the retained photo.
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      }
+      flushSync(() => setClosingPhoto(undefined));
+    }, originPrint.current, false)).finally(() => {
+      ownHistoryBack.current = false;
+      openedHere.current = false;
+      closing.current = false;
+      transitionBusy.current = false;
+    });
+  }, [photo, url]);
   useEffect(() => {
-    if (pendingRoute.current !== undefined) {
-      if ((routePhoto?.slug ?? null) !== pendingRoute.current) return;
-      pendingRoute.current = undefined;
-    }
-    if (transitionBusy.current) return;
-    if (!routePhoto && photo) { close(true); return; }
-    if (routePhoto && routePhoto !== photo) setPhoto(routePhoto);
-  }, [routePhoto, transitioning, close, photo]);
+    const onPopState = () => {
+      if (ownHistoryBack.current) return;
+      if (!new URLSearchParams(window.location.search).has("photo")) close(true);
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [close]);
+  const navigate = useCallback((direction: number) => {
+    if (!routePhoto || transitionBusy.current) return;
+    const index = photos.indexOf(routePhoto);
+    const next = photos[(index + direction + photos.length) % photos.length];
+    window.history.replaceState(null, "", url({ photo: next.slug }));
+  }, [routePhoto, url]);
   const restoreFocus = useCallback(() => { lastFocus.current?.focus({ preventScroll: true }); }, []);
   return <>
     <a className="skip-link" href="#main">Skip to captures</a>
