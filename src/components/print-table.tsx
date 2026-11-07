@@ -196,12 +196,10 @@ function PilePrint({ photo, index, position, busy, flipped, flip, raise, open }:
   return <div ref={elementRef} className={`pile-print${flipped ? " is-flipped" : ""}`} style={style} tabIndex={0} role="group" aria-label={`${photo.title}. ${flipped ? "Back" : "Front"}.`} aria-describedby={instructionId}
     onDragStart={(event) => event.preventDefault()}
     onFocus={(event) => { event.currentTarget.style.zIndex = String(raise()); }}
-    onBlur={(event) => { event.currentTarget.classList.remove("is-pointer-focused"); }}
     onPointerDown={(event) => {
       if (busy || event.button !== 0 || !event.isPrimary || (event.target as HTMLElement).closest("a")) return;
       const element = event.currentTarget;
-      element.classList.add("is-pointer-focused");
-      element.focus({ preventScroll: true }); element.style.zIndex = String(raise());
+      element.style.zIndex = String(raise());
       element.classList.add("is-pressed"); element.setPointerCapture(event.pointerId);
       drag.current = { id: event.pointerId, x: event.clientX, y: event.clientY, left: element.offsetLeft, top: element.offsetTop, moved: false };
     }}
@@ -224,12 +222,12 @@ function PilePrint({ photo, index, position, busy, flipped, flip, raise, open }:
     onLostPointerCapture={(event) => { drag.current = null; event.currentTarget.classList.remove("is-dragging"); }}
     onKeyDown={(event) => {
       if (busy || event.target !== event.currentTarget) return;
-      event.currentTarget.classList.remove("is-pointer-focused");
       if (event.key === " ") { event.preventDefault(); cancelClick(); flip(); }
       if (event.key === "Enter" || event.key.toLowerCase() === "o") { event.preventDefault(); cancelClick(); elementRef.current?.classList.remove("is-pressed"); open(photo); }
       if (event.key.startsWith("Arrow")) { event.preventDefault(); const el = event.currentTarget; move(el, el.offsetLeft + (event.key === "ArrowLeft" ? -12 : event.key === "ArrowRight" ? 12 : 0), el.offsetTop + (event.key === "ArrowUp" ? -12 : event.key === "ArrowDown" ? 12 : 0)); }
     }}>
     <span id={instructionId} className="sr-only">Space to flip, Enter to open</span>
+    <div className="pile-lift">
     <div className="pile-inner">
       <div className="pile-face pile-front" aria-hidden={flipped}><PhotoImage photo={photo} sizes="(max-width: 760px) 160px, 220px" /><span className="pile-title">{photo.title}</span>{index % 3 === 2 && <span className="pile-tape" />}</div>
       <div className="pile-face pile-back" aria-hidden={!flipped} inert={!flipped}>
@@ -237,6 +235,7 @@ function PilePrint({ photo, index, position, busy, flipped, flip, raise, open }:
         <Link href={`/?view=table&photo=${encodeURIComponent(photo.slug)}`} tabIndex={flipped ? 0 : -1} onClick={(event) => { cancelClick(); if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); open(photo); } }}>open →</Link>
         <span className="pile-stamp">{photo.place} · {stampDate}</span>
       </div>
+    </div>
     </div>
   </div>;
 }

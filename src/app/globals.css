@@ -93,7 +93,7 @@ nav a{text-decoration:none}nav a.on{color:var(--hi)}
 .roll-nav button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* lightbox */
-.lb{position:fixed;inset:0;z-index:100;background:var(--overlay);display:none;align-items:center;justify-content:center;padding:24px}
+.lb{position:fixed;inset:0;z-index:100;background:transparent;outline:none;display:none;align-items:center;justify-content:center;padding:24px}
 .lb.open{display:flex}
 .lb-card{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:28px;max-width:1040px;width:100%;align-items:center}
 .lb-img{width:100%;aspect-ratio:3/2;border-radius:4px;animation:pop .45s cubic-bezier(.2,.8,.2,1)}
@@ -107,10 +107,11 @@ nav a{text-decoration:none}nav a.on{color:var(--hi)}
 .exif .l{font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--dim)}
 .exif .v{font-family:var(--mono);font-size:13px;color:var(--text);margin-top:3px}
 .story{margin-top:18px;font-family:var(--hand);font-size:24px;line-height:1.2;color:var(--text)}
-.lb-x{position:absolute;top:18px;right:20px}
+.lb .lb-x{position:fixed;top:calc(20px + env(safe-area-inset-top, 0px));right:calc(20px + env(safe-area-inset-right, 0px));z-index:1001}
 .lb-btn{all:unset;cursor:pointer;width:38px;height:38px;border-radius:999px;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted-foreground);background:var(--surface)}
 .lb-btn:hover{color:var(--hi)}
-.lb-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lb .lb-btn:focus{outline:none;box-shadow:none}
+.lb .lb-btn:focus-visible{outline:1px solid color-mix(in srgb, var(--hi) 35%, transparent);outline-offset:2px}
 .lb-prev,.lb-next{position:absolute;top:50%;transform:translateY(-50%)}
 .lb-prev{left:16px}.lb-next{right:16px}
 
@@ -183,9 +184,18 @@ main.wrap { width: 100%; }
 .contact-frame .photo-image { height: auto; aspect-ratio: 3/2; }
 .frame-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 0; font-family: var(--mono); font-size: 9px; color: var(--amber); }
 .frame-label > :last-child { color: var(--film-muted); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.lb { margin: 0; border: 0; width: 100%; max-width: none; height: 100dvh; max-height: none; color: var(--text); padding: 64px; overflow-y: auto; overscroll-behavior: contain; }
+.lb { margin: 0; border: 0; width: 100%; max-width: none; height: 100dvh; max-height: none; color: var(--text); padding: 0; overflow: visible; }
 .lb[open] { display: flex; }
-.lb::backdrop { background: var(--overlay); }
+.lb::backdrop { background: transparent; }
+.lb-stage { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 64px; overflow-y: auto; overscroll-behavior: contain; }
+.lb-backdrop {
+  --lb-backdrop-color: color-mix(in srgb, var(--bg) 96%, transparent);
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--lb-backdrop-color);
+}
 .lb-card { margin: auto; }
 .lb-img { height: auto; }
 .lb-meta h2 { margin: 0; font-size: 22px; font-weight: 500; color: var(--hi); }
@@ -201,7 +211,7 @@ footer a:hover { text-decoration: underline; text-underline-offset: 4px; color: 
   .stats { margin-top: 4px; }
   .strip { padding-inline: calc(50% - 112px); }
   .roll-head { flex-wrap: wrap; gap: 5px; }
-  .lb { padding: 66px 20px 80px; }
+  .lb-stage { padding: 66px 20px 80px; }
   .lb-prev, .lb-next { position: fixed; top: auto; bottom: 18px; transform: none; }
   .lb-prev { left: calc(50% - 48px); }
   .lb-next { right: calc(50% - 48px); }
@@ -285,12 +295,14 @@ footer a:hover { text-decoration: underline; text-underline-offset: 4px; color: 
 /* Shared paper materials and interactions. */
 .pile-stack { position:absolute; inset:0; z-index:1; }
 .pile-print { position:absolute; perspective:900px; cursor:grab; touch-action:none; user-select:none; transform:rotate(var(--rotation)); transition:none; }
-.pile-print.is-dragging { cursor:grabbing; transform:rotate(var(--rotation)) scale(1.04); transition:none; }
+.pile-print.is-dragging { cursor:grabbing; }
+.pile-lift { width:100%; height:100%; border-radius:3px; transform:translateY(0) scale(1); transform-style:preserve-3d; box-shadow:var(--print-shadow); transition:transform 180ms ease-out,box-shadow 180ms ease-out; }
+.pile-print.is-dragging > .pile-lift { transform:scale(1.04); }
 .pile-print:focus,.pile-print:focus-visible { outline:none; border:none; box-shadow:none; }
-.pile-inner { position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .7s cubic-bezier(.2,.85,.25,1.15); }
+.pile-inner { position:relative; width:100%; height:100%; transform-style:preserve-3d; transform:rotateY(0); transition:transform 700ms cubic-bezier(.3,1.3,.5,1); }
 .pile-print.is-flipped .pile-inner { transform:rotateY(180deg); }
-.pile-face { position:absolute; inset:0; border-radius:3px; backface-visibility:hidden; -webkit-backface-visibility:hidden; box-shadow:var(--print-shadow); }
-.is-dragging .pile-face { box-shadow:var(--print-lift); }
+.pile-face { position:absolute; inset:0; border-radius:3px; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
+.is-dragging > .pile-lift { box-shadow:var(--print-lift); }
 .pile-front { background:var(--paper); padding:9px 9px 34px; }
 .pile-title { position:absolute; bottom:7px; left:9px; right:9px; font:20px var(--hand); color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .pile-tape { position:absolute; width:55px; height:18px; top:-8px; left:calc(50% - 27px); background:rgba(240,230,200,.55); transform:rotate(-4deg); backface-visibility:hidden; -webkit-backface-visibility:hidden; }
@@ -320,8 +332,8 @@ header nav { align-items:center; }
   .pile-controls > span { flex-basis:100%; margin:3px 0 0; }
 }
 @media (prefers-reduced-motion:reduce) {
-  .pile-print,.pile-inner { transition:transform 700ms cubic-bezier(.3,1.3,.5,1); }
-  .pile-print.is-dragging { transform:rotate(var(--rotation)); }
+  .pile-lift { transition:box-shadow 180ms ease-out; }
+  .pile-print.is-dragging > .pile-lift { transform:none; }
   .pile-print.is-flipped .pile-inner,.pile-back { transform:none; }
   .pile-back { visibility:hidden; }
   .pile-print.is-flipped .pile-back { visibility:visible; }
@@ -352,10 +364,9 @@ a:hover,nav a:hover { color:var(--accent); }
 
 /* Shuffle directly to new positions, then return to instant dragging. */
 .is-shuffling .pile-print { transition:left 600ms cubic-bezier(.3,1.2,.5,1),top 600ms cubic-bezier(.3,1.2,.5,1),transform 600ms cubic-bezier(.3,1.2,.5,1); }
-.is-shuffling .pile-inner { transition:transform 600ms cubic-bezier(.3,1.2,.5,1); }
 .pile-stack[inert] { pointer-events:none; }
 @media (prefers-reduced-motion:reduce) {
-  .is-shuffling .pile-print,.is-shuffling .pile-inner { transition:transform 700ms cubic-bezier(.3,1.3,.5,1); }
+  .is-shuffling .pile-print { transition:none; }
 }
 
 /* Shuffle control feedback. */
@@ -378,55 +389,57 @@ a:hover,nav a:hover { color:var(--accent); }
 /* Press and release affect only the shadow; left/top remain instant while dragging. */
 .pile-print { --print-press:0 10px 20px rgba(0,0,0,.38); }
 [data-theme="light"] .pile-print { --print-press:0 8px 18px rgba(35,50,40,.22); }
-.pile-face { transition:box-shadow 220ms cubic-bezier(.2,.8,.2,1); }
-.pile-print.is-pressed { transform:rotate(var(--rotation)); }
-.is-pressed .pile-face { box-shadow:var(--print-press); transition:box-shadow 180ms cubic-bezier(.2,.8,.2,1); }
-.pile-inner { transition:transform 700ms cubic-bezier(.3,1.3,.5,1); }
+.is-pressed > .pile-lift { box-shadow:var(--print-press); }
 .is-shuffling .pile-print { transition:left 600ms cubic-bezier(.3,1.2,.5,1),top 600ms cubic-bezier(.3,1.2,.5,1),transform 600ms cubic-bezier(.3,1.2,.5,1); }
-.is-shuffling .pile-inner { transition:transform 600ms cubic-bezier(.3,1.2,.5,1); }
 
 /* Dialog fallback and shared-photo snapshots. */
 @keyframes dialog-in { from { opacity:0; } to { opacity:1; } }
 @keyframes dialog-out { from { opacity:1; } to { opacity:0; } }
+@keyframes backdrop-in {
+  from { background-color:transparent; }
+  to { background-color:var(--lb-backdrop-color); }
+}
+@keyframes backdrop-out {
+  from { background-color:var(--lb-backdrop-color); }
+  to { background-color:transparent; }
+}
 @keyframes dialog-card-in { from { transform:scale(.96); } to { transform:scale(1); } }
 @keyframes dialog-card-out { from { transform:scale(1); } to { transform:scale(.96); } }
-.lb[open],.lb[open]::backdrop { animation:dialog-in 250ms ease both; }
+.lb[open] > .lb-stage { animation:dialog-in 250ms ease both; }
+.lb[open] > .lb-backdrop { animation:backdrop-in 250ms ease both; }
 .lb[open] .lb-card { animation:dialog-card-in 250ms ease both; }
-.lb.is-closing,.lb.is-closing::backdrop { animation:dialog-out 250ms ease both; }
+.lb.is-closing > .lb-stage { animation:dialog-out 250ms ease both; }
+.lb.is-closing > .lb-backdrop { animation:backdrop-out 250ms ease both; }
 .lb.is-closing .lb-card { animation:dialog-card-out 250ms ease both; }
 .lb .lb-img { animation:none; }
 /* Manual photo clone lives inside the dialog top layer. */
 .photo-morph-clone { position:fixed; overflow:hidden; pointer-events:none; z-index:1000; background-size:cover; background-position:center; transform-origin:center; }
-.manual-photo-morph .lb[open],.manual-photo-morph .lb[open] .lb-card { animation:none; }
+.manual-photo-morph .lb[open] > .lb-stage,.manual-photo-morph .lb[open] .lb-card { animation:none; }
 .manual-photo-morph .lb { background:transparent; }
-.manual-photo-morph .lb::backdrop { animation:dialog-in 380ms ease both; }
+.manual-photo-morph .lb > .lb-backdrop { animation:backdrop-in 380ms ease both; }
 .manual-photo-morph .lb-img { visibility:hidden; filter:none; }
 .manual-photo-morph .lb:not(.morph-landed) .lb-meta { opacity:0; }
 .manual-photo-morph .lb:not(.morph-landed) .lb-x { opacity:0; }
 .manual-photo-morph .lb.morph-landed .lb-img { visibility:visible; }
-.lb.morph-complete:not(.is-closing),.lb.morph-complete:not(.is-closing) .lb-card,.lb.morph-complete:not(.is-closing)::backdrop { animation:none; }
-.manual-photo-morph .lb.morph-closing::backdrop { animation:dialog-out 380ms ease both; }
-.pile-print.is-pressed.is-dragging { transform:rotate(var(--rotation)) scale(1.04); }
-.is-pressed.is-dragging .pile-face { box-shadow:var(--print-lift); }
+.lb.morph-complete:not(.is-closing) > .lb-stage,.lb.morph-complete:not(.is-closing) .lb-card,.lb.morph-complete:not(.is-closing) > .lb-backdrop { animation:none; }
+.manual-photo-morph .lb.morph-closing > .lb-backdrop { animation:backdrop-out 380ms ease both; }
+.is-pressed.is-dragging > .pile-lift { box-shadow:var(--print-lift); }
 @media (prefers-reduced-motion:reduce) {
-  .pile-print.is-pressed,.pile-print.is-dragging,.pile-print.is-pressed.is-dragging { transform:rotate(var(--rotation)); }
-  .is-pressed .pile-face,.is-dragging .pile-face,.is-pressed.is-dragging .pile-face { box-shadow:var(--print-shadow); }
-  .lb[open],.lb[open]::backdrop { animation:dialog-in 150ms ease both !important; }
-  .lb.is-closing,.lb.is-closing::backdrop { animation:dialog-out 150ms ease both !important; }
+  .is-pressed > .pile-lift,.is-dragging > .pile-lift,.is-pressed.is-dragging > .pile-lift { box-shadow:var(--print-shadow); }
+  .lb[open] > .lb-stage { animation:dialog-in 150ms ease both !important; }
+  .lb[open] > .lb-backdrop { animation:backdrop-in 150ms ease both !important; }
+  .lb.is-closing > .lb-stage { animation:dialog-out 150ms ease both !important; }
+  .lb.is-closing > .lb-backdrop { animation:backdrop-out 150ms ease both !important; }
   .lb .lb-card { animation:none !important; transform:none; }
 }
 
 /* Keyboard-only print focus: physical lift, never an accent ring. */
-.pile-print:focus-visible:not(.is-pointer-focused):not(.is-dragging):not(.is-pressed) {
-  transform:translateY(-4px) rotate(var(--rotation));
-  transition:transform 180ms ease;
-}
-.pile-print:focus-visible:not(.is-pointer-focused):not(.is-dragging):not(.is-pressed) .pile-face {
+.pile-print:focus-visible:not(.is-dragging):not(.is-pressed) > .pile-lift {
+  transform:translateY(-4px);
   box-shadow:var(--print-lift);
-  transition:box-shadow 180ms ease;
 }
 @media (prefers-reduced-motion:reduce) {
-  .pile-print:focus-visible:not(.is-pointer-focused):not(.is-dragging):not(.is-pressed) { transform:rotate(var(--rotation)); }
+  .pile-print:focus-visible:not(.is-dragging):not(.is-pressed) > .pile-lift { transform:none; }
 }
 
 /* During the flight, fade the physical frame without duplicating the photo. */
