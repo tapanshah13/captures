@@ -38,7 +38,7 @@ function visibilityScore(positions: Position[]) {
   return penalty;
 }
 
-export function PrintTable({ surface, open }: { surface: "mat" | "linen"; open: (photo: Photo) => void }) {
+export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | "linen"; open: (photo: Photo) => void }) {
   const board = useRef<HTMLDivElement>(null);
   const top = useRef(20);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -90,12 +90,12 @@ export function PrintTable({ surface, open }: { surface: "mat" | "linen"; open: 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     timers.current = pile.map((photo, i) => setTimeout(() => setFlipped((previous) => ({ ...previous, [photo.slug]: next })), reduced ? 0 : i * 60));
   };
-  return <section className="table-board" aria-label={`${surface === "mat" ? "Cutting mat" : "Linen"} photo pile`}>
-    <div ref={board} className={`pile-surface surface-${surface}`}><p className="sr-only">Drag prints to move them. Double-click or double-tap to flip. Focus a print and press Enter or Space to flip; use arrow keys to move it.</p>
+  return <section className="table-board" aria-label={`${surface === "linen" ? "Linen" : surface === "mat-tinted" ? "Tinted mat" : "Cutting mat"} photo pile`}>
+    <div ref={board} className={`pile-surface ${surface === "mat-tinted" ? "surface-mat surface-mat-tinted" : `surface-${surface}`}`}><p className="sr-only">Drag prints to move them. Double-click or double-tap to flip. Focus a print and press Enter or Space to flip; use arrow keys to move it.</p>
       <div className="pile-stack">{pile.map((photo, i) => positions[i] && <PilePrint key={photo.slug} photo={photo} index={i} position={positions[i]} flipped={!!flipped[photo.slug]} flip={() => flip(photo.slug)} raise={() => ++top.current} open={open} />)}</div>
-      {surface === "mat" && <span className="mat-label">A2 · SELF-HEALING · 1 SQ = 1 IN</span>}
+      {surface !== "linen" && <span className="mat-label">A2 · SELF-HEALING · 1 SQ = 1 IN</span>}
     </div>
-    <div className="pile-controls"><button onClick={scatter}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h3c5 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c2 0 3-2 4-4m4-4c1-2 2-4 4-4h3m-4-4 4 4-4 4" /></svg>shuffle pile</button><button onClick={flipAll}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6" /></svg>flip all</button><span>drag · double-click to flip</span></div>
+    <div className="pile-controls"><button className="shuffle-button" onClick={scatter}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h3c5 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c2 0 3-2 4-4m4-4c1-2 2-4 4-4h3m-4-4 4 4-4 4" /></svg>shuffle pile</button><button onClick={flipAll}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6" /></svg>flip all</button><span>drag · double-click to flip</span></div>
   </section>;
 }
 

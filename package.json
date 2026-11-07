@@ -11,7 +11,7 @@
     "check:photos": "node scripts/check-photos.mjs"
   },
   "dependencies": {
-    "geist": "^1.9.1",
+    "geist": "^1.9.2",
     "next": "16.4.5",
     "react": "19.3.0",
     "react-dom": "19.3.0"

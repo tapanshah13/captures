@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
+import { PALETTE } from "@/data/captures";
+import { GeistSerifTriangle } from "geist/font/serif/triangle";
 import { GeistMono } from "geist/font/mono";
 import { Caveat } from "next/font/google";
 import "./globals.css";
@@ -12,8 +14,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   colorScheme: "light dark",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f6f5f1" },
-    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+    { media: "(prefers-color-scheme: light)", color: "#f7f1ee" },
+    { media: "(prefers-color-scheme: dark)", color: "#100c0b" },
   ],
 };
 
@@ -22,7 +24,7 @@ const themeScript = `(function(){
   var media=window.matchMedia('(prefers-color-scheme: dark)'),chosen=null;
   try{var saved=localStorage.getItem('captures-theme');if(saved==='light'||saved==='dark')chosen=saved;}catch(e){}
   function apply(){var theme=chosen||(media.matches?'dark':'light');document.documentElement.dataset.theme=theme;
-    document.querySelectorAll('meta[name="theme-color"]').forEach(function(meta){meta.content=theme==='light'?'#f6f5f1':'#09090b';});}
+    document.querySelectorAll('meta[name="theme-color"]').forEach(function(meta){meta.content=theme==='light'?'#f7f1ee':'#100c0b';});}
   apply();
   document.addEventListener('DOMContentLoaded',apply,{once:true});
   media.addEventListener('change',function(){if(!chosen)apply();});
@@ -31,5 +33,5 @@ const themeScript = `(function(){
 })();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="en" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable} ${caveat.variable}`}><head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head><body>{children}</body></html>;
+  return <html lang="en" data-palette={PALETTE} suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable} ${GeistSerifTriangle.variable} ${caveat.variable}`}><head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head><body>{children}</body></html>;
 }

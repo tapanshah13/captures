@@ -1,7 +1,10 @@
 import importedData from "./photos.json";
 
-// Table background. Options: mat, linen. Will be controlled from the admin panel later.
-export const TABLE_SURFACE: "mat" | "linen" = "mat";
+// Site palette. Options: darkroom. See docs/palettes/ for saved palettes like golden-hour.
+export const PALETTE = "darkroom" as const;
+
+// Table background. Options: mat (green cutting mat), mat-tinted (palette-tinted mat), linen (palette-tinted woven cloth). See docs/palettes/golden-hour.md → Table surfaces.
+export const TABLE_SURFACE: "mat" | "mat-tinted" | "linen" = "mat-tinted";
 
 export type Photo = {
   slug: string;
