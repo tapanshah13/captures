@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local photo originals and generated renditions
+/photos/originals/
+/public/captures/
+/photos/.import.lock
+/src/data/photos.json.*.tmp

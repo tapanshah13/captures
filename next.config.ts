@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: { deviceSizes: [640, 1280, 2048], imageSizes: [] },
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

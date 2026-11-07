@@ -2,13 +2,17 @@
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { BrandMark } from "./brand-mark";
 import { PhotoImage } from "./photo-image";
 import { PhotoDialog } from "./photo-dialog";
 import { photos, rolls, photoDate, frameNumber, type Photo, type Roll } from "@/data/captures";
 
 type View = "table" | "rolls" | "all";
-const favorites = [0, 3, 4, 5, 1, 6].map((index) => photos[index]).filter((photo) => photo.favorite);
+const favorites = photos.filter((photo) => photo.favorite);
+const tablePhotos = favorites.length ? favorites : photos;
+const activeRolls = rolls.filter((roll) => photos.some((photo) => photo.roll === roll.id));
+const since = photos.map((photo) => photo.date.slice(0, 4)).filter((year) => /^\d{4}$/.test(year)).sort()[0] ?? "—";
 const spots = [[6, 8], [30, 32], [54, 6], [74, 30], [18, 52], [48, 50]];
 const mobileSpots = [[6, 4], [51, 8], [10, 34], [53, 37], [6, 64], [51, 66]];
 
@@ -48,12 +52,13 @@ export function Captures() {
   const restoreFocus = useCallback(() => { lastFocus.current?.focus({ preventScroll: true }); }, []);
   return <>
     <a className="skip-link" href="#main">Skip to captures</a>
-    <header><div className="wrap"><a className="mark" href="https://tapanshah.me" aria-label="Tapan Shah — home"><BrandMark className="h-6 w-10" /></a><nav aria-label="Main navigation"><a href="https://tapanshah.me">Home</a><a className="on" href="/" aria-current="page">Captures</a><a href="https://tapanshah.me/blog">Blog</a></nav></div></header>
+    <header><div className="wrap"><a className="mark" href="https://tapanshah.me" aria-label="Tapan Shah — home"><BrandMark className="h-6 w-10" /></a><nav aria-label="Main navigation"><a href="https://tapanshah.me">Home</a><Link className="on" href="/" aria-current="page">Captures</Link><a href="https://tapanshah.me/blog">Blog</a></nav></div></header>
     <main className="wrap" id="main">
-      <section className="hero" aria-labelledby="title"><div><h1 id="title">Captures</h1><p>Things I noticed, mostly on the way somewhere else. Pick one up, flip it over, there&apos;s usually a story.</p></div><div className="stats"><div><b>{photos.length}</b>sample photos</div><div><b>{new Set(photos.map((item) => item.place)).size}</b>places</div><div><b>2024</b>since</div></div></section>
+      <section className="hero" aria-labelledby="title"><div><h1 id="title">Captures</h1><p>Things I noticed, mostly on the way somewhere else. Pick one up, flip it over, there&apos;s usually a story.</p></div><div className="stats"><div><b>{photos.length}</b>photos</div><div><b>{new Set(photos.map((item) => item.place)).size}</b>places</div><div><b>{since}</b>since</div></div></section>
       <nav className="view-switcher" aria-label="Photo views">{([['table', 'Table'], ['rolls', 'Rolls'], ['all', 'Contact sheet']] as const).map(([value, label]) => <button key={value} aria-pressed={view === value} onClick={() => router.push(url({ view: value }), { scroll: false })}>{label}</button>)}</nav>
+      {photos.length === 0 && <p className="py-12 text-sm text-muted-foreground">No published photos yet.</p>}
       {view === "table" && <PrintTable open={open} />}
-      {view === "rolls" && <section aria-labelledby="rolls-heading"><div className="section-h"><h2 id="rolls-heading">Rolls</h2><span>one roll per trip · swipe or use arrows</span></div>{rolls.map((roll) => <FilmRoll key={roll.id} roll={roll} open={open} />)}</section>}
+      {view === "rolls" && <section aria-labelledby="rolls-heading"><div className="section-h"><h2 id="rolls-heading">Rolls</h2><span>one roll per trip · swipe or use arrows</span></div>{activeRolls.map((roll) => <FilmRoll key={roll.id} roll={roll} open={open} />)}</section>}
       {view === "all" && <ContactSheet open={open} />}
       <footer>© 2026 <a href="https://tapanshah.me">Tapan Shah</a> · if you scrolled this far, <a href="https://tapanshah.me/#contact">we should probably talk.</a></footer>
     </main>
@@ -73,7 +78,7 @@ function PrintTable({ open }: { open: (photo: Photo) => void }) {
     observer.observe(element);
     return () => observer.disconnect();
   }, []);
-  return <div ref={table} className="table" aria-label="Favorite prints"><p className="sr-only">Drag to move. Click, Enter or Space to flip. Double-click or press O to open. Arrow keys move a focused print.</p>{favorites.map((photo, i) => <Print key={photo.slug} photo={photo} index={i} open={open} raise={() => ++top.current} />)}<div className="table-hint">drag · click to flip · double-click / O to open</div></div>;
+  return <div ref={table} className="print-table" aria-label={favorites.length ? "Favorite prints" : "Published prints"}><p className="sr-only">Drag to move. Click, Enter or Space to flip. Double-click or press O to open. Arrow keys move a focused print.</p>{tablePhotos.map((photo, i) => <Print key={photo.slug} photo={photo} index={i} open={open} raise={() => ++top.current} />)}<div className="table-hint">drag · click to flip · double-click / O to open</div></div>;
 }
 
 function Print({ photo, index, open, raise }: { photo: Photo; index: number; open: (photo: Photo) => void; raise: () => number }) {
@@ -86,7 +91,7 @@ function Print({ photo, index, open, raise }: { photo: Photo; index: number; ope
     element.style.left = `${Math.max(12, Math.min(table.clientWidth - element.offsetWidth - 12, x)) / table.clientWidth * 100}%`;
     element.style.top = `${Math.max(12, Math.min(table.clientHeight - element.offsetHeight - 35, y)) / table.clientHeight * 100}%`;
   };
-  const style = { "--r": `${(index * 53) % 19 - 9}deg`, "--x": `${spots[index][0]}%`, "--y": `${spots[index][1]}%`, "--mx": `${mobileSpots[index][0]}%`, "--my": `${mobileSpots[index][1]}%`, "--delay": `${index * 140}ms`, zIndex: index + 10 } as CSSProperties;
+  const style = { "--r": `${(index * 53) % 19 - 9}deg`, "--x": `${spots[index % spots.length][0]}%`, "--y": `${spots[index % spots.length][1]}%`, "--mx": `${mobileSpots[index % mobileSpots.length][0]}%`, "--my": `${mobileSpots[index % mobileSpots.length][1]}%`, "--delay": `${index * 140}ms`, zIndex: index + 10 } as CSSProperties;
   return <div role="button" tabIndex={0} aria-pressed={flipped} aria-label={`${photo.title}. ${flipped ? photo.story : ""} Enter to flip, O to open, arrow keys to move.`} className={`print ${flipped ? "flip" : ""}`} style={style}
     onFocus={(event) => { event.currentTarget.style.zIndex = String(raise()); }}
     onPointerDown={(event) => {
@@ -121,12 +126,24 @@ function FilmRoll({ roll, open }: { roll: Roll; open: (photo: Photo) => void }) 
   const items = photos.filter((photo) => photo.roll === roll.id);
   const [current, setCurrent] = useState(0);
   const strip = useRef<HTMLDivElement>(null);
+  const prepareStrip = () => {
+    const element = strip.current;
+    if (!element || element.classList.contains("navigated")) return;
+    const first = element.firstElementChild as HTMLElement;
+    const previousLeft = first.offsetLeft;
+    // Add room to center the first frame only after interaction, preserving the viewport.
+    element.style.scrollSnapType = "none";
+    element.classList.add("navigated");
+    element.scrollLeft += first.offsetLeft - previousLeft;
+    requestAnimationFrame(() => { element.style.scrollSnapType = ""; });
+  };
   const go = (index: number) => {
+    prepareStrip();
     const element = strip.current;
     const frame = element?.children[Math.max(0, Math.min(items.length - 1, index))] as HTMLElement | undefined;
     if (element && frame) element.scrollTo({ left: frame.offsetLeft + frame.offsetWidth / 2 - element.clientWidth / 2, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
   };
-  return <section className="roll" aria-label={roll.name}><div className="roll-head"><h3>{roll.name}</h3><span className="meta">{items.length} frames · {roll.meta}</span></div><div className="film"><span className="edge" aria-hidden="true">KODAK PORTRA 400 · {roll.meta.split('·')[1].trim()}</span><div ref={strip} className="strip" tabIndex={0} aria-label={`${roll.name}. Left and right arrows select a frame; Enter opens it.`}
+  return <section className="roll" aria-label={roll.name}><div className="roll-head"><h3>{roll.name}</h3><span className="meta">{items.length} frames · {roll.meta}</span></div><div className="film"><span className="edge" aria-hidden="true">KODAK PORTRA 400 · {roll.meta.split('·')[1].trim()}</span><div ref={strip} className="strip" onPointerMove={(event) => { if (event.buttons || event.pointerType === "touch") prepareStrip(); }} onWheel={(event) => { if (event.deltaX || event.shiftKey) prepareStrip(); }} tabIndex={0} aria-label={`${roll.name}. Left and right arrows select a frame; Enter opens it.`}
     onScroll={() => {
       const el = strip.current!;
       const center = el.scrollLeft + el.clientWidth / 2;
@@ -140,9 +157,21 @@ function FilmRoll({ roll, open }: { roll: Roll; open: (photo: Photo) => void }) 
 }
 
 function ContactSheet({ open }: { open: (photo: Photo) => void }) {
-  const [filter, setFilter] = useState("All");
-  const filters = ['All', ...new Set(photos.flatMap((photo) => [photo.place, ...photo.collections])), ...[...new Set(photos.map((photo) => photo.date.slice(0, 4)))].sort().reverse()];
-  const matches = (photo: Photo, value: string) => value === 'All' || photo.place === value || photo.collections.includes(value) || photo.date.startsWith(value);
-  const visible = photos.filter((photo) => matches(photo, filter));
-  return <section aria-labelledby="sheet-heading"><div className="section-h"><h2 id="sheet-heading">Contact sheet</h2><span aria-live="polite">{visible.length} of {photos.length} frames</span></div><div className="filters" role="group" aria-label="Filter by place, collection or year">{filters.map((value) => <button key={value} aria-pressed={filter === value} onClick={() => setFilter(value)}>{value}<span>{photos.filter((photo) => matches(photo, value)).length}</span></button>)}</div><div className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3 contact-grid">{visible.map((photo) => <button key={photo.slug} className="contact-frame" aria-label={`Open ${photo.title}`} onClick={() => open(photo)}><PhotoImage photo={photo} sizes="(max-width: 767px) 30vw, 170px" /><span className="frame-label"><span>{frameNumber(photo)}</span><span>{photo.place.split(',')[0]}</span></span></button>)}</div></section>;
+  type FilterGroup = "Places" | "Tags" | "Years";
+  const [filter, setFilter] = useState<{ group: FilterGroup; value: string } | null>(null);
+  const validValue = (value: string) => value.trim() !== "" && value.trim().toUpperCase() !== "TODO";
+  const groups: { label: FilterGroup; values: string[] }[] = [
+    { label: "Places", values: [...new Set(photos.map((photo) => photo.place).filter(validValue))] },
+    { label: "Tags", values: [...new Set(photos.flatMap((photo) => photo.collections).filter(validValue))] },
+    { label: "Years", values: [...new Set(photos.map((photo) => photo.date.slice(0, 4)).filter((year) => /^\d{4}$/.test(year)))].sort().reverse() }
+  ];
+  const matches = (photo: Photo, group: FilterGroup, value: string) => group === "Places" ? photo.place === value : group === "Tags" ? photo.collections.includes(value) : photo.date.slice(0, 4) === value;
+  const visible = filter ? photos.filter((photo) => matches(photo, filter.group, filter.value)) : photos;
+  return <section aria-labelledby="sheet-heading"><div className="section-h"><h2 id="sheet-heading">Contact sheet</h2><span aria-live="polite">{visible.length} of {photos.length} frames</span></div><div className="filters" role="group" aria-label="Filter by place, collection or year">
+    <div><button aria-pressed={filter === null} onClick={() => setFilter(null)}>All<span>{photos.length}</span></button></div>
+    {groups.map(({ label, values }) => <div className="filter-row" role="group" aria-labelledby={`filter-${label}`} key={label}>
+      <span className="filter-label" id={`filter-${label}`}>{label}</span>
+      <div className="filter-chips">{values.map((value) => <button key={value} aria-pressed={filter?.group === label && filter.value === value} onClick={() => setFilter({ group: label, value })}>{value}<span>{photos.filter((photo) => matches(photo, label, value)).length}</span></button>)}</div>
+    </div>)}
+  </div><div className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3 contact-grid">{visible.map((photo) => <button key={photo.slug} className="contact-frame" aria-label={`Open ${photo.title}`} onClick={() => open(photo)}><PhotoImage photo={photo} sizes="(max-width: 767px) 30vw, 170px" /><span className="frame-label"><span>{frameNumber(photo)}</span><span>{photo.place.split(',')[0]}</span></span></button>)}</div></section>;
 }
