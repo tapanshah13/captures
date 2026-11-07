@@ -1,5 +1,8 @@
 import importedData from "./photos.json";
 
+// Table background. Options: mat, linen. Will be controlled from the admin panel later.
+export const TABLE_SURFACE: "mat" | "linen" = "mat";
+
 export type Photo = {
   slug: string;
   title: string;
