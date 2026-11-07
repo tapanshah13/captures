@@ -33,5 +33,5 @@ const themeScript = `(function(){
 })();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="en" data-palette={PALETTE} suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable} ${GeistSerifTriangle.variable} ${caveat.variable}`}><head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head><body>{children}</body></html>;
+  return <html lang="en" data-palette={PALETTE} suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable} ${GeistSerifTriangle.variable} ${caveat.variable}`}><head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head><body suppressHydrationWarning>{children}</body></html>;
 }

@@ -431,3 +431,7 @@ a:hover,nav a:hover { color:var(--accent); }
 
 /* During the flight, fade the physical frame without duplicating the photo. */
 .pile-print.morph-frame-only .photo-image { visibility:hidden; }
+
+/* Table photos fade over their blur placeholder; developing is explicitly opt-in. */
+.photo-fade img { opacity:0; transition:opacity 200ms ease; }
+.photo-fade.image-loaded img { opacity:1; }

@@ -31,6 +31,6 @@ export function PhotoDialog({ photo, close, navigate, restoreFocus }: Props) {
     <button ref={closeButton} className="lb-btn lb-x" onClick={close} aria-label="Close photo (Escape)">✕</button>
     <button className="lb-btn lb-prev" onClick={() => navigate(-1)} aria-label="Previous photo (left arrow)">‹</button>
     <button className="lb-btn lb-next" onClick={() => navigate(1)} aria-label="Next photo (right arrow)">›</button>
-    <div className="lb-card"><PhotoImage key={photo.slug} photo={photo} className="lb-img" sizes="(max-width: 760px) 90vw, 620px" /><div className="lb-meta" aria-live="polite"><h2 id="photo-title">{photo.title}</h2><div className="where">{photo.place} · <time dateTime={photo.date}>{photoDate(photo.date)}</time></div>{fields.length > 0 && <dl className="exif">{fields.map(([label, value]) => <div key={label}><dt className="l">{label}</dt><dd className="v">{value}</dd></div>)}</dl>}<p className="story" id="photo-story">“{photo.story}”</p></div></div>
+    <div className="lb-card"><PhotoImage develop key={photo.slug} photo={photo} className="lb-img" sizes="(max-width: 760px) 90vw, 620px" /><div className="lb-meta" aria-live="polite"><h2 id="photo-title">{photo.title}</h2><div className="where">{photo.place} · <time dateTime={photo.date}>{photoDate(photo.date)}</time></div>{fields.length > 0 && <dl className="exif">{fields.map(([label, value]) => <div key={label}><dt className="l">{label}</dt><dd className="v">{value}</dd></div>)}</dl>}<p className="story" id="photo-story">“{photo.story}”</p></div></div>
   </dialog>;
 }

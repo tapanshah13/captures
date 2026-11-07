@@ -4,7 +4,7 @@ import Image, { type ImageLoaderProps } from "next/image";
 import { useEffect, useRef } from "react";
 import { photos, type Photo } from "@/data/captures";
 
-export function PhotoImage({ photo, className = "", sizes = "260px" }: { photo: Photo; className?: string; sizes?: string }) {
+export function PhotoImage({ photo, className = "", sizes = "260px", develop = false }: { photo: Photo; className?: string; sizes?: string; develop?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const renditionLoader = photo.sizes ? ({ width }: ImageLoaderProps) => {
     const available = ([640, 1280, 2048] as const).map((target) => ({
@@ -16,7 +16,7 @@ export function PhotoImage({ photo, className = "", sizes = "260px" }: { photo: 
   } : undefined;
   useEffect(() => {
     const element = ref.current;
-    if (!element) return;
+    if (!element || !develop) return;
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let timer: ReturnType<typeof setTimeout>;
     const observer = new IntersectionObserver((entries) => {
@@ -27,9 +27,9 @@ export function PhotoImage({ photo, className = "", sizes = "260px" }: { photo: 
     }, { threshold: 0.35 });
     observer.observe(element);
     return () => { observer.disconnect(); clearTimeout(timer); };
-  }, []);
+  }, [develop]);
   // The loader serves prebuilt WebPs directly, for local paths and future Blob URLs.
-  return <div ref={ref} style={className.includes("lb-img") && photo.width && photo.height ? { aspectRatio: `${photo.width} / ${photo.height}` } : undefined} className={`photo-image develop g${photos.findIndex((item) => item.slug === photo.slug) % 12 + 1} ${className}`}>
-    {photo.src ? <Image src={photo.src} alt={photo.title} fill sizes={sizes} loader={renditionLoader} unoptimized={!renditionLoader && /^https?:\/\//.test(photo.src)} placeholder={photo.blurDataURL ? "blur" : "empty"} blurDataURL={photo.blurDataURL} /> : <span className="sr-only">Sample image: {photo.title}</span>}
+  return <div ref={ref} style={{ ...(className.includes("lb-img") && photo.width && photo.height ? { aspectRatio: `${photo.width} / ${photo.height}` } : {}), ...(!develop && photo.blurDataURL ? { backgroundImage: `url(${photo.blurDataURL})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }} className={`photo-image ${develop ? "develop" : "photo-fade"} g${photos.findIndex((item) => item.slug === photo.slug) % 12 + 1} ${className}`}>
+    {photo.src ? <Image onLoad={() => { if (!develop) ref.current?.classList.add("image-loaded"); }} src={photo.src} alt={photo.title} fill sizes={sizes} loader={renditionLoader} unoptimized={!renditionLoader && /^https?:\/\//.test(photo.src)} placeholder={photo.blurDataURL ? "blur" : "empty"} blurDataURL={photo.blurDataURL} /> : <span className="sr-only">Sample image: {photo.title}</span>}
   </div>;
 }

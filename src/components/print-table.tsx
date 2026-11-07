@@ -44,6 +44,8 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
   const top = useRef(20);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const [positions, setPositions] = useState<Position[]>([]);
+  const initialLayout = useRef<Position[] | null>(null);
+  const lastWidth = useRef<number | null>(null);
   const [flipped, setFlipped] = useState<Record<string, boolean>>({});
   const [shuffling, setShuffling] = useState(false);
   const animating = useRef(false);
@@ -89,12 +91,29 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
     setPositions(makeScatter());
   }, [makeScatter, resetStackOrder]);
   useEffect(() => {
-    const frame = requestAnimationFrame(scatter);
+    const element = board.current;
+    if (!element) return;
+    const frame = requestAnimationFrame(() => {
+      if (initialLayout.current === null) initialLayout.current = makeScatter();
+      lastWidth.current = element.clientWidth;
+      setPositions(initialLayout.current);
+    });
     let timeout: ReturnType<typeof setTimeout>;
-    const observer = new ResizeObserver(() => { clearTimeout(timeout); timeout = setTimeout(scatter, 200); });
-    if (board.current) observer.observe(board.current);
+    const observer = new ResizeObserver(() => {
+      const width = element.clientWidth;
+      // Initial delivery and height-only/image changes must not reshuffle the pile.
+      if (lastWidth.current === null || width === lastWidth.current) return;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        const nextWidth = element.clientWidth;
+        if (nextWidth === lastWidth.current) return;
+        lastWidth.current = nextWidth;
+        scatter();
+      }, 200);
+    });
+    observer.observe(element);
     return () => { cancelAnimationFrame(frame); clearTimeout(timeout); observer.disconnect(); timers.current.forEach(clearTimeout); };
-  }, [scatter]);
+  }, [makeScatter, scatter]);
   const shuffle = () => {
     if (animating.current || !board.current) return;
     timers.current.forEach(clearTimeout);
@@ -139,6 +158,25 @@ function PilePrint({ photo, index, position, busy, flipped, flip, raise, open }:
   const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
+    const element = elementRef.current;
+    if (!element) return;
+    const rotation = getComputedStyle(element).getPropertyValue("--rotation");
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const delay = reduced ? 0 : index * 30;
+    element.style.visibility = "visible";
+    const fade = element.animate([{ opacity: 0 }, { opacity: 1 }], { duration: reduced ? 150 : 250, delay, fill: "backwards" });
+    const settle = reduced ? null : element.animate([
+      { transform: `translateY(8px) rotate(calc(${rotation} + ${index % 2 ? 2 : -2}deg))` },
+      { transform: `translateY(0) rotate(${rotation})` },
+    ], { duration: 450, delay, easing: "cubic-bezier(.3,1.25,.5,1)", fill: "backwards" });
+    // A user's first interaction takes precedence over the introductory motion.
+    const stop = () => { fade.cancel(); settle?.cancel(); };
+    element.addEventListener("pointerdown", stop);
+    element.addEventListener("focus", stop);
+    return () => { stop(); element.removeEventListener("pointerdown", stop); element.removeEventListener("focus", stop); };
+  }, [index]);
+
+  useLayoutEffect(() => {
     elementRef.current?.classList.remove("is-pressed");
   }, [flipped]);
   const instructionId = useId();
@@ -148,7 +186,7 @@ function PilePrint({ photo, index, position, busy, flipped, flip, raise, open }:
     elementRef.current?.classList.remove("is-pressed");
     return cancelClick;
   }, [busy, position, cancelClick]);
-  const style = { left: position.x, top: position.y, width: position.width, height: position.height, "--rotation": `${position.rotation}deg` } as CSSProperties;
+  const style = { visibility: "hidden", left: position.x, top: position.y, width: position.width, height: position.height, "--rotation": `${position.rotation}deg` } as CSSProperties;
   const move = (element: HTMLElement, x: number, y: number) => {
     const parent = element.parentElement!;
     const point = clampPosition(x, y, position, parent.clientWidth, parent.clientHeight);
