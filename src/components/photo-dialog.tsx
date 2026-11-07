@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { PhotoImage } from "./photo-image";
 import { photoDate, type Photo } from "@/data/captures";
 
@@ -8,7 +8,7 @@ type Props = { photo: Photo; close: () => void; navigate: (direction: number) =>
 export function PhotoDialog({ photo, close, navigate, restoreFocus }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = dialog.current!;
     element.showModal();
     closeButton.current?.focus();

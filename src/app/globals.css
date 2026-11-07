@@ -284,9 +284,9 @@ footer a:hover { text-decoration: underline; text-underline-offset: 4px; color: 
 
 /* Shared paper materials and interactions. */
 .pile-stack { position:absolute; inset:0; z-index:1; }
-.pile-print { position:absolute; perspective:1000px; cursor:grab; touch-action:none; user-select:none; transform:rotate(var(--rotation)); transition:left .6s cubic-bezier(.22,1.12,.36,1),top .6s cubic-bezier(.22,1.12,.36,1),transform .6s cubic-bezier(.22,1.12,.36,1); }
+.pile-print { position:absolute; perspective:900px; cursor:grab; touch-action:none; user-select:none; transform:rotate(var(--rotation)); transition:none; }
 .pile-print.is-dragging { cursor:grabbing; transform:rotate(var(--rotation)) scale(1.04); transition:none; }
-.pile-print:focus-visible { outline:2px solid var(--accent); outline-offset:5px; border-radius:3px; }
+.pile-print:focus,.pile-print:focus-visible { outline:none; border:none; box-shadow:none; }
 .pile-inner { position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .7s cubic-bezier(.2,.85,.25,1.15); }
 .pile-print.is-flipped .pile-inner { transform:rotateY(180deg); }
 .pile-face { position:absolute; inset:0; border-radius:3px; backface-visibility:hidden; -webkit-backface-visibility:hidden; box-shadow:var(--print-shadow); }
@@ -320,7 +320,7 @@ header nav { align-items:center; }
   .pile-controls > span { flex-basis:100%; margin:3px 0 0; }
 }
 @media (prefers-reduced-motion:reduce) {
-  .pile-print,.pile-inner { transition:none; }
+  .pile-print,.pile-inner { transition:transform 700ms cubic-bezier(.3,1.3,.5,1); }
   .pile-print.is-dragging { transform:rotate(var(--rotation)); }
   .pile-print.is-flipped .pile-inner,.pile-back { transform:none; }
   .pile-back { visibility:hidden; }
@@ -334,11 +334,11 @@ header nav { align-items:center; }
 }
 .hero-dot { color:var(--accent); }
 .stats b { font-family:var(--mono); }
-.stats .favorites-stat b { color:var(--accent); }
-.favorite-dot { display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--accent); vertical-align:middle; }
+.stats .photos-stat b { color:var(--accent); }
+.tab-label,.stat-label { display:inline-flex; align-items:center; gap:6px; }
+.photos-dot,.tab-dot { display:block; flex-shrink:0; width:5px; height:5px; border-radius:50%; background:var(--accent); }
 header nav { font-family:var(--mono); }
 a:hover,nav a:hover { color:var(--accent); }
-.view-switcher button[aria-pressed="true"]::before { content:""; display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--accent); margin-right:7px; vertical-align:middle; }
 .filters button { background:var(--chip); }
 .pile-controls .shuffle-button,.pile-controls .shuffle-button:hover { background:var(--accent); border-color:var(--accent); color:var(--accent-contrast); }
 
@@ -349,3 +349,85 @@ a:hover,nav a:hover { color:var(--accent); }
 }
 
 :root[data-palette="darkroom"][data-theme="dark"] .surface-mat-tinted { border:1px solid rgba(255,255,255,.05); }
+
+/* Shuffle directly to new positions, then return to instant dragging. */
+.is-shuffling .pile-print { transition:left 600ms cubic-bezier(.3,1.2,.5,1),top 600ms cubic-bezier(.3,1.2,.5,1),transform 600ms cubic-bezier(.3,1.2,.5,1); }
+.is-shuffling .pile-inner { transition:transform 600ms cubic-bezier(.3,1.2,.5,1); }
+.pile-stack[inert] { pointer-events:none; }
+@media (prefers-reduced-motion:reduce) {
+  .is-shuffling .pile-print,.is-shuffling .pile-inner { transition:transform 700ms cubic-bezier(.3,1.3,.5,1); }
+}
+
+/* Shuffle control feedback. */
+.pile-controls .shuffle-button {
+  opacity:1; filter:saturate(1); transform:scale(1);
+  transition:opacity 200ms ease,background-color 200ms ease,transform 200ms ease,filter 200ms ease;
+}
+.pile-controls .shuffle-button:disabled {
+  opacity:.55; filter:saturate(.6); transform:scale(.97); cursor:not-allowed;
+}
+@media (prefers-reduced-motion:reduce) {
+  .pile-controls .shuffle-button,.pile-controls .shuffle-button:disabled {
+    transform:none; filter:none; transition:opacity 200ms ease !important;
+  }
+}
+
+/* Shared presentation for all Caveat handwriting. */
+.pile-title,.pile-note,.story { text-transform:lowercase; }
+
+/* Press and release affect only the shadow; left/top remain instant while dragging. */
+.pile-print { --print-press:0 10px 20px rgba(0,0,0,.38); }
+[data-theme="light"] .pile-print { --print-press:0 8px 18px rgba(35,50,40,.22); }
+.pile-face { transition:box-shadow 220ms cubic-bezier(.2,.8,.2,1); }
+.pile-print.is-pressed { transform:rotate(var(--rotation)); }
+.is-pressed .pile-face { box-shadow:var(--print-press); transition:box-shadow 180ms cubic-bezier(.2,.8,.2,1); }
+.pile-inner { transition:transform 700ms cubic-bezier(.3,1.3,.5,1); }
+.is-shuffling .pile-print { transition:left 600ms cubic-bezier(.3,1.2,.5,1),top 600ms cubic-bezier(.3,1.2,.5,1),transform 600ms cubic-bezier(.3,1.2,.5,1); }
+.is-shuffling .pile-inner { transition:transform 600ms cubic-bezier(.3,1.2,.5,1); }
+
+/* Dialog fallback and shared-photo snapshots. */
+@keyframes dialog-in { from { opacity:0; } to { opacity:1; } }
+@keyframes dialog-out { from { opacity:1; } to { opacity:0; } }
+@keyframes dialog-card-in { from { transform:scale(.96); } to { transform:scale(1); } }
+@keyframes dialog-card-out { from { transform:scale(1); } to { transform:scale(.96); } }
+.lb[open],.lb[open]::backdrop { animation:dialog-in 250ms ease both; }
+.lb[open] .lb-card { animation:dialog-card-in 250ms ease both; }
+.lb.is-closing,.lb.is-closing::backdrop { animation:dialog-out 250ms ease both; }
+.lb.is-closing .lb-card { animation:dialog-card-out 250ms ease both; }
+.lb .lb-img { animation:none; }
+/* Manual photo clone lives inside the dialog top layer. */
+.photo-morph-clone { position:fixed; overflow:hidden; pointer-events:none; z-index:1000; background-size:cover; background-position:center; transform-origin:center; }
+.manual-photo-morph .lb[open],.manual-photo-morph .lb[open] .lb-card { animation:none; }
+.manual-photo-morph .lb { background:transparent; }
+.manual-photo-morph .lb::backdrop { animation:dialog-in 380ms ease both; }
+.manual-photo-morph .lb-img { visibility:hidden; filter:none; }
+.manual-photo-morph .lb:not(.morph-landed) .lb-meta { opacity:0; }
+.manual-photo-morph .lb:not(.morph-landed) .lb-x { opacity:0; }
+.manual-photo-morph .lb.morph-landed .lb-img { visibility:visible; }
+.lb.morph-complete:not(.is-closing),.lb.morph-complete:not(.is-closing) .lb-card,.lb.morph-complete:not(.is-closing)::backdrop { animation:none; }
+.manual-photo-morph .lb.morph-closing::backdrop { animation:dialog-out 380ms ease both; }
+.pile-print.is-pressed.is-dragging { transform:rotate(var(--rotation)) scale(1.04); }
+.is-pressed.is-dragging .pile-face { box-shadow:var(--print-lift); }
+@media (prefers-reduced-motion:reduce) {
+  .pile-print.is-pressed,.pile-print.is-dragging,.pile-print.is-pressed.is-dragging { transform:rotate(var(--rotation)); }
+  .is-pressed .pile-face,.is-dragging .pile-face,.is-pressed.is-dragging .pile-face { box-shadow:var(--print-shadow); }
+  .lb[open],.lb[open]::backdrop { animation:dialog-in 150ms ease both !important; }
+  .lb.is-closing,.lb.is-closing::backdrop { animation:dialog-out 150ms ease both !important; }
+  .lb .lb-card { animation:none !important; transform:none; }
+}
+
+/* Keyboard-only print focus: physical lift, never an accent ring. */
+.pile-print:focus-visible:not(.is-pointer-focused):not(.is-dragging):not(.is-pressed) {
+  transform:translateY(-4px) rotate(var(--rotation));
+  transition:transform 180ms ease;
+}
+.pile-print:focus-visible:not(.is-pointer-focused):not(.is-dragging):not(.is-pressed) .pile-face {
+  box-shadow:var(--print-lift);
+  transition:box-shadow 180ms ease;
+}
+@media (prefers-reduced-motion:reduce) {
+  .pile-print:focus-visible:not(.is-pointer-focused):not(.is-dragging):not(.is-pressed) { transform:rotate(var(--rotation)); }
+}
+
+/* During the flight, fade the physical frame without duplicating the photo. */
+.pile-print.morph-frame-only .photo-image { visibility:hidden; }

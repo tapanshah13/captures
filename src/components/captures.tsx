@@ -1,12 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PrintTable } from "./print-table";
 import { ThemeToggle } from "./theme-toggle";
 import { BrandMark } from "./brand-mark";
 import { PhotoImage } from "./photo-image";
+import { transitionPhoto, restoreTransitionPrint } from "./photo-transition";
 import { PhotoDialog } from "./photo-dialog";
 import { TABLE_SURFACE, photos, rolls, photoDate, frameNumber, type Photo, type Roll } from "@/data/captures";
 
@@ -18,8 +20,14 @@ export function Captures() {
   const search = useSearchParams();
   const rawView = search.get("view");
   const view: View = rawView === "rolls" || rawView === "all" ? rawView : "table";
-  const photo = photos.find((item) => item.slug === search.get("photo"));
+  const routePhoto = photos.find((item) => item.slug === search.get("photo"));
+  const [photo, setPhoto] = useState(routePhoto);
+  const [transitioning, setTransitioning] = useState(false);
   const openedHere = useRef(false);
+  const transitionBusy = useRef(false);
+  const pendingRoute = useRef<string | null | undefined>(undefined);
+  useEffect(() => () => restoreTransitionPrint(), []);
+  const originPrint = useRef<HTMLElement | null>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
   const url = useCallback((changes: Record<string, string | null>) => {
     const params = new URLSearchParams(search.toString());
@@ -33,33 +41,64 @@ export function Captures() {
     if (rawView !== view) router.replace(url({ view }), { scroll: false });
   }, [rawView, view, router, url]);
   const open = (item: Photo) => {
+    if (transitionBusy.current) return;
     lastFocus.current = document.activeElement as HTMLElement;
+    const print = lastFocus.current?.closest<HTMLElement>(".pile-print");
+    // The back has no visible photograph to snapshot; use the fade fallback there.
+    originPrint.current = print && !print.classList.contains("is-flipped") ? print.querySelector<HTMLElement>(".photo-image") : null;
     openedHere.current = true;
-    router.push(url({ photo: item.slug }), { scroll: false });
+    pendingRoute.current = item.slug;
+    transitionBusy.current = true;
+    setTransitioning(true);
+    void transitionPhoto(() => {
+      flushSync(() => setPhoto(item));
+      router.push(url({ photo: item.slug }), { scroll: false });
+    }, originPrint.current, true).finally(() => { transitionBusy.current = false; setTransitioning(false); });
   };
-  const close = useCallback(() => {
-    if (openedHere.current) router.back();
-    else router.replace(url({ photo: null }), { scroll: false });
+  const close = useCallback((fromHistory = false) => {
+    if (transitionBusy.current) return;
+    transitionBusy.current = true;
+    pendingRoute.current = fromHistory ? undefined : null;
+    setTransitioning(true);
+    void transitionPhoto(() => {
+      flushSync(() => setPhoto(undefined));
+      if (fromHistory) return;
+      if (openedHere.current) router.back();
+      else router.replace(url({ photo: null }), { scroll: false });
+    }, originPrint.current, false).finally(() => { transitionBusy.current = false; setTransitioning(false); });
   }, [router, url]);
   const navigate = useCallback((direction: number) => {
-    if (!photo) return;
+    if (!photo || transitionBusy.current) return;
     const index = photos.indexOf(photo);
-    router.replace(url({ photo: photos[(index + direction + photos.length) % photos.length].slug }), { scroll: false });
+    const next = photos[(index + direction + photos.length) % photos.length];
+    pendingRoute.current = next.slug;
+    setPhoto(next);
+    router.replace(url({ photo: next.slug }), { scroll: false });
   }, [photo, router, url]);
+  // Retain the dialog through a history-driven close so the reverse morph can finish.
+  useEffect(() => {
+    if (pendingRoute.current !== undefined) {
+      if ((routePhoto?.slug ?? null) !== pendingRoute.current) return;
+      pendingRoute.current = undefined;
+    }
+    if (transitionBusy.current) return;
+    if (!routePhoto && photo) { close(true); return; }
+    if (routePhoto && routePhoto !== photo) setPhoto(routePhoto);
+  }, [routePhoto, transitioning, close, photo]);
   const restoreFocus = useCallback(() => { lastFocus.current?.focus({ preventScroll: true }); }, []);
   return <>
     <a className="skip-link" href="#main">Skip to captures</a>
     <header><div className="wrap"><a className="mark" href="https://tapanshah.me" aria-label="Tapan Shah — home"><BrandMark className="h-6 w-10" /></a><nav aria-label="Main navigation"><a href="https://tapanshah.me">Home</a><Link className="on" href="/" aria-current="page">Captures</Link><a href="https://tapanshah.me/blog">Blog</a><ThemeToggle /></nav></div></header>
     <main className="wrap" id="main">
-      <section className="hero" aria-labelledby="title"><div><h1 id="title">Captures<span className="hero-dot" aria-hidden="true">.</span></h1><p>Things I noticed, mostly on the way somewhere else. Pick one up, flip it over, there&apos;s usually a story.</p></div><div className="stats"><div className="favorites-stat"><b>{photos.filter((item) => item.favorite).length}</b><span className="favorite-dot" aria-hidden="true" /> favorites</div><div><b>{photos.length}</b>photos</div><div><b>{new Set(photos.map((item) => item.place)).size}</b>places</div><div><b>{since}</b>since</div></div></section>
-      <nav className="view-switcher" aria-label="Photo views">{([['table', 'Table'], ['rolls', 'Rolls'], ['all', 'Contact sheet']] as const).map(([value, label]) => <button key={value} aria-pressed={view === value} onClick={() => router.push(url({ view: value }), { scroll: false })}>{label}</button>)}</nav>
+      <section className="hero" aria-labelledby="title"><div><h1 id="title">Captures<span className="hero-dot" aria-hidden="true">.</span></h1><p>Things I noticed, mostly on the way somewhere else. Pick one up, flip it over, there&apos;s usually a story.</p></div><div className="stats"><div className="photos-stat"><b>{photos.length}</b><span className="stat-label"><span className="photos-dot" aria-hidden="true" />photos</span></div><div><b>{new Set(photos.map((item) => item.place)).size}</b>places</div><div><b>{since}</b>since</div></div></section>
+      <nav className="view-switcher" aria-label="Photo views">{([['table', 'Table'], ['rolls', 'Rolls'], ['all', 'Contact sheet']] as const).map(([value, label]) => <button key={value} aria-pressed={view === value} onClick={() => router.push(url({ view: value }), { scroll: false })}><span className="tab-label">{view === value && <span className="tab-dot" aria-hidden="true" />}{label}</span></button>)}</nav>
       {photos.length === 0 && <p className="py-12 text-sm text-muted-foreground">No published photos yet.</p>}
       {view === "table" && <PrintTable surface={TABLE_SURFACE} open={open} />}
       {view === "rolls" && <section aria-labelledby="rolls-heading"><div className="section-h"><h2 id="rolls-heading">Rolls</h2><span>one roll per trip · swipe or use arrows</span></div>{activeRolls.map((roll) => <FilmRoll key={roll.id} roll={roll} open={open} />)}</section>}
       {view === "all" && <ContactSheet open={open} />}
       <footer>© 2026 <a href="https://tapanshah.me">Tapan Shah</a> · if you scrolled this far, <a href="https://tapanshah.me/#contact">we should probably talk.</a></footer>
     </main>
-    {photo && <PhotoDialog photo={photo} close={close} navigate={navigate} restoreFocus={restoreFocus} />}
+    {photo && <PhotoDialog photo={photo} close={() => close()} navigate={navigate} restoreFocus={restoreFocus} />}
   </>;
 }
 
