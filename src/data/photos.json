@@ -505,5 +505,1280 @@
       "city"
     ],
     "favorite": false
+  },
+  {
+    "slug": "hidden-falls",
+    "hash": "300547a0f9921d70e2a09c7bbf43c07522791e1a6088330910e63b87e116c474",
+    "src": "/captures/27e0b63f-afd7-4812-90c1-c19b261a916a-2048.webp",
+    "sizes": {
+      "640": "/captures/27e0b63f-afd7-4812-90c1-c19b261a916a-640.webp",
+      "1280": "/captures/27e0b63f-afd7-4812-90c1-c19b261a916a-1280.webp",
+      "2048": "/captures/27e0b63f-afd7-4812-90c1-c19b261a916a-2048.webp"
+    },
+    "width": 2048,
+    "height": 3115,
+    "blurDataURL": "data:image/webp;base64,UklGRswAAABXRUJQVlA4IMAAAABwBACdASoQABgAPrVInkmnJCKhMAgA4BaJYgCdMoAlwQ32yDFysmGl9GACAAD+tkxryVjTrP8KOTH+aQj6clyYNYU9Ze1Zi/1Ot2Je8CPPIdoPz1j4DRfydUNudBJCP9yWX5mA2ZC5L2dvTm/wYTVdChIeSIDr0aA58quTeaLd3qhaDI2MRwTKnnuJ/ZYDHuRjbIGZCXmYXfA/jEmhP+sX/3YwwwsjyX2X5p8pDoC5SGaSpyqZX/LHbJF205cgAAA=",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 1.54mm f/2.4",
+      "aperture": "f/2.4",
+      "shutter": "1/1199",
+      "iso": 20
+    },
+    "date": "2022-09-03T11:00:19+05:30",
+    "title": "Hidden Falls",
+    "place": "India",
+    "story": "Monsoon-season waterfall, loud enough that nobody could hear me say 'wow' for the fifth time.",
+    "roll": "postcards",
+    "collections": [
+      "water",
+      "mountains"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-0378",
+    "hash": "4a2d41f35078299e973276a1079fb9ee0ae58d8fd00a8bde5c57ad391f240b2e",
+    "src": "/captures/img-0378-2048.webp",
+    "sizes": {
+      "640": "/captures/img-0378-640.webp",
+      "1280": "/captures/img-0378-1280.webp",
+      "2048": "/captures/img-0378-2048.webp"
+    },
+    "width": 2048,
+    "height": 2901,
+    "blurDataURL": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAABQBACdASoQABcALoVarVaipycnBwCESxAE6ZQjAACuuPQ4Glr1XCZPAM0AAPxcf+2nIMiTUh4AJMRDWqQhd6wbYwOH/6rNhCHxON/FTSeRHZL4Wzn/FSxacP1cYrmmIFfYFsPVWbJ/ASCcYhaRVVTHhOWoZi85uiYUVwpGmDbTgAAA",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 6mm f/2",
+      "aperture": "f/2",
+      "shutter": "1/3195",
+      "iso": 20
+    },
+    "date": "2023-06-04T16:01:44-07:00",
+    "title": "The Public Market Sign",
+    "place": "Pike Place Market, Seattle",
+    "story": "The sign, the Sound, and a crane that photobombed every single angle.",
+    "roll": "pnw",
+    "collections": [
+      "city",
+      "water"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-0589",
+    "hash": "db426136d4f4845fe05257a58107508950f6c56cfa4e048bc0379fd2f9ca5823",
+    "src": "/captures/img-0589-2048.webp",
+    "sizes": {
+      "640": "/captures/img-0589-640.webp",
+      "1280": "/captures/img-0589-1280.webp",
+      "2048": "/captures/img-0589-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABQBACdASoQABUAPrVInkmnJCKhMAgA4BaJYwCdMoADUF0NVcQ0zERvO5jAAP6M+Ub63zvKy8eMrJecb66IvUPhLBY0xVGQME3EKvz+lbvQUzVvLTDJWbH+86wi/b0sMgEjXL5wAAA=",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 6.765mm f/1.78",
+      "aperture": "f/1.78",
+      "shutter": "1/2041",
+      "iso": 80
+    },
+    "date": "2026-02-15T15:21:26-08:00",
+    "title": "Grey Day, Big Ocean",
+    "place": "Northern California coast",
+    "story": "Fog, wind, an old fence and the whole Pacific. Moody on purpose (it was not on purpose).",
+    "roll": "postcards",
+    "collections": [
+      "water"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-1415",
+    "hash": "c4c46134a45528ad437d605bbdd45fcb431b1e85baa44a521ec2b20f4bbc51c5",
+    "src": "/captures/img-1415-2048.webp",
+    "sizes": {
+      "640": "/captures/img-1415-640.webp",
+      "1280": "/captures/img-1415-1280.webp",
+      "2048": "/captures/img-1415-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAAAQBQCdASoQABUAPrVInkmnJCKhMAgA4BaJbACdMoRwHaAlkAcsMxdvkxMd5Ch7jt8AAP59UQuJzq2hjsJq+JElwpW4/qpRhxcINtgqvn2f5anv8i2NxqA4Pw9B4Uuis3+zFdvXfg8lQMfnH+pb/d7/FqKgHLaB1M+P9qPulCcyWfEDaKyLvm/o+w1/+50+B7IdgttrraaZWISIl6yG1M/rzjjsxKzFfjQTgnc90X0WariXPTVZa95kS7eEzesIl2AAAA==",
+    "exif": {
+      "camera": "Apple iPhone 13 Pro Max",
+      "lens": "iPhone 13 Pro Max back triple camera 5.7mm f/1.5",
+      "aperture": "f/1.5",
+      "shutter": "1/60",
+      "iso": 400
+    },
+    "date": "2023-02-20T22:12:07-08:00",
+    "title": "Ramen Break",
+    "place": "Rakkan Ramen",
+    "story": "Mushrooms, corn, tofu, no regrets. Fuel for more sunset chasing.",
+    "roll": "yard",
+    "collections": [
+      "food"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-1474",
+    "hash": "651a8d18a6eb153534fafca9b3a4e35a14f06b1a092d8fe21f0fabb5154afea4",
+    "src": "/captures/img-1474-2048.webp",
+    "sizes": {
+      "640": "/captures/img-1474-640.webp",
+      "1280": "/captures/img-1474-1280.webp",
+      "2048": "/captures/img-1474-2048.webp"
+    },
+    "width": 2048,
+    "height": 1536,
+    "blurDataURL": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAQCdASoQAAwAAoBCJbACdEf/ga+ILxgA/F1dKcmP12SAnVczZROWbkBRsaaGoMy5uvfsurdivnOhyFj3bvp5OAaHo+DNAAA=",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 15.66mm f/2.8",
+      "aperture": "f/2.8",
+      "shutter": "1/4651",
+      "iso": 64
+    },
+    "date": "2025-05-16T19:16:35-07:00",
+    "title": "Sedona Says Goodnight",
+    "place": "Sedona, AZ",
+    "story": "The sun split into two on its way down behind the red rocks. Physics, but make it pretty.",
+    "roll": "sedona",
+    "collections": [
+      "sunsets",
+      "mountains"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-1480",
+    "hash": "accd68a65a45796d3ebaceba66d6c9d1d5d1855b33edda4a2a7e1e4449737890",
+    "src": "/captures/img-1480-2048.webp",
+    "sizes": {
+      "640": "/captures/img-1480-640.webp",
+      "1280": "/captures/img-1480-1280.webp",
+      "2048": "/captures/img-1480-2048.webp"
+    },
+    "width": 2048,
+    "height": 1536,
+    "blurDataURL": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAACwAQCdASoQAAwAAoBCJagCdACyaMgAAPmxl2dFr3SVPAtqzjfF20woZTsW7TJ36ZQYsSfTZbVz3PffC1tDpR7FSQAAAA==",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 15.66mm f/2.8",
+      "aperture": "f/2.8",
+      "shutter": "1/4651",
+      "iso": 40
+    },
+    "date": "2025-05-16T19:21:02-07:00",
+    "title": "Last Light, Red Rocks",
+    "place": "Sedona, AZ",
+    "story": "Two minutes later: just the glow and the silhouettes. Everyone stayed quiet.",
+    "roll": "sedona",
+    "collections": [
+      "sunsets",
+      "mountains"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-1636",
+    "hash": "cc5656e87ac16bebf02cf98d1b6875088aa5e9640437b467f6cea9d1499abd7e",
+    "src": "/captures/img-1636-2048.webp",
+    "sizes": {
+      "640": "/captures/img-1636-640.webp",
+      "1280": "/captures/img-1636-1280.webp",
+      "2048": "/captures/img-1636-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAADQBACdASoQABUAPrVKnkonJCKhsAgA4BaJZACdMoKABFgA5N5q52PQOSg2zf3mAAD4FmvcpT1m27yeSB7UkwA7xC85L78C6yW+6ATKASV9qfJqXLpbWXzhlAaMEe7mNwONlZ9PkO0dJs6ZtNY3Crn9FlYTM/6B8a/ad6wR5nb+gGQq3zxv+qAkSKmnlpaFqYtXE1+5u5UAAA==",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 4.25mm f/1.8",
+      "aperture": "f/1.8",
+      "shutter": "1/1754",
+      "iso": 32
+    },
+    "date": "2023-07-08T18:25:09-07:00",
+    "title": "Paradise, Literally",
+    "place": "Mount Rainier, WA",
+    "story": "The trailhead is literally called Paradise. The mountain wore a cloud hat to match.",
+    "roll": "pnw",
+    "collections": [
+      "mountains"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-1643",
+    "hash": "6acc5f2adf2bb99f5d78bc66bcb1eefba6b30c04cb1fc15978694a1c57e331b8",
+    "src": "/captures/img-1643-2048.webp",
+    "sizes": {
+      "640": "/captures/img-1643-640.webp",
+      "1280": "/captures/img-1643-1280.webp",
+      "2048": "/captures/img-1643-2048.webp"
+    },
+    "width": 2048,
+    "height": 3110,
+    "blurDataURL": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAAAQBACdASoQABgAPrVKoUqnJCMhsAgA4BaJaACdABg4ZGDsd2M0hzzrAAD95pCZR4qo94htP2tX0U6kF0J0m9jJhAYGf9H/d/BsOGT/6+8oWi+NFsmk4MICfJQU/pJssPDseYwFMLdL2GSdJMU9XMcktuBg4xPE6ZiEYXYQ6WgwTzFx1fsQAA==",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 4.25mm f/1.8",
+      "aperture": "f/1.8",
+      "shutter": "1/1996",
+      "iso": 32
+    },
+    "date": "2023-07-08T18:51:08-07:00",
+    "title": "Myrtle Falls Moment",
+    "place": "Mount Rainier, WA",
+    "story": "Waterfall in front, glacier behind, cloud sitting on top like a lid. Nature showing off on purpose.",
+    "roll": "pnw",
+    "collections": [
+      "mountains",
+      "water"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-1784",
+    "hash": "c1dd9b016f2078fac352a9f3564409e195d662a5cd8853aa45240ff9363f1918",
+    "src": "/captures/img-1784-2048.webp",
+    "sizes": {
+      "640": "/captures/img-1784-640.webp",
+      "1280": "/captures/img-1784-1280.webp",
+      "2048": "/captures/img-1784-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAADwAwCdASoQABUAPrVInkmnJCKhMAgA4BaJQBOgA83ZaeQpZdX/hr6AAP6RpySO9Rj75UtJ+ZaPWKsmMov21DGzTy3OgBbvSIHMYBiddkLaJvqIoU5WWHMTomTg2ya9uw8PgyWfo8o1keB3fldxzVDjsFpJfkomk5KO7H//2RZ2iflDCtLsMAAA",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 15.66mm f/2.8",
+      "aperture": "f/2.8",
+      "shutter": "1/99",
+      "iso": 125
+    },
+    "date": "2024-05-26T20:05:10-07:00",
+    "title": "Wave Back",
+    "place": "Southern California coast",
+    "story": "One surfer, one tanker, one very orange sky. Pretty sure he was waving at the ship.",
+    "roll": "coast",
+    "collections": [
+      "sunsets",
+      "water",
+      "people"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-1814",
+    "hash": "b7e593de94db1b4b485b3d028cf287ad35b621e4474ce62a639f4a0a39eea0e3",
+    "src": "/captures/img-1814-2048.webp",
+    "sizes": {
+      "640": "/captures/img-1814-640.webp",
+      "1280": "/captures/img-1814-1280.webp",
+      "2048": "/captures/img-1814-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAADQBACdASoQABUAPrVInkmnJCKhMAgA4BaJbACdMoR3N6TbgAel5zZWpM94kOnGAAD8f/wmKsVRLkjFMSjD0ZQERcR66JVB/n/UB8ISX6Ug0rpoL7veUa1OCBl1GpUvtCq/OG2OG0MfQ/s5RgasCaCX0C11t1JMJXcVnGiY9lYdzEew0JOwpUtEPb8nTjkOFULl/4/nq4OUsjMuQAAAAA==",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 6mm f/2",
+      "aperture": "f/2",
+      "shutter": "1/905",
+      "iso": 20
+    },
+    "date": "2023-07-15T13:48:07-07:00",
+    "title": "Diablo Lake Is Not Edited",
+    "place": "North Cascades, WA",
+    "story": "Glacier flour makes the water this color. I didn't touch a single slider. A boat drew a line for scale.",
+    "roll": "pnw",
+    "collections": [
+      "water",
+      "mountains"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-1889",
+    "hash": "fdaf5f1699af5b773e1eb543ea35f64c683f0d5c26dc4816f74ead52b2c08c38",
+    "src": "/captures/img-1889-2048.webp",
+    "sizes": {
+      "640": "/captures/img-1889-640.webp",
+      "1280": "/captures/img-1889-1280.webp",
+      "2048": "/captures/img-1889-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAAAwBACdASoQABUAPrVInkmnJCKhMAgA4BaJZACdMoAC+24le0vnmO6hQYAA/uFZKCfI5RC0nY0Ow0vrOq6uqiGkx/6OK2xqA5ULje2b5W5GHI2/bs9UG1BFe4mQWhrpk08T5LIkRtF/WnCTyZtQjFNczWeVK7KrgvMovjm5t/5Hfc3vIOGtMAwWy8Pkv67+nqN+0YD/Mh/fY17FI04rdBPzyfyAAA==",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 4.25mm f/1.8",
+      "aperture": "f/1.8",
+      "shutter": "1/1135",
+      "iso": 32
+    },
+    "date": "2023-07-16T16:15:43-07:00",
+    "title": "Snoqualmie Falls",
+    "place": "Snoqualmie, WA",
+    "story": "Loud, misty, and taller than it looks. Also the waterfall from Twin Peaks, if that means anything to you.",
+    "roll": "pnw",
+    "collections": [
+      "water"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-2021",
+    "hash": "9434c5c6797d063df8e372ee6b9fe14e1e3a76c275ba02dd577efb5a0cf83708",
+    "src": "/captures/img-2021-2048.webp",
+    "sizes": {
+      "640": "/captures/img-2021-640.webp",
+      "1280": "/captures/img-2021-1280.webp",
+      "2048": "/captures/img-2021-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAAAQBACdASoQABUAPrVInkmnJCKhMAgA4BaJZgCdMoRwABeo7VdRQpPQGADhDZLKPcHCp5Js5Hu2iOEqXXiJe1T9PoDUdMBYA8w5aF/E+/ApTc+IPoxLCWxIqTKBBbnjYWFd7+FTcWbrmTeQTzH4J25C++KHlVmveAdr6BB/sr0Xfh5HWhAAAA==",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 4.25mm f/1.8",
+      "aperture": "f/1.8",
+      "shutter": "1/5495",
+      "iso": 32
+    },
+    "date": "2023-07-22T16:59:14-07:00",
+    "title": "Paddle Break",
+    "place": "Lake Washington, WA",
+    "story": "Stopped paddling for exactly one photo. The sun handled the sparkles.",
+    "roll": "pnw",
+    "collections": [
+      "water"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-2109",
+    "hash": "520c5fabbc2d7910e4a1d3942a387f26cdb108502b721fe740ec02c0b48a8fed",
+    "src": "/captures/img-2109-2048.webp",
+    "sizes": {
+      "640": "/captures/img-2109-640.webp",
+      "1280": "/captures/img-2109-1280.webp",
+      "2048": "/captures/img-2109-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAADQAwCdASoQABUAPrUwqVCnIiSjGADgFolnAMiYIeG/Z8NNslOkyQAA/vNj7PTOPQQE4nOTvmHn5jJ6ua3MWWlEkQR9ypBfuzbSpVzpYx0Z9RhC9TgFn+mG8av3E3r+qBH0lAzZ754LMiuAAAA=",
+    "exif": {
+      "camera": "Apple iPhone 13 Pro Max",
+      "lens": "iPhone 13 Pro Max back triple camera 5.7mm f/1.5",
+      "aperture": "f/1.5",
+      "shutter": "1/60",
+      "iso": 125
+    },
+    "date": "2023-02-27T02:59:47-08:00",
+    "title": "Hollywood, Closing Time",
+    "place": "Hollywood, Los Angeles",
+    "story": "Hollywood Boulevard after midnight: empty street, red lights and a dinosaur keeping watch.",
+    "roll": "yard",
+    "collections": [
+      "city",
+      "night"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-2551",
+    "hash": "d6fdf9571408fe5fd5b0b5942641c1823e8913b066af4232b0f683d53b3f00c8",
+    "src": "/captures/img-2551-2048.webp",
+    "sizes": {
+      "640": "/captures/img-2551-640.webp",
+      "1280": "/captures/img-2551-1280.webp",
+      "2048": "/captures/img-2551-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAABQBACdASoQABUAPrVInkmnJCKhMAgA4BaJZACdMoMh1ElWrEG+ZVvVODSQAN1xucbYNjAae1oTY5lKZX74E6WFCEYesnrdsVqLBEgj2FLgvZqAnlWoOkELw+QRalLPHPB9MGy3qKR+agHiYSQMAAvuWcLOxLrPOaH/l/RAQBIqDylZbrwAAA==",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 6.765mm f/1.78",
+      "aperture": "f/1.78",
+      "shutter": "1/2717",
+      "iso": 64
+    },
+    "date": "2025-05-20T19:43:21-07:00",
+    "title": "Malibu Glow",
+    "place": "Santa Monica, CA",
+    "story": "Sun gone behind the Malibu hills, waves still catching the leftovers.",
+    "roll": "coast",
+    "collections": [
+      "sunsets",
+      "water"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-3041",
+    "hash": "c07ee5057cf86a986521b2dd16310bc4256343eb4d018b85f91bf707483b3d34",
+    "src": "/captures/img-3041-2048.webp",
+    "sizes": {
+      "640": "/captures/img-3041-640.webp",
+      "1280": "/captures/img-3041-1280.webp",
+      "2048": "/captures/img-3041-2048.webp"
+    },
+    "width": 2048,
+    "height": 1536,
+    "blurDataURL": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAAAQAgCdASoQAAwAAoBCJZACdGuAAsztXb4AAP7kWQdCNBdZny3JLO9YWDe/HRv2YZFGbEL8sbcXTrDnbdnhGrylSoAAAA==",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 4.25mm f/1.8",
+      "aperture": "f/1.8",
+      "shutter": "1/60",
+      "iso": 125
+    },
+    "date": "2023-08-27T19:48:44-07:00",
+    "title": "Palos Verdes Blue Hour",
+    "place": "Palos Verdes, CA",
+    "story": "Five palms, one orange line, the whole bay turning blue. Sat on the grass until it was gone.",
+    "roll": "coast",
+    "collections": [
+      "sunsets",
+      "water"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-3563",
+    "hash": "8c6a239a401c6f7ffce05d04f7cf4d46c13c9f96cbbeb40d5c241f5a1c1935ef",
+    "src": "/captures/img-3563-2048.webp",
+    "sizes": {
+      "640": "/captures/img-3563-640.webp",
+      "1280": "/captures/img-3563-1280.webp",
+      "2048": "/captures/img-3563-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAABwAwCdASoQABUAPrVKn0onJCKhsAgA4BaJQAAj3WVXvCswcYAA/v6fW8xRZuptz27bg4HhTF++KriVh673TEO9I3S7AFkw6ByzXES7HHtnIeo3IEUWifmAAAA=",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 6mm f/2",
+      "aperture": "f/2",
+      "shutter": "1/30",
+      "iso": 500
+    },
+    "date": "2023-09-02T19:52:45-07:00",
+    "title": "Mickey Never Sleeps",
+    "place": "Disney California Adventure",
+    "story": "Pixar Pier at night. He's smiling because he knows what the churros cost.",
+    "roll": "disney",
+    "collections": [
+      "night",
+      "people"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-3569",
+    "hash": "a8c819b0316c3e00f60491fd018e423bc53ddee3f1c1e6024e66fbdf7624db2b",
+    "src": "/captures/img-3569-2048.webp",
+    "sizes": {
+      "640": "/captures/img-3569-640.webp",
+      "1280": "/captures/img-3569-1280.webp",
+      "2048": "/captures/img-3569-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAAAQAwCdASoQABUAPrVKnkonJCKhsAgA4BaJQAAmYs4/rIAA/vvUj2sRaV6GxPlnPYY2WyKUV154ODYhZFzQdq3i4zh9zd7u4+29qb+j9bquAAAA",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 4.25mm f/1.8",
+      "aperture": "f/1.8",
+      "shutter": "1/30",
+      "iso": 640
+    },
+    "date": "2023-09-02T19:53:21-07:00",
+    "title": "Wheel Over Water",
+    "place": "Disney California Adventure",
+    "story": "Same wheel, wider view, with the coaster and the lake doing the reflections.",
+    "roll": "disney",
+    "collections": [
+      "night",
+      "water"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-4076",
+    "hash": "55f588bf729a0098a06d78526c67ff0ba67cb1989f5206a48236e5d15a520267",
+    "src": "/captures/img-4076-2048.webp",
+    "sizes": {
+      "640": "/captures/img-4076-640.webp",
+      "1280": "/captures/img-4076-1280.webp",
+      "2048": "/captures/img-4076-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAABQAwCdASoQABUAPrVInkmnJCKhMAgA4BaJQAAKVSCcJ6twAAD++Rgn/8XVf2+ZP77Cup+78CxvYJ5SLsLDbTm12Dwe3qrKSwqSo6BmfIwEm++ErrjKDxD3Ff2cOAAA",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 6.765mm f/1.78",
+      "aperture": "f/1.78",
+      "shutter": "1/173",
+      "iso": 64
+    },
+    "date": "2026-05-13T20:25:58-07:00",
+    "title": "Street Goes Quiet",
+    "place": "Long Beach, CA",
+    "story": "Trees going black, sky going orange, parked cars minding their business.",
+    "roll": "yard",
+    "collections": [
+      "sunsets",
+      "city"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-4448",
+    "hash": "85f79cc38525ad88cc9003e38376c71a6e10c9c4da6adad4774dc3ff7f34e596",
+    "src": "/captures/img-4448-2048.webp",
+    "sizes": {
+      "640": "/captures/img-4448-640.webp",
+      "1280": "/captures/img-4448-1280.webp",
+      "2048": "/captures/img-4448-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAACwAwCdASoQABUAPrVInkmnJCKhMAgA4BaJQBWAAs8j05ztvtSOdAD+2pWdd3r0+NuxZpac+MDa335lC0OCnUoFUFs8uOX/uYuuYI8vY+qEKqabCZMF3lIjc2Xnj37fNp1qKZOyDJfw0mymhFzpbiJbn+y8UhGtdwvU/I4n+HiWpsr4xJ0D8elNAthXMMAA",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 6.765mm f/1.78",
+      "aperture": "f/1.78",
+      "shutter": "1/60",
+      "iso": 200
+    },
+    "date": "2024-08-31T19:36:11-05:00",
+    "title": "Rush Hour, Theatre Lights",
+    "place": "Chicago, IL",
+    "story": "Brake lights all the way down the street and one theatre sign glowing like it's opening night.",
+    "roll": "chicago",
+    "collections": [
+      "city",
+      "people"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-4466",
+    "hash": "37b54c60d1f553cc56983cf89d0f81ec3f65065461d112b08d67e1c46cc4edf0",
+    "src": "/captures/img-4466-2048.webp",
+    "sizes": {
+      "640": "/captures/img-4466-640.webp",
+      "1280": "/captures/img-4466-1280.webp",
+      "2048": "/captures/img-4466-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAACQBACdASoQABUAPrVInkmnJCKhMAgA4BaJZgCdMoRwACbK9E6U9kA0RTItooAA/vCTq1fwH/UHKLwE2vCjGgBI29xo2vQLW1tFLMr7JWLC7ytJgIt2iLYGWmpVKVUe019qE3I8jyucl8vZzLu/pgvzJ+6NacARZicvQb5ZGrSjWeCk6L1ALjLYCJ4ppV06AAA=",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 6.765mm f/1.78",
+      "aperture": "f/1.78",
+      "shutter": "1/20000",
+      "iso": 64
+    },
+    "date": "2026-05-24T15:22:38-07:00",
+    "title": "Palm Tree Lineup",
+    "place": "Long Beach, CA",
+    "story": "Sunny day, very tall trees, my neck still hurts.",
+    "roll": "yard",
+    "collections": [
+      "city"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-4510",
+    "hash": "1f36e33f16141764689217889333abdc653a975e74a3844dbe7d4e7c863d03f5",
+    "src": "/captures/img-4510-2048.webp",
+    "sizes": {
+      "640": "/captures/img-4510-640.webp",
+      "1280": "/captures/img-4510-1280.webp",
+      "2048": "/captures/img-4510-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAAAwBACdASoQABUAPrVInkmnJCKhMAgA4BaJbACdMoR3N5KASbsu7KgKDAAA/vWNr77lCubXoycJ7z/3RgzQRHWyZq7bv+72y7Zv3RMlsnp0KgV7UlQo9j/WpopQ3ctcuDfFX8+zv+4oR++y8KODc+EOqb5ImNQqG8zV9ZofukvRBwYW4zSC3ifgWV/haQqRXiEHqTjUr+F2sznfyXY1ePjTnbbAAA==",
+    "exif": {
+      "camera": "Apple iPhone 13 Pro Max",
+      "lens": "iPhone 13 Pro Max back triple camera 5.7mm f/1.5",
+      "aperture": "f/1.5",
+      "shutter": "1/60",
+      "iso": 160
+    },
+    "date": "2023-06-04T16:12:13-07:00",
+    "title": "Neon at the Market",
+    "place": "Pike Place Market, Seattle",
+    "story": "Red neon, closing time, and a guy buying flowers. Felt like a movie I wasn't in.",
+    "roll": "pnw",
+    "collections": [
+      "city",
+      "people"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-4663",
+    "hash": "1e6b395908a47e4c295a83735f9c28c0e5808e7ef4fe3eef7acf6a54eafeb9ec",
+    "src": "/captures/img-4663-2048.webp",
+    "sizes": {
+      "640": "/captures/img-4663-640.webp",
+      "1280": "/captures/img-4663-1280.webp",
+      "2048": "/captures/img-4663-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAADwAwCdASoQABUAPrVInkmnJCKhMAgA4BaJYwCdACGU9Ikq7s7zn/AAAPGCjKD3nNs265Sx7bQ9z8ZF7yFXq4ellyh9dqag7Yyz+2wNFgL5Al81pBzpuoCWjZb5KV7NK64NDrGx6gudP7CGwAA=",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 6.765mm f/1.78",
+      "aperture": "f/1.78",
+      "shutter": "1/34",
+      "iso": 1000
+    },
+    "date": "2024-09-01T19:40:21-05:00",
+    "title": "The View From Up There",
+    "place": "360 Chicago, IL",
+    "story": "Golden hour from the 94th floor. The city looks calm from up here. It is not.",
+    "roll": "chicago",
+    "collections": [
+      "city",
+      "sunsets"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-4679",
+    "hash": "6b1cac84c4bbd541eac800fb60934dda941c4d90ee8981b2ede772a5d66bea65",
+    "src": "/captures/img-4679-2048.webp",
+    "sizes": {
+      "640": "/captures/img-4679-640.webp",
+      "1280": "/captures/img-4679-1280.webp",
+      "2048": "/captures/img-4679-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAABQBACdASoQABUAPrVInkmnJCKhMAgA4BaJQBOmUABqn7wHhAaaqYbkSpdwAP7EryyfemJVZ9jtQHHImcpMeS90UmIw/4dJvSQHAIedKjnJ77UiuwdumbQhKDidTerEVyaVmIlRT9bvyAPxlG7QcPivy498bdwUB51+dKl3oCIGP5h18FfAlgVSUt232kmNA4AAAA==",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 4.25mm f/1.8",
+      "aperture": "f/1.8",
+      "shutter": "1/1484",
+      "iso": 32
+    },
+    "date": "2023-01-14T13:30:56+08:00",
+    "title": "Indoor Waterfall, Why Not",
+    "place": "Jewel Changi, Singapore",
+    "story": "An airport with a rain vortex in the middle of a jungle. I'd miss my flight for this.",
+    "roll": "postcards",
+    "collections": [
+      "water",
+      "people"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-4702",
+    "hash": "500809b3233b42ab5d83f320a1a4da32ef47ea3f49b019c9c32ce7dcd79f2f7f",
+    "src": "/captures/img-4702-2048.webp",
+    "sizes": {
+      "640": "/captures/img-4702-640.webp",
+      "1280": "/captures/img-4702-1280.webp",
+      "2048": "/captures/img-4702-2048.webp"
+    },
+    "width": 2048,
+    "height": 1536,
+    "blurDataURL": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAAAQAgCdASoQAAwAAoBCJQBOjXAAWZ843qeAAP7pWGXvTryBiY79BLbHBxkTPWKU0rY1D3hrmcVmD9gAAAA=",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 6.765mm f/1.78",
+      "aperture": "f/1.78",
+      "shutter": "1/51",
+      "iso": 800
+    },
+    "date": "2024-09-01T19:55:12-05:00",
+    "title": "Floor 103",
+    "place": "Willis Tower, Chicago",
+    "story": "The sun went down and the whole grid lit up. Reflections included, free of charge.",
+    "roll": "chicago",
+    "collections": [
+      "city",
+      "sunsets",
+      "night"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-4794",
+    "hash": "91b611edfe2d8d36d5c42677a8d3f6d6e13f9216e75eac70e1907856fcf91a8f",
+    "src": "/captures/img-4794-2048.webp",
+    "sizes": {
+      "640": "/captures/img-4794-640.webp",
+      "1280": "/captures/img-4794-1280.webp",
+      "2048": "/captures/img-4794-2048.webp"
+    },
+    "width": 2048,
+    "height": 2118,
+    "blurDataURL": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAABQBACdASoQABEAPrVInkmnJCKhMAgA4BaJbACdMoADa2ycom1k+JWJ66AAAP6t5y0vgG6AitGE9CarticoUa6eI4k8GQIS3gkykKAWn6z4s9OTJG/NNEyFhxebkrWhXmKz/JRfBw0uH1R6wDHc4aRTjL2KjBCEebWPYz4Pr+Do3QKfTsjtswqzqTe1o5hGzf/sWKUPi6Hn5dVEMfLTYmAAAAA=",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 6.765mm f/1.78",
+      "aperture": "f/1.78",
+      "shutter": "1/50",
+      "iso": 160
+    },
+    "date": "2024-09-02T14:47:57-05:00",
+    "title": "One of Everything",
+    "place": "Starbucks Reserve, Chicago",
+    "story": "Ordered one of everything. Research purposes only.",
+    "roll": "chicago",
+    "collections": [
+      "food"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-5425",
+    "hash": "2b8258ef458113f50c1aa6f9bca4fb918550b20eeef2394aab3a27b30925b596",
+    "src": "/captures/img-5425-2048.webp",
+    "sizes": {
+      "640": "/captures/img-5425-640.webp",
+      "1280": "/captures/img-5425-1280.webp",
+      "2048": "/captures/img-5425-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAAAwBACdASoQABUAPrVInkmnJCKhMAgA4BaJZQCdAYxipXDtfRvJgow04YAA/IKlPwaI5gM6fCtTMqRfQKFrW8BjVciJHuv8U6jRKzn2qc5I/l+uzs1S6hzcT1n2Kf00vZd7muC44OLlXzGgKFKH3SIP36pAXvcoKq0kbdYiZi3Nu/fcU29VOYoIJts0jtVz0lMVChPCTdmNZJdjgwAAAA==",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 4.25mm f/1.8",
+      "aperture": "f/1.8",
+      "shutter": "1/1072",
+      "iso": 32
+    },
+    "date": "2023-02-03T16:52:59-08:00",
+    "title": "Overcast, Then Not",
+    "place": "Long Beach, CA",
+    "story": "Grey all afternoon, then the sun slipped in under the clouds for exactly four minutes. Palm trees didn't even flinch.",
+    "roll": "yard",
+    "collections": [
+      "sunsets",
+      "city"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-5490",
+    "hash": "4a4b89751ce25d6c5ef211d331861a6d445ba55bd6766ec06c61e4b7e882697c",
+    "src": "/captures/img-5490-2048.webp",
+    "sizes": {
+      "640": "/captures/img-5490-640.webp",
+      "1280": "/captures/img-5490-1280.webp",
+      "2048": "/captures/img-5490-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAAAQBACdASoQABUAPrVInkmnJCKhMAgA4BaJZQCdINiDAolI2DYbWxY4AAD+776JrZ1N9iukzY7VIBc3YPqST4dSAFpOyN2bpAlZjF/WkfPV5q830lhVTKmpxcuo748ipub877dFskF5no266uLhChVPmCgxow95xBJePTc+cAQ/DrCSPnQi1H6AJ1wAAA==",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 6mm f/2",
+      "aperture": "f/2",
+      "shutter": "1/118",
+      "iso": 40
+    },
+    "date": "2023-02-05T17:26:38-08:00",
+    "title": "Racing in the Coliseum",
+    "place": "LA Memorial Coliseum",
+    "story": "NASCAR. Inside a football stadium. Built a whole track for one night and I still don't fully understand how.",
+    "roll": "postcards",
+    "collections": [
+      "sports",
+      "city",
+      "people"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-5638-2",
+    "hash": "e53da313e954a8efe64ec957d75c7fe84bd67c05e96931dacf62547b27ff1714",
+    "src": "/captures/img-5638-2-2048.webp",
+    "sizes": {
+      "640": "/captures/img-5638-2-640.webp",
+      "1280": "/captures/img-5638-2-1280.webp",
+      "2048": "/captures/img-5638-2-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAADwAwCdASoQABUALoVarVaipycnBwCESxgE6I//A9Dlm19Tdo36OK7AAP7xzNZgMj36caF1k4wQ+KRshzVgKwl+kbj5JZB28vtKnVYCO7xf0z2b3MRO79qi6DxFl11kJlykSiP+fDeu6BdrbBfTq7bajBxHHJtFAAA=",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 15.66mm f/2.8",
+      "aperture": "f/2.8",
+      "shutter": "1/124",
+      "iso": 50
+    },
+    "date": "2026-06-26T20:25:09-07:00",
+    "title": "Red Tower, Pink Sky",
+    "place": "Northern California",
+    "story": "Footbridge, river, and a sky that went full peach while I stood there pretending to stretch.",
+    "roll": "river",
+    "collections": [
+      "sunsets",
+      "water"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-5644",
+    "hash": "a301918dea009318ac0006e0c83541a55b3aaf7da303aa0fedf7f783ba3f11be",
+    "src": "/captures/img-5644-2048.webp",
+    "sizes": {
+      "640": "/captures/img-5644-640.webp",
+      "1280": "/captures/img-5644-1280.webp",
+      "2048": "/captures/img-5644-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAADQAwCdASoQABUAPrVKn0onJCKhsAgA4BaJQBOmUABfHkdSQdWyxEgA/ueTQS6mkKqN5TobIAElVoVnCZcJXnYXl3a9/FaowhqMcZCjNTClNz2i3thaN/5tutYOcNNe+/Z158XoOt+0Mqv1yYKwl+cf0+H9vvqTbEBid1B+nniC3qmRANwaRvHrvfFDymd4AAA=",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 15.66mm f/2.8",
+      "aperture": "f/2.8",
+      "shutter": "1/99",
+      "iso": 64
+    },
+    "date": "2026-06-26T20:30:39-07:00",
+    "title": "Iron Bridge Evening",
+    "place": "Northern California",
+    "story": "Old truss bridge, clouds lit from underneath. The river did the reflection work for free.",
+    "roll": "river",
+    "collections": [
+      "sunsets",
+      "water"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-5647",
+    "hash": "61e214fbafe12c09456d5b11121e58a0831a990c98f899001ebd428185617fe6",
+    "src": "/captures/img-5647-2048.webp",
+    "sizes": {
+      "640": "/captures/img-5647-640.webp",
+      "1280": "/captures/img-5647-1280.webp",
+      "2048": "/captures/img-5647-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAABwBACdASoQABUAPrVInkmnJCKhMAgA4BaJQBOmUIF/Am6thQFC77zlJwC0kADf32DaquGTsdPoU7Y2v/UfDMTbwBAyOATjAj9tk/g3a1fLT/7XfCM0r9XZxBUqRL9YRYIH1e5RgX/A3ijZDLwDzPYAAAA=",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 6.765mm f/1.78",
+      "aperture": "f/1.78",
+      "shutter": "1/399",
+      "iso": 64
+    },
+    "date": "2026-06-26T20:36:55-07:00",
+    "title": "Downstream",
+    "place": "Northern California",
+    "story": "Same river, wider view. The last orange stripe before everything went blue.",
+    "roll": "river",
+    "collections": [
+      "sunsets",
+      "water"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-5990",
+    "hash": "85ca148be9d8540a11ae66de0797d748822f2b4f00d4dfed0f5abc9d1b63e16d",
+    "src": "/captures/img-5990-2048.webp",
+    "sizes": {
+      "640": "/captures/img-5990-640.webp",
+      "1280": "/captures/img-5990-1280.webp",
+      "2048": "/captures/img-5990-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAwCdASoQABUAPrVKn0mnJCKhMAgA4BaJZwDE2Gle1hcio15lZ4QAAP7+hzg7mS/TxQ90g5yOCtFRil0BiGKWLDHsnn/IYQ82HDfsa6X2mJfp6UAAAA==",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 4.25mm f/1.8",
+      "aperture": "f/1.8",
+      "shutter": "1/15",
+      "iso": 400
+    },
+    "date": "2023-02-20T19:43:12-08:00",
+    "title": "Boats After Dark",
+    "place": "Long Beach, CA",
+    "story": "The marina at night: one boat lit up like it was the main character.",
+    "roll": "yard",
+    "collections": [
+      "water",
+      "night"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-6470",
+    "hash": "42f8d88534ad20fde2e2346e50773b467b61c8ac3f36b9ee6d510ca5b798d29b",
+    "src": "/captures/img-6470-2048.webp",
+    "sizes": {
+      "640": "/captures/img-6470-640.webp",
+      "1280": "/captures/img-6470-1280.webp",
+      "2048": "/captures/img-6470-2048.webp"
+    },
+    "width": 1723,
+    "height": 2730,
+    "blurDataURL": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAABwBACdASoQABkAPrVInkmnJCKhMAgA4BaJZgCdMoRwAIJH8sjjXmnwYVd9YAD+/xrBnICOR5Hy0jtjLkT+V6MEx3V9j1OUKUtbTZ7RE4pFMZipGQ66IncqGAKv1tskwr3a/s/WrAI1TXN/jS+I1wAA",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 4.25mm f/1.8",
+      "aperture": "f/1.8",
+      "shutter": "1/100",
+      "iso": 64
+    },
+    "date": "2023-02-26T18:14:03-08:00",
+    "title": "Red Light, Two Planets",
+    "place": "Los Angeles, CA",
+    "story": "Stuck at a red light, looked up, found two planets hanging out above the palm trees. Best traffic of my life.",
+    "roll": "yard",
+    "collections": [
+      "city",
+      "night",
+      "sunsets"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-6471",
+    "hash": "ba1115fa75c4433ed0f1f04f7ce037c4470a5c3e19e450f1e1a3482e6537e369",
+    "src": "/captures/img-6471-2048.webp",
+    "sizes": {
+      "640": "/captures/img-6471-640.webp",
+      "1280": "/captures/img-6471-1280.webp",
+      "2048": "/captures/img-6471-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAACwAwCdASoQABUAPrVMoUqnJCMhsAgA4BaJZwAAW9aQ6Jv/VBrAAAD+9qnG/qxnty9DLfbCbVPUK0cSMcRg2Piu2En1ui6g7rva6IQDbK6/JtFsCZO4AAAA",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 4.25mm f/1.8",
+      "aperture": "f/1.8",
+      "shutter": "1/8",
+      "iso": 500
+    },
+    "date": "2023-02-26T18:27:49-08:00",
+    "title": "Venus Clocked In",
+    "place": "Southern California coast",
+    "story": "Last orange line on the water and two planets showing up early for the night shift.",
+    "roll": "coast",
+    "collections": [
+      "water",
+      "night",
+      "sunsets"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-6488",
+    "hash": "12ae07f6c50d7f1a956ac2ba3c3a864deb97e8d1ed58329d889080232e578da4",
+    "src": "/captures/img-6488-2048.webp",
+    "sizes": {
+      "640": "/captures/img-6488-640.webp",
+      "1280": "/captures/img-6488-1280.webp",
+      "2048": "/captures/img-6488-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADwAwCdASoQABUAPrVKnkmnJCKhMAgA4BaJYwC7ACHfjypD4XcxkbkAAP75C3rymRexcR9kOxRbYB5tuPSe5mZ/B8yr9udVDXof/qNh9K97oAAA",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back triple camera 4.25mm f/1.8",
+      "aperture": "f/1.8",
+      "shutter": "1/4",
+      "iso": 800
+    },
+    "date": "2023-02-26T19:05:04-08:00",
+    "title": "Pier, Lights On",
+    "place": "Southern California coast",
+    "story": "The pier at night, lamps doing their best against the whole dark Pacific.",
+    "roll": "coast",
+    "collections": [
+      "water",
+      "night"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-6804",
+    "hash": "05a9bd2af329413d193a5f1262c74307acc25798f187903ab273dc0198ac936a",
+    "src": "/captures/img-6804-2048.webp",
+    "sizes": {
+      "640": "/captures/img-6804-640.webp",
+      "1280": "/captures/img-6804-1280.webp",
+      "2048": "/captures/img-6804-2048.webp"
+    },
+    "width": 2048,
+    "height": 2426,
+    "blurDataURL": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAQBACdASoQABMAPrVIn0onJCKhsAgA4BaJZQC7GuAAT45M2wG3R1KzAAD+56b4NvOQJttQ4OjW9m0M/tv5zIE9xsQ+JjcikY3/J52m0uQB4OIh+7GyeSV5cBhXQAAA",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 15.66mm f/2.8",
+      "aperture": "f/2.8",
+      "shutter": "1/4975",
+      "iso": 50
+    },
+    "date": "2023-12-31T10:41:43+01:00",
+    "title": "Window Seat Win",
+    "place": "Somewhere over the Rockies",
+    "story": "Snow peaks, a lid of clouds and golden hour at 35,000 feet. Fought for this seat. Worth it.",
+    "roll": "postcards",
+    "collections": [
+      "mountains"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-7289",
+    "hash": "5a2b906418e33f6da8aa2db11e4b114225bc888cd5f665b01b563863738df213",
+    "src": "/captures/img-7289-2048.webp",
+    "sizes": {
+      "640": "/captures/img-7289-640.webp",
+      "1280": "/captures/img-7289-1280.webp",
+      "2048": "/captures/img-7289-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAABwBACdASoQABUAPrVKnkmnJCKhMAgA4BaJbACdMoGv/gKKKBJaFMdeZvGagAD+nsVbhED0v+tJGsJe9pQyd2kEi0w1+MuSKqY3mODA8phdszqKjP9V/RWgygiBV/QrfI5Hb6/ECJ6zkrBE9CyxhRz8K9sKVEytr8uVygK729GbFZp9lltIugz4pBlKDj9UmAgAAA==",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 6.765mm f/1.78",
+      "aperture": "f/1.78",
+      "shutter": "1/1261",
+      "iso": 80
+    },
+    "date": "2026-09-12T15:40:13-07:00",
+    "title": "Very Clear Instructions",
+    "place": "Secret Cove, Lake Tahoe",
+    "story": "The water was this blue. The sign was this direct. I kept my clothes on and my camera pointed at the lake.",
+    "roll": "tahoe",
+    "collections": [
+      "water",
+      "people"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-7297",
+    "hash": "028a2c515ddafd4231899eeaa47caa064f3fdd2c0da2e807022a783cdfe06d0e",
+    "src": "/captures/img-7297-2048.webp",
+    "sizes": {
+      "640": "/captures/img-7297-640.webp",
+      "1280": "/captures/img-7297-1280.webp",
+      "2048": "/captures/img-7297-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRrIAAABXRUJQVlA4IKYAAABwBACdASoQABUAPrVKnkmnJCKhMAgA4BaJbACdLwABORDmIGn7hx9dpFtyAAD9JmluJDZSO1NQJQfuHJ85mdo5ydl2mkBcaoJVp9lXsrttWZJ2CKOfM1QPqrkf+4GgnnknmpS+hQYjsRxB0ULEiTzyP5PdeTq88Z2Jvz5MCzP964jf8bI4LaUHTnLqLB90Pqxx1+0Kn/QzidPceOTxDM8c761GsSAA",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 6.765mm f/1.78",
+      "aperture": "f/1.78",
+      "shutter": "1/1172",
+      "iso": 64
+    },
+    "date": "2026-09-12T17:47:57-07:00",
+    "title": "Emerald Bay, Through the Pines",
+    "place": "Lake Tahoe, CA",
+    "story": "Framed by pines on purpose, I swear. The blue doesn't need a filter.",
+    "roll": "tahoe",
+    "collections": [
+      "water",
+      "mountains"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-7302",
+    "hash": "013f3992d11b4a273ab12ee9cda0c7e307a7cbe49de3c96629a37572c408801e",
+    "src": "/captures/img-7302-2048.webp",
+    "sizes": {
+      "640": "/captures/img-7302-640.webp",
+      "1280": "/captures/img-7302-1280.webp",
+      "2048": "/captures/img-7302-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAAAwBACdASoQABUAPrVInkmnJCKhMAgA4BaJagCdMoADTl90QgJJRJao39gA3TcDb19xTI3BuoSDZfKk+0Ms0hPiyFR7rxihZehM1UwkvAjkbWyKsWL/1q8jQgUupOmce+j6+5fJJWPJU9hAvyg8oKo6o880rRjnj/iVJm9QjIr6DLuGIJxa/oAJL+2/NuBWh38VWN4K5qW8/AIX2/yc3mMS36yAAA==",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 6.765mm f/1.78",
+      "aperture": "f/1.78",
+      "shutter": "1/995",
+      "iso": 64
+    },
+    "date": "2026-09-12T17:49:24-07:00",
+    "title": "Fannette Island",
+    "place": "Emerald Bay, Lake Tahoe",
+    "story": "Tahoe's only island, sitting in the middle of the bay like it owns the place. It kind of does.",
+    "roll": "tahoe",
+    "collections": [
+      "water",
+      "mountains"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-8391",
+    "hash": "6e4ada9b5e0541c0c3e558555f0c6c74a3289ab21b1e7844f9fca7b666d7ef84",
+    "src": "/captures/img-8391-2048.webp",
+    "sizes": {
+      "640": "/captures/img-8391-640.webp",
+      "1280": "/captures/img-8391-1280.webp",
+      "2048": "/captures/img-8391-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACQAwCdASoQABUAPrVInkmnJCKhMAgA4BaJQBOgAn3+E1HO/NLAAP5ZXErzDpGn1xxOTYfaJQYM2Fc9E1snOInG30wd9xQS99Qsx7dXDY9DnrnmAhrlGcPVBWP8BQwibESvi4QpB+nPU5QUbCjSa0/ewZosplP9SrqYy+hRcVkAAA==",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 6.765mm f/1.78",
+      "aperture": "f/1.78",
+      "shutter": "1/457",
+      "iso": 80
+    },
+    "date": "2025-01-02T16:41:26-08:00",
+    "title": "Marine Layer Crosswalk",
+    "place": "Southern California coast",
+    "story": "Fog rolled in mid-afternoon and turned a normal crosswalk into a movie set.",
+    "roll": "coast",
+    "collections": [
+      "city",
+      "people"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "img-8424",
+    "hash": "289cce4ea5b1d4fb53390958a8db5f60fbe92f1f0d5fe6f57a67ee411093a607",
+    "src": "/captures/img-8424-2048.webp",
+    "sizes": {
+      "640": "/captures/img-8424-640.webp",
+      "1280": "/captures/img-8424-1280.webp",
+      "2048": "/captures/img-8424-2048.webp"
+    },
+    "width": 2048,
+    "height": 2731,
+    "blurDataURL": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADwAwCdASoQABUAPrVKnkmnJCKhMAgA4BaJYwCdMoADY2wy5BTKA0ZQAP6L0vKtGv1AgLzk2y74oW38/RckhoTcfH7VM8QOC1BzMog3HuYENdwn2msyDGEnaCAExbPxHDqor/DUfxCp5UaJW53B/o6tNpzl5wIhs73RNfDWkoszVAV8AAA=",
+    "exif": {
+      "camera": "Apple iPhone 15 Pro Max",
+      "lens": "iPhone 15 Pro Max back triple camera 15.66mm f/2.8",
+      "aperture": "f/2.8",
+      "shutter": "1/60",
+      "iso": 160
+    },
+    "date": "2025-01-02T17:13:41-08:00",
+    "title": "Two Walking, One Ball",
+    "place": "Southern California coast",
+    "story": "Hazy beach, golden stripe, two people heading home with a ball. Didn't plan it, got lucky.",
+    "roll": "coast",
+    "collections": [
+      "sunsets",
+      "water",
+      "people"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "img-8935",
+    "hash": "72700b171f56540d9bc781bb74c09d5269931519ec3982a02e7712dc544b7ee9",
+    "src": "/captures/img-8935-2048.webp",
+    "sizes": {
+      "640": "/captures/img-8935-640.webp",
+      "1280": "/captures/img-8935-1280.webp",
+      "2048": "/captures/img-8935-2048.webp"
+    },
+    "width": 1240,
+    "height": 2022,
+    "blurDataURL": "data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAACQBACdASoQABoAPrVMoUqnJCMhsAgA4BaJZQCsAYu6tW12G5OZCCrT7pfT+wAA/vqzpV5cbTZpXyKb1d1OlyuLoGzX6mYrEAFGvTEgxGcBmk081T0M2HvuQP+YKmtVg7zx+Q5fPTI7sCH19qHL2ERDK+tRRonLXrP7zczyr0/jFTgg5fCMOT9PjTkaMe/ObqrMSB3aVORmlz5WQdfT55zBBvXHnBofX1g3Qg5mrSmnhooWQ4BTRoUkdMXsv6VrEfQAAA==",
+    "exif": {},
+    "date": "2023-04-30T18:06:42",
+    "title": "The Famous Sign",
+    "place": "Santa Monica Pier",
+    "story": "Pink car, blue car, road closed, a hundred people and that sign. Very Santa Monica.",
+    "roll": "coast",
+    "collections": [
+      "city",
+      "people"
+    ],
+    "favorite": false
+  },
+  {
+    "slug": "cathedral-rock",
+    "hash": "811e213dc6faadba261095ef89caa00fbc8d6d6923394495d385cf810c4fd2b9",
+    "src": "/captures/d7d6d93c-011c-47c5-81f0-146327c7f880-2048.webp",
+    "sizes": {
+      "640": "/captures/d7d6d93c-011c-47c5-81f0-146327c7f880-640.webp",
+      "1280": "/captures/d7d6d93c-011c-47c5-81f0-146327c7f880-1280.webp",
+      "2048": "/captures/d7d6d93c-011c-47c5-81f0-146327c7f880-2048.webp"
+    },
+    "width": 960,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAABQBACdASoQABUAPrVInkonJCKhsAgA4BaJYgCdMoADTND3pwaI9j9kKNBwAP3LJXhVsOXQierFT5L+tJMkIR8sM2cn8/JNnI0s1rim2tV3t5YWqy869OQQ8nYlCd5YE+MS7LTinvrF5F+IFDvDA6hoGwJqekj//TW04AAA",
+    "exif": {},
+    "date": "2025-05-21T01:05:31-07:00",
+    "title": "Cathedral Rock",
+    "place": "Sedona, AZ",
+    "story": "Red rock, blue sky, zero clouds. Sedona doesn't do subtle.",
+    "roll": "sedona",
+    "collections": [
+      "mountains"
+    ],
+    "favorite": true
+  },
+  {
+    "slug": "original-2023-07-08-180218-237",
+    "hash": "1d9cfb6e1ebe5a5df2554fa459b04fb8dfa58cdaecc30824d216244a9d0439ae",
+    "src": "/captures/original-2023-07-08-180218-237-2048.webp",
+    "sizes": {
+      "640": "/captures/original-2023-07-08-180218-237-640.webp",
+      "1280": "/captures/original-2023-07-08-180218-237-1280.webp",
+      "2048": "/captures/original-2023-07-08-180218-237-2048.webp"
+    },
+    "width": 1604,
+    "height": 2139,
+    "blurDataURL": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAAAQBACdASoQABUAPrVKnkonJCKhsAgA4BaJQBOmUABqpUW8F7oC7DreWADKcmlqeG855Y5hQpV23gkHsXUOk+a0JyXCgzAyfiWsxEILIs0QcjJrKZ/JQzmWI6ugtshmG6CqtrLpN9gAAAAA",
+    "exif": {
+      "camera": "Apple iPhone 11 Pro Max",
+      "lens": "iPhone 11 Pro Max back camera 4.25mm f/1.8",
+      "aperture": "f/1.8",
+      "shutter": "1/2755",
+      "iso": 32
+    },
+    "date": "2023-07-08T18:02:17-07:00",
+    "title": "Trail With a View",
+    "place": "Mount Rainier, WA",
+    "story": "The old camera date stamp says it was 2023. My legs say it was yesterday.",
+    "roll": "pnw",
+    "collections": [
+      "mountains",
+      "people"
+    ],
+    "favorite": false
   }
 ]
