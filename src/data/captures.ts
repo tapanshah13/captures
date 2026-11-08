@@ -26,7 +26,7 @@ export type Photo = {
   exif?: { camera?: string; lens?: string; aperture?: string; shutter?: string; iso?: number | string };
 };
 
-export type Roll = { id: string; name: string; meta: string; place: string; tagline: string; intro: string; cover: string };
+export type Roll = { id: string; name: string; meta: string; place: string; tagline: string; intro: string; cover: string; coverPosition?: string };
 
 const importedPhotos: Photo[] = importedData;
 const drafts = importedPhotos.filter((photo) => photo.title === "TODO");
@@ -54,7 +54,7 @@ function rollMeta(id: string, number: number) {
 
 export const rolls: Roll[] = [
   { id: "yosemite", name: "Yosemite", meta: rollMeta("yosemite", 1), place: "California, USA", tagline: "Three days, one granite wall, a lot of waterfalls.", intro: "Three days, one granite wall, a lot of waterfalls. Snow on the peaks, mist on my hoodie, and the same view everyone takes. Worth it every time.", cover: "img-0469" },
-  { id: "coast", name: "Saltwater Hours", meta: rollMeta("coast", 2), place: "SoCal coast", tagline: "Not one trip — a habit.", intro: "Not one trip — a habit. Most evenings that ended near the ocean, waiting for the sun to do its thing and everyone else to stop and watch.", cover: "img-1784" },
+  { id: "coast", name: "Saltwater Hours", meta: rollMeta("coast", 2), place: "SoCal coast", tagline: "Not one trip — a habit.", intro: "Not one trip — a habit. Most evenings that ended near the ocean, waiting for the sun to do its thing and everyone else to stop and watch.", cover: "img-1784", coverPosition: "center 15%" },
   { id: "yard", name: "Around the Block", meta: rollMeta("yard", 3), place: "Long Beach & LA", tagline: "Skies from parking lots, street corners and the walk out of class.", intro: "Skies from parking lots, street corners and the walk out of class. Proof you don't need to travel for a good sunset.", cover: "img-5603" },
   { id: "postcards", name: "Postcards", meta: rollMeta("postcards", 4), place: "Everywhere", tagline: "One-offs from far away.", intro: "One-offs from far away. A beer flight by the water in Seattle, a lake sunset back home in Udaipur.", cover: "img-4679" },
   { id: "pnw", name: "Pacific Northwest", meta: rollMeta("pnw", 5), place: "Washington", tagline: "Waterfalls, glacier lakes and one very famous market.", intro: "Waterfalls, glacier lakes and one very famous market. Rainier wearing a cloud hat, Diablo Lake doing its unreal blue, and neon at Pike Place after closing.", cover: "img-1814" },

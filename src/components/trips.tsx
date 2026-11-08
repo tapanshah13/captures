@@ -17,9 +17,9 @@ export function Trips({ tripId, open }: { tripId: string | null; open: (photo: P
       const cover = frames.find((photo) => photo.slug === item.cover) ?? frames[0];
       return <Link className="trip-card" href={tripUrl(item.id)} key={item.id}>
         <div className="trip-cover">
-          <PhotoImage photo={cover} sizes="(max-width: 760px) calc(100vw - 40px), 510px" />
+          <PhotoImage photo={cover} objectPosition={item.coverPosition} sizes="(width < 600px) calc(100vw - 40px), (width < 860px) calc((100vw - 58px) / 2), (max-width: 1080px) calc((100vw - 76px) / 3), 335px" />
           <div className="trip-cover-caption"><h3>{item.name} <span aria-hidden="true">▲</span></h3><p>{tripDateRange(item.id)} · {frames.length} frames</p></div>
-          <div className="trip-thumbs" aria-hidden="true">{frames.filter((photo) => photo.slug !== cover.slug).slice(0, 3).map((photo) => <div className="trip-thumb" key={photo.slug}><PhotoImage photo={photo} sizes="64px" /></div>)}</div>
+          <div className="trip-thumbs" aria-hidden="true">{frames.filter((photo) => photo.slug !== cover.slug).slice(0, 3).map((photo) => <div className="trip-thumb" key={photo.slug}><PhotoImage photo={photo} sizes="34px" /></div>)}</div>
         </div>
         <div className="trip-card-note"><p>{item.tagline}</p><span className="trip-stamp">{item.place.split(/[,·&]/)[0].trim()}<br />trip {String(index + 1).padStart(2, "0")}</span></div>
       </Link>;
@@ -36,7 +36,7 @@ export function Trips({ tripId, open }: { tripId: string | null; open: (photo: P
   return <article className="trip-page trips-enter" aria-labelledby="trip-title">
     <Link className="trip-back" href="/?view=trips">← all trips</Link>
     <div className="trip-cover trip-hero">
-      <PhotoImage photo={cover} sizes="(max-width: 1080px) calc(100vw - 40px), 1040px" loading="eager" />
+      <PhotoImage photo={cover} objectPosition={trip.coverPosition} sizes="(max-width: 1080px) calc(100vw - 40px), 1040px" loading="eager" />
       <div className="trip-cover-caption"><h2 id="trip-title">{trip.name} <span aria-hidden="true">▲</span></h2><p>{trip.place} · {dates}</p></div>
     </div>
     <div className="trip-context"><p className="trip-intro">{trip.intro}</p><dl className="trip-facts">
