@@ -67,7 +67,12 @@ export function Captures() {
   const router = useRouter();
   const search = useSearchParams();
   const rawView = search.get("view");
-  const view: View = rawView === "rolls" ? (SHOW_ROLLS ? "rolls" : "all") : rawView === "trips" ? "trips" : rawView === "all" ? "all" : "table";
+  const tripId = search.get("trip");
+  const view: View = rawView === "rolls" ? (SHOW_ROLLS ? "rolls" : "all") : (rawView === "trips" || (!rawView && tripId)) ? "trips" : rawView === "all" ? "all" : "table";
+  const isTripPage = view === "trips" && !!tripId;
+  useEffect(() => {
+    if (isTripPage) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [isTripPage, tripId]);
   const routePhoto = photos.find((item) => item.slug === search.get("photo"));
   const [closingPhoto, setClosingPhoto] = useState<Photo>();
   const photo = routePhoto ?? closingPhoto;
@@ -150,7 +155,7 @@ export function Captures() {
     <a className="skip-link" href="#main">Skip to captures</a>
     <header><div className="wrap"><a className="mark" href="https://tapanshah.me" aria-label="Tapan Shah — home"><BrandMark className="h-6 w-10" /></a><nav aria-label="Main navigation"><a href="https://tapanshah.me">Home</a><Link className="on" href="/" aria-current="page">Captures</Link><a href="https://tapanshah.me/blog">Blog</a><ThemeToggle /></nav></div></header>
     <main className="wrap" id="main">
-      <section className="hero" aria-labelledby="title"><div><h1 id="title">Captures<span className="hero-dot" aria-hidden="true">.</span></h1><p>Things I noticed, mostly on the way somewhere else. Pick one up, flip it over, there&apos;s usually a story.</p></div><div className="stats"><div className="photos-stat"><b><PhotoCount /></b><span className="stat-label"><span className="photos-dot" aria-hidden="true" />photos</span></div><div><b>{placeCounts.size}</b>places</div><div><b>{since}</b>since</div></div></section>
+      {!isTripPage && <section className="hero" aria-labelledby="title"><div><h1 id="title">Captures<span className="hero-dot" aria-hidden="true">.</span></h1><p>Things I noticed, mostly on the way somewhere else. Pick one up, flip it over, there&apos;s usually a story.</p></div><div className="stats"><div className="photos-stat"><b><PhotoCount /></b><span className="stat-label"><span className="photos-dot" aria-hidden="true" />photos</span></div><div><b>{placeCounts.size}</b>places</div><div><b>{since}</b>since</div></div></section>}
       <nav className="view-switcher" aria-label="Photo views">{([['table', 'Table'], ['trips', 'Trips'], ['rolls', 'Rolls'], ['all', 'Contact sheet']] as const).filter(([value]) => SHOW_ROLLS || value !== "rolls").map(([value, label]) => <button key={value} aria-pressed={view === value} onClick={() => router.push(url({ view: value, trip: null, photo: null }), { scroll: false })}><span className="tab-label">{view === value && <span className="tab-dot" aria-hidden="true" />}{label}</span></button>)}</nav>
       {photos.length === 0 && <p className="py-12 text-sm text-muted-foreground">No published photos yet.</p>}
       {view === "table" && <PrintTable surface={TABLE_SURFACE} open={open} />}
