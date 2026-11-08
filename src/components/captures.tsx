@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -15,6 +15,27 @@ import { TABLE_SURFACE, photos, rolls, photoDate, frameNumber, type Photo, type 
 type View = "table" | "rolls" | "all";
 const activeRolls = rolls.filter((roll) => photos.some((photo) => photo.roll === roll.id));
 const since = photos.map((photo) => photo.date.slice(0, 4)).filter((year) => /^\d{4}$/.test(year)).sort()[0] ?? "—";
+function PhotoCount() {
+  const countRef = useRef<HTMLSpanElement>(null);
+  useLayoutEffect(() => {
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const element = countRef.current;
+    if (!element || motion.matches || photos.length === 0) return;
+    let current = 0;
+    element.textContent = "0";
+    const timer = setInterval(() => {
+      element.textContent = String(++current);
+      if (current >= photos.length) clearInterval(timer);
+    }, 45);
+    const finish = () => {
+      if (motion.matches) { clearInterval(timer); element.textContent = String(photos.length); }
+    };
+    motion.addEventListener("change", finish);
+    return () => { clearInterval(timer); motion.removeEventListener("change", finish); };
+  }, []);
+  return <><span ref={countRef} aria-hidden="true">{photos.length}</span><span className="sr-only">{photos.length}</span></>;
+}
+
 export function Captures() {
   const router = useRouter();
   const search = useSearchParams();
@@ -102,7 +123,7 @@ export function Captures() {
     <a className="skip-link" href="#main">Skip to captures</a>
     <header><div className="wrap"><a className="mark" href="https://tapanshah.me" aria-label="Tapan Shah — home"><BrandMark className="h-6 w-10" /></a><nav aria-label="Main navigation"><a href="https://tapanshah.me">Home</a><Link className="on" href="/" aria-current="page">Captures</Link><a href="https://tapanshah.me/blog">Blog</a><ThemeToggle /></nav></div></header>
     <main className="wrap" id="main">
-      <section className="hero" aria-labelledby="title"><div><h1 id="title">Captures<span className="hero-dot" aria-hidden="true">.</span></h1><p>Things I noticed, mostly on the way somewhere else. Pick one up, flip it over, there&apos;s usually a story.</p></div><div className="stats"><div className="photos-stat"><b>{photos.length}</b><span className="stat-label"><span className="photos-dot" aria-hidden="true" />photos</span></div><div><b>{new Set(photos.map((item) => item.place)).size}</b>places</div><div><b>{since}</b>since</div></div></section>
+      <section className="hero" aria-labelledby="title"><div><h1 id="title">Captures<span className="hero-dot" aria-hidden="true">.</span></h1><p>Things I noticed, mostly on the way somewhere else. Pick one up, flip it over, there&apos;s usually a story.</p></div><div className="stats"><div className="photos-stat"><b><PhotoCount /></b><span className="stat-label"><span className="photos-dot" aria-hidden="true" />photos</span></div><div><b>{new Set(photos.map((item) => item.place)).size}</b>places</div><div><b>{since}</b>since</div></div></section>
       <nav className="view-switcher" aria-label="Photo views">{([['table', 'Table'], ['rolls', 'Rolls'], ['all', 'Contact sheet']] as const).map(([value, label]) => <button key={value} aria-pressed={view === value} onClick={() => router.push(url({ view: value }), { scroll: false })}><span className="tab-label">{view === value && <span className="tab-dot" aria-hidden="true" />}{label}</span></button>)}</nav>
       {photos.length === 0 && <p className="py-12 text-sm text-muted-foreground">No published photos yet.</p>}
       {view === "table" && <PrintTable surface={TABLE_SURFACE} open={open} />}

@@ -28,11 +28,13 @@ export function PhotoImage({ photo, className = "", sizes = "260px", develop = f
   }, [develop]);
   // Explicit candidates serve prebuilt WebPs directly, without another compression pass.
   return <div ref={ref} style={{ ...(className.includes("lb-img") && photo.width && photo.height ? { aspectRatio: `${photo.width} / ${photo.height}` } : {}), ...(photo.blurDataURL ? { backgroundImage: `url(${photo.blurDataURL})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }} className={`photo-image ${develop ? "develop" : "photo-fade"} g${photos.findIndex((item) => item.slug === photo.slug) % 12 + 1} ${className}`}>
-    {photo.src ? (renditions.length ? <img
+    {photo.src ? (renditions.length ? (
+      // eslint-disable-next-line @next/next/no-img-element -- pre-optimized WebP with srcset
+      <img
       src={photo.sizes![isPhotoView ? 2048 : 640]} srcSet={srcSet} sizes={sizes}
       alt={photo.title} loading={isPhotoView ? "eager" : "lazy"} decoding="async"
       style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
       onLoad={() => { if (!develop) ref.current?.classList.add("image-loaded"); }}
-    /> : <Image onLoad={() => { if (!develop) ref.current?.classList.add("image-loaded"); }} src={photo.src} alt={photo.title} fill sizes={sizes} unoptimized placeholder={photo.blurDataURL ? "blur" : "empty"} blurDataURL={photo.blurDataURL} />) : <span className="sr-only">Sample image: {photo.title}</span>}
+    />) : <Image onLoad={() => { if (!develop) ref.current?.classList.add("image-loaded"); }} src={photo.src} alt={photo.title} fill sizes={sizes} unoptimized placeholder={photo.blurDataURL ? "blur" : "empty"} blurDataURL={photo.blurDataURL} />) : <span className="sr-only">Sample image: {photo.title}</span>}
   </div>;
 }

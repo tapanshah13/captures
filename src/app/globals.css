@@ -349,7 +349,15 @@ header nav { align-items:center; }
 .hero h1,.section-h h2,.roll-head h3,.lb-meta h2,.lb-meta h4,.strip-caption b {
   font-family:var(--font-display); font-weight:400; letter-spacing:-.02em;
 }
-.hero-dot { color:var(--accent); }
+.hero-dot { color:var(--accent); animation:safelight-glow 2.4s ease .3s 1 both; }
+@keyframes safelight-glow {
+  0% { opacity:.3; text-shadow:none; }
+  30% { opacity:1; text-shadow:0 0 18px var(--accent),0 0 36px var(--accent); }
+  100% { opacity:1; text-shadow:none; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .hero-dot { animation:none; opacity:1; text-shadow:none; }
+}
 .stats b { font-family:var(--mono); }
 .stats .photos-stat b { color:var(--accent); }
 .tab-label,.stat-label { display:inline-flex; align-items:center; gap:6px; }
