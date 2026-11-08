@@ -179,6 +179,26 @@ function PilePrint({ photo, index, position, busy, flipped, flip, raise, open }:
   useLayoutEffect(() => {
     elementRef.current?.classList.remove("is-pressed");
   }, [flipped]);
+  const previousFlipped = useRef(flipped);
+  useLayoutEffect(() => {
+    if (previousFlipped.current === flipped) return;
+    const wasFlipped = previousFlipped.current;
+    previousFlipped.current = flipped;
+    const element = elementRef.current!;
+    const inner = element.querySelector<HTMLElement>(".pile-inner")!;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!element.classList.contains("is-flipping")) {
+      element.classList.add("is-flipping");
+      inner.style.transition = "none";
+      inner.style.transform = `rotateY(${wasFlipped ? 180 : 0}deg)`;
+      // Establish the starting face before transitioning to the new flip state.
+      inner.getBoundingClientRect();
+      inner.style.removeProperty("transition");
+      inner.style.removeProperty("transform");
+    }
+    const timer = setTimeout(() => element.classList.remove("is-flipping"), 700);
+    return () => clearTimeout(timer);
+  }, [flipped]);
   const instructionId = useId();
   const cancelClick = useCallback(() => { if (clickTimer.current !== null) clearTimeout(clickTimer.current); clickTimer.current = null; }, []);
   useEffect(() => {
@@ -229,7 +249,7 @@ function PilePrint({ photo, index, position, busy, flipped, flip, raise, open }:
     <span id={instructionId} className="sr-only">Space to flip, Enter to open</span>
     <div className="pile-lift">
     <div className="pile-inner">
-      <div className="pile-face pile-front" aria-hidden={flipped}><PhotoImage photo={photo} sizes="(max-width: 760px) 160px, 220px" /><span className="pile-title">{photo.title}</span>{index % 3 === 2 && <span className="pile-tape" />}</div>
+      <div className="pile-face pile-front" aria-hidden={flipped}><PhotoImage photo={photo} sizes={`${position.width - 18}px`} /><span className="pile-title">{photo.title}</span>{index % 3 === 2 && <span className="pile-tape" />}</div>
       <div className="pile-face pile-back" aria-hidden={!flipped} inert={!flipped}>
         <div className="pile-note"><strong>{photo.title}</strong><p>{photo.story}</p></div>
         <Link href={`/?view=table&photo=${encodeURIComponent(photo.slug)}`} tabIndex={flipped ? 0 : -1} onClick={(event) => { cancelClick(); if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); open(photo); } }}>open →</Link>

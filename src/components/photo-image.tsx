@@ -1,19 +1,17 @@
 "use client";
 
-import Image, { type ImageLoaderProps } from "next/image";
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { photos, type Photo } from "@/data/captures";
 
 export function PhotoImage({ photo, className = "", sizes = "260px", develop = false }: { photo: Photo; className?: string; sizes?: string; develop?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
-  const renditionLoader = photo.sizes ? ({ width }: ImageLoaderProps) => {
-    const available = ([640, 1280, 2048] as const).map((target) => ({
-      src: photo.sizes![target],
-      width: Math.min(target, photo.width ?? target),
-    }));
-    // Select the smallest rendition that meets the request, capped at the original.
-    return (available.find((image) => image.width >= width) ?? available[available.length - 1]).src;
-  } : undefined;
+  const isPhotoView = className.includes("lb-img");
+  const targets = isPhotoView ? [1280, 2048] as const : [640, 1280] as const;
+  const renditions = photo.sizes ? Array.from(new Map(targets.map((width) => [
+    Math.min(width, photo.width ?? width), photo.sizes![width],
+  ] as const)).entries()) : [];
+  const srcSet = renditions.map(([width, src]) => `${src} ${width}w`).join(", ");
   useEffect(() => {
     const element = ref.current;
     if (!element || !develop) return;
@@ -28,8 +26,13 @@ export function PhotoImage({ photo, className = "", sizes = "260px", develop = f
     observer.observe(element);
     return () => { observer.disconnect(); clearTimeout(timer); };
   }, [develop]);
-  // The loader serves prebuilt WebPs directly, for local paths and future Blob URLs.
-  return <div ref={ref} style={{ ...(className.includes("lb-img") && photo.width && photo.height ? { aspectRatio: `${photo.width} / ${photo.height}` } : {}), ...(!develop && photo.blurDataURL ? { backgroundImage: `url(${photo.blurDataURL})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }} className={`photo-image ${develop ? "develop" : "photo-fade"} g${photos.findIndex((item) => item.slug === photo.slug) % 12 + 1} ${className}`}>
-    {photo.src ? <Image onLoad={() => { if (!develop) ref.current?.classList.add("image-loaded"); }} src={photo.src} alt={photo.title} fill sizes={sizes} loader={renditionLoader} unoptimized={!renditionLoader && /^https?:\/\//.test(photo.src)} placeholder={photo.blurDataURL ? "blur" : "empty"} blurDataURL={photo.blurDataURL} /> : <span className="sr-only">Sample image: {photo.title}</span>}
+  // Explicit candidates serve prebuilt WebPs directly, without another compression pass.
+  return <div ref={ref} style={{ ...(className.includes("lb-img") && photo.width && photo.height ? { aspectRatio: `${photo.width} / ${photo.height}` } : {}), ...(photo.blurDataURL ? { backgroundImage: `url(${photo.blurDataURL})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }} className={`photo-image ${develop ? "develop" : "photo-fade"} g${photos.findIndex((item) => item.slug === photo.slug) % 12 + 1} ${className}`}>
+    {photo.src ? (renditions.length ? <img
+      src={photo.sizes![isPhotoView ? 2048 : 640]} srcSet={srcSet} sizes={sizes}
+      alt={photo.title} loading={isPhotoView ? "eager" : "lazy"} decoding="async"
+      style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+      onLoad={() => { if (!develop) ref.current?.classList.add("image-loaded"); }}
+    /> : <Image onLoad={() => { if (!develop) ref.current?.classList.add("image-loaded"); }} src={photo.src} alt={photo.title} fill sizes={sizes} unoptimized placeholder={photo.blurDataURL ? "blur" : "empty"} blurDataURL={photo.blurDataURL} />) : <span className="sr-only">Sample image: {photo.title}</span>}
   </div>;
 }

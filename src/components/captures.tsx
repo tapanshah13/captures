@@ -144,7 +144,7 @@ function FilmRoll({ roll, open }: { roll: Roll; open: (photo: Photo) => void }) 
       setCurrent(nearest);
     }}
     onKeyDown={(event) => { if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); go(current + (event.key === "ArrowLeft" ? -1 : 1)); } else if (event.key === "Enter" && event.target === event.currentTarget) { event.preventDefault(); open(items[current]); } }}>
-      {items.map((photo, i) => <button key={photo.slug} className={`cell ${current === i ? "mid" : ""}`} aria-label={`${photo.title}. ${current === i ? "Open photo" : "Center frame"}`} aria-current={current === i ? "true" : undefined} onClick={() => current === i ? open(photo) : go(i)}><PhotoImage develop photo={photo} /><span className="no">{String(i + 1).padStart(2, '0')}A</span></button>)}
+      {items.map((photo, i) => <button key={photo.slug} className={`cell ${current === i ? "mid" : ""}`} aria-label={`${photo.title}. ${current === i ? "Open photo" : "Center frame"}`} aria-current={current === i ? "true" : undefined} onClick={() => current === i ? open(photo) : go(i)}><PhotoImage develop photo={photo} sizes="(max-width: 760px) 210px, 260px" /><span className="no">{String(i + 1).padStart(2, '0')}A</span></button>)}
     </div></div><div className="strip-caption" aria-live="polite"><b>{items[current].title}</b><small>{items[current].place} · {photoDate(items[current].date)}</small></div><div className="roll-nav"><button aria-label={`Previous frame in ${roll.name}`} disabled={current === 0} onClick={() => go(current - 1)}>‹</button><button aria-label={`Next frame in ${roll.name}`} disabled={current === items.length - 1} onClick={() => go(current + 1)}>›</button></div></section>;
 }
 
@@ -165,5 +165,5 @@ function ContactSheet({ open }: { open: (photo: Photo) => void }) {
       <span className="filter-label" id={`filter-${label}`}>{label}</span>
       <div className="filter-chips">{values.map((value) => <button key={value} aria-pressed={filter?.group === label && filter.value === value} onClick={() => setFilter({ group: label, value })}>{value}<span>{photos.filter((photo) => matches(photo, label, value)).length}</span></button>)}</div>
     </div>)}
-  </div><div className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3 contact-grid">{visible.map((photo) => <button key={photo.slug} className="contact-frame" aria-label={`Open ${photo.title}`} onClick={() => open(photo)}><PhotoImage develop photo={photo} sizes="(max-width: 767px) 30vw, 170px" /><span className="frame-label"><span>{frameNumber(photo)}</span><span>{photo.place.split(',')[0]}</span></span></button>)}</div></section>;
+  </div><div className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3 contact-grid">{visible.map((photo) => <button key={photo.slug} className="contact-frame" aria-label={`Open ${photo.title}`} onClick={() => open(photo)}><PhotoImage develop photo={photo} sizes="(max-width: 767px) calc((100vw - 104px) / 3), (max-width: 1080px) calc((100vw - 196px) / 6), 147.34px" /><span className="frame-label"><span>{frameNumber(photo)}</span><span>{photo.place.split(',')[0]}</span></span></button>)}</div></section>;
 }
