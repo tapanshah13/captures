@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from "react";
 import { flushSync } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -138,35 +138,128 @@ export function Captures() {
 function FilmRoll({ roll, open }: { roll: Roll; open: (photo: Photo) => void }) {
   const items = photos.filter((photo) => photo.roll === roll.id);
   const [current, setCurrent] = useState(0);
+  const section = useRef<HTMLElement>(null);
   const strip = useRef<HTMLDivElement>(null);
-  const prepareStrip = () => {
+  const loupe = useRef<HTMLDivElement>(null);
+  const destination = useRef<number | null>(null);
+  const hideLoupe = useCallback(() => { if (loupe.current) loupe.current.hidden = true; }, []);
+  const activeFrame = useRef(0);
+  const positionStrip = useCallback((index: number, animate = false) => {
     const element = strip.current;
-    if (!element || element.classList.contains("navigated")) return;
-    const first = element.firstElementChild as HTMLElement;
-    const previousLeft = first.offsetLeft;
-    // Add room to center the first frame only after interaction, preserving the viewport.
-    element.style.scrollSnapType = "none";
-    element.classList.add("navigated");
-    element.scrollLeft += first.offsetLeft - previousLeft;
-    requestAnimationFrame(() => { element.style.scrollSnapType = ""; });
-  };
-  const go = (index: number) => {
-    prepareStrip();
+    const frame = element?.children[index] as HTMLElement | undefined;
+    if (!element || !frame) return;
+    const maxScroll = Math.max(0, element.scrollWidth - element.clientWidth);
+    const left = Math.max(0, Math.min(maxScroll, frame.offsetLeft + frame.offsetWidth / 2 - element.clientWidth / 2));
+    destination.current = index;
+    element.scrollTo({ left, behavior: animate && !matchMedia("(prefers-reduced-motion: reduce)").matches ? "smooth" : "instant" });
+  }, []);
+  const go = useCallback((index: number) => {
+    const selected = Math.max(0, Math.min(items.length - 1, index));
+    activeFrame.current = selected;
+    setCurrent(selected);
+    hideLoupe();
+    positionStrip(selected, true);
+  }, [items.length, positionStrip, hideLoupe]);
+  useLayoutEffect(() => {
     const element = strip.current;
-    const frame = element?.children[Math.max(0, Math.min(items.length - 1, index))] as HTMLElement | undefined;
-    if (element && frame) element.scrollTo({ left: frame.offsetLeft + frame.offsetWidth / 2 - element.clientWidth / 2, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+    if (!element) return;
+    const sheet = element.closest<HTMLElement>(".lightbox-sheet");
+    const panel = sheet?.parentElement;
+    const reposition = () => {
+      if (sheet && panel) sheet.style.setProperty("--sheet-rotation", sheet.offsetWidth > panel.clientWidth * .7 ? "-.3deg" : "-.6deg");
+      // The strip fills the sheet's content box, excluding its 24px side padding.
+      positionStrip(activeFrame.current);
+    };
+    const settle = () => {
+      if (destination.current === null) positionStrip(activeFrame.current, true);
+    };
+    reposition();
+    const observer = new ResizeObserver(reposition);
+    observer.observe(element);
+    if (sheet) observer.observe(sheet);
+    if (panel) observer.observe(panel);
+    Array.from(element.children).forEach((frame) => observer.observe(frame));
+    element.addEventListener("scrollend", settle);
+    return () => { observer.disconnect(); element.removeEventListener("scrollend", settle); };
+  }, [positionStrip]);
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || document.querySelector(".lb[open]")) return;
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      const target = event.target as HTMLElement;
+      if (target.closest("input,textarea,select,[contenteditable=true]")) return;
+      const focusedRoll = target.closest(".roll");
+      const visible = Array.from(document.querySelectorAll<HTMLElement>(".roll")).filter((roll) => {
+        const rect = roll.getBoundingClientRect();
+        return rect.bottom > 0 && rect.top < innerHeight;
+      });
+      const nearest = visible.sort((a, b) => {
+        const distance = (el: HTMLElement) => { const r = el.getBoundingClientRect(); return Math.abs((r.top + r.bottom) / 2 - innerHeight / 2); };
+        return distance(a) - distance(b);
+      })[0];
+      if ((focusedRoll && visible.includes(focusedRoll as HTMLElement) ? focusedRoll : nearest) !== section.current) return;
+      event.preventDefault();
+      go(current + (event.key === "ArrowLeft" ? -1 : 1));
+    };
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("scroll", hideLoupe, true);
+    return () => { window.removeEventListener("keydown", onKey); window.removeEventListener("scroll", hideLoupe, true); };
+  }, [current, go, hideLoupe]);
+  const magnify = (event: PointerEvent<HTMLButtonElement>, photo: Photo) => {
+    const lens = loupe.current;
+    if (!lens || event.pointerType !== "mouse" || !matchMedia("(min-width: 761px) and (hover: hover) and (pointer: fine)").matches || !photo.src) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const imageWidth = photo.width ?? 3, imageHeight = photo.height ?? 2;
+    const frameWidth = event.currentTarget.offsetWidth, frameHeight = event.currentTarget.offsetHeight;
+    // Undo the sheet's current tilt so the loupe samples the point under the cursor.
+    const dx = event.clientX - (rect.left + rect.width / 2), dy = event.clientY - (rect.top + rect.height / 2);
+    const sheet = event.currentTarget.closest<HTMLElement>(".lightbox-sheet")!;
+    const angle = -parseFloat(getComputedStyle(sheet).getPropertyValue("--sheet-rotation")) * Math.PI / 180;
+    const x = dx * Math.cos(angle) - dy * Math.sin(angle) + frameWidth / 2;
+    const y = dx * Math.sin(angle) + dy * Math.cos(angle) + frameHeight / 2;
+    const cover = Math.max(frameWidth / imageWidth, frameHeight / imageHeight);
+    const width = imageWidth * cover, height = imageHeight * cover;
+    lens.hidden = false;
+    Object.assign(lens.style, {
+      left: `${event.clientX - 80}px`, top: `${event.clientY - 80}px`,
+      backgroundImage: `url(${JSON.stringify(photo.sizes?.[2048] ?? photo.src)})`,
+      backgroundSize: `${width * 2.6}px ${height * 2.6}px`,
+      backgroundPosition: `${80 - (x + (width - frameWidth) / 2) * 2.6}px ${80 - (y + (height - frameHeight) / 2) * 2.6}px`,
+    });
   };
-  return <section className="roll" aria-label={roll.name}><div className="roll-head"><h3>{roll.name}</h3><span className="meta">{items.length} frames · {roll.meta}</span></div><div className="film"><span className="edge" aria-hidden="true">KODAK PORTRA 400 · {roll.meta.split('·')[1].trim()}</span><div ref={strip} className="strip" onPointerMove={(event) => { if (event.buttons || event.pointerType === "touch") prepareStrip(); }} onWheel={(event) => { if (event.deltaX || event.shiftKey) prepareStrip(); }} tabIndex={0} aria-label={`${roll.name}. Left and right arrows select a frame; Enter opens it.`}
-    onScroll={() => {
-      const el = strip.current!;
-      const center = el.scrollLeft + el.clientWidth / 2;
-      let nearest = 0, distance = Infinity;
-      Array.from(el.children).forEach((child, i) => { const frame = child as HTMLElement; const d = Math.abs(frame.offsetLeft + frame.offsetWidth / 2 - center); if (d < distance) { distance = d; nearest = i; } });
-      setCurrent(nearest);
-    }}
-    onKeyDown={(event) => { if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); go(current + (event.key === "ArrowLeft" ? -1 : 1)); } else if (event.key === "Enter" && event.target === event.currentTarget) { event.preventDefault(); open(items[current]); } }}>
-      {items.map((photo, i) => <button key={photo.slug} className={`cell ${current === i ? "mid" : ""}`} aria-label={`${photo.title}. ${current === i ? "Open photo" : "Center frame"}`} aria-current={current === i ? "true" : undefined} onClick={() => current === i ? open(photo) : go(i)}><PhotoImage develop photo={photo} sizes="(max-width: 760px) 210px, 260px" /><span className="no">{String(i + 1).padStart(2, '0')}A</span></button>)}
-    </div></div><div className="strip-caption" aria-live="polite"><b>{items[current].title}</b><small>{items[current].place} · {photoDate(items[current].date)}</small></div><div className="roll-nav"><button aria-label={`Previous frame in ${roll.name}`} disabled={current === 0} onClick={() => go(current - 1)}>‹</button><button aria-label={`Next frame in ${roll.name}`} disabled={current === items.length - 1} onClick={() => go(current + 1)}>›</button></div></section>;
+  const selected = items[current];
+  const frameWidth = (photo: Photo) => (photo.width ?? 3) < (photo.height ?? 2) ? 144 : 210;
+  return <section ref={section} className="roll" aria-label={roll.name}>
+    <div className="roll-head"><h3>{roll.name}</h3><span className="meta">{items.length} frames · {roll.meta}</span></div>
+    <div className="light-table surface-linen">
+      <div className="lightbox-sheet">
+      <div className="film"><span className="edge" aria-hidden="true">KODAK PORTRA 400 ▸ {items.length}</span>
+        <div ref={strip} className="strip" tabIndex={0} aria-label={`${roll.name}. Left and right arrows select a frame; Enter opens it.`}
+          onPointerDown={() => { destination.current = null; hideLoupe(); }}
+          onWheel={() => { destination.current = null; }}
+          onScroll={() => {
+            const el = strip.current!;
+            if (destination.current !== null || el.scrollWidth <= el.clientWidth) return;
+            const center = el.scrollLeft + el.clientWidth / 2;
+            let nearest = 0, distance = Infinity;
+            Array.from(el.children).forEach((child, i) => { const frame = child as HTMLElement; const d = Math.abs(frame.offsetLeft + frame.offsetWidth / 2 - center); if (d < distance) { distance = d; nearest = i; } });
+            activeFrame.current = nearest;
+            setCurrent(nearest);
+          }}
+          onKeyDown={(event) => { if (event.key === "Enter" && event.target === event.currentTarget) { event.preventDefault(); open(selected); } }}>
+          {items.map((photo, i) => <button key={photo.slug} className={`cell ${frameWidth(photo) === 144 ? "cell-portrait" : ""} ${current === i ? "mid" : ""}`} aria-label={`${photo.title}. ${current === i ? "Open photo" : "Select frame"}`} aria-current={current === i ? "true" : undefined}
+            onClick={() => { hideLoupe(); if (current === i) open(photo); else go(i); }} onDoubleClick={() => { hideLoupe(); open(photo); }}
+            onPointerMove={(event) => magnify(event, photo)} onPointerLeave={hideLoupe} onBlur={hideLoupe}>
+            <PhotoImage photo={photo} sizes={`${frameWidth(photo)}px`} loading={i < 2 ? "eager" : "lazy"} /><span className="no">{String(i + 1).padStart(2, '0')}A ▸</span>
+          </button>)}
+        </div>
+      </div>
+      </div>
+      <div className="strip-caption" aria-live="polite"><b>{selected.title}</b><small>{selected.place} · {photoDate(selected.date)} · FRAME {String(current + 1).padStart(2, '0')}A</small></div>
+      <div className="roll-nav"><button aria-label={`Previous frame in ${roll.name}`} disabled={current === 0} onClick={() => go(current - 1)}>‹</button><button className="roll-open" onClick={() => open(selected)}>open</button><button aria-label={`Next frame in ${roll.name}`} disabled={current === items.length - 1} onClick={() => go(current + 1)}>›</button></div>
+    </div>
+    <div ref={loupe} className="roll-loupe" hidden aria-hidden="true" />
+  </section>;
 }
 
 function ContactSheet({ open }: { open: (photo: Photo) => void }) {
