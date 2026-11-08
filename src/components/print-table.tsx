@@ -58,7 +58,9 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
     // Thirty candidates per print; shrink only when the mat cannot fit readable prints.
     for (let scale = 1; scale >= .5; scale -= .04) {
       next = [];
-      for (const index of order) {
+      const printsPerRow = Math.max(1, Math.min(order.length, Math.floor(width / (Math.min(mobile ? 160 : 220, width * .65) * scale + 24))));
+      const bandWidth = width / printsPerRow;
+      for (const [rank, index] of order.entries()) {
         const photo = pile[index];
         const landscape = (photo.width ?? 3) > (photo.height ?? 4);
         const cardWidth = Math.min(mobile ? (landscape ? 160 : 120) : (landscape ? 220 : 170), width * .65) * scale;
@@ -67,7 +69,11 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
           const p = { x: 0, y: 0, width: cardWidth, height: (cardWidth - 18) / (landscape ? 1.5 : .8) + 43, rotation: Math.random() * 28 - 14 };
           const min = clampPosition(-width, -height, p, width, height);
           const max = clampPosition(width, height, p, width, height);
-          const candidate = { ...p, x: min.x + Math.random() * (max.x - min.x), y: min.y + Math.random() * (max.y - min.y) };
+          // Distribute print centers across every band before starting another row.
+          const band = rank % printsPerRow;
+          const minX = Math.max(min.x, band * bandWidth - cardWidth / 2);
+          const maxX = Math.min(max.x, (band + 1) * bandWidth - cardWidth / 2);
+          const candidate = { ...p, x: minX + Math.random() * (maxX - minX), y: min.y + Math.random() * (max.y - min.y) };
           const score = visibilityScore([...next, candidate]);
           const cost = score.penalty * 10000 + score.overlap;
           if (cost < bestScore) { best = candidate; bestScore = cost; }
