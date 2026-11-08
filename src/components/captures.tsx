@@ -13,6 +13,32 @@ import { transitionPhoto, restoreTransitionPrint } from "./photo-transition";
 import { PhotoDialog } from "./photo-dialog";
 import { TABLE_SURFACE, SHOW_ROLLS, photos, rolls, photoDate, frameNumber, type Photo, type Roll } from "@/data/captures";
 
+const cityLabels: Record<string, string> = {
+  "Rakkan Ramen": "Long Beach",
+  "Starbucks Reserve, Chicago": "Chicago",
+  "Willis Tower, Chicago": "Chicago",
+  "360 Chicago, IL": "Chicago",
+  "Disney California Adventure": "Anaheim",
+  "Secret Cove, Lake Tahoe": "Lake Tahoe",
+  "Emerald Bay, Lake Tahoe": "Lake Tahoe",
+  "Santa Monica Pier": "Santa Monica",
+  "LA Memorial Coliseum": "Los Angeles",
+  "Hollywood, Los Angeles": "Los Angeles",
+  "San Pedro, Los Angeles": "Los Angeles",
+  "South Bay, Los Angeles": "Los Angeles",
+  "Pike Place Market, Seattle": "Seattle",
+  "Jewel Changi, Singapore": "Singapore",
+  "Yosemite National Park": "Yosemite",
+  "Southern California coast": "SoCal coast",
+};
+const cityPlace = (place: string) => cityLabels[place] ?? place.split(",")[0].trim();
+const placeCounts = new Map<string, number>();
+for (const photo of photos) {
+  const city = cityPlace(photo.place);
+  if (city && city.toUpperCase() !== "TODO") placeCounts.set(city, (placeCounts.get(city) ?? 0) + 1);
+}
+const commonPlaces = [...placeCounts.keys()].sort((a, b) => placeCounts.get(b)! - placeCounts.get(a)! || a.localeCompare(b));
+
 type View = "table" | "trips" | "rolls" | "all";
 const activeRolls = rolls.filter((roll) => photos.some((photo) => photo.roll === roll.id));
 const since = photos.map((photo) => photo.date.slice(0, 4)).filter((year) => /^\d{4}$/.test(year)).sort()[0] ?? "—";
@@ -124,7 +150,7 @@ export function Captures() {
     <a className="skip-link" href="#main">Skip to captures</a>
     <header><div className="wrap"><a className="mark" href="https://tapanshah.me" aria-label="Tapan Shah — home"><BrandMark className="h-6 w-10" /></a><nav aria-label="Main navigation"><a href="https://tapanshah.me">Home</a><Link className="on" href="/" aria-current="page">Captures</Link><a href="https://tapanshah.me/blog">Blog</a><ThemeToggle /></nav></div></header>
     <main className="wrap" id="main">
-      <section className="hero" aria-labelledby="title"><div><h1 id="title">Captures<span className="hero-dot" aria-hidden="true">.</span></h1><p>Things I noticed, mostly on the way somewhere else. Pick one up, flip it over, there&apos;s usually a story.</p></div><div className="stats"><div className="photos-stat"><b><PhotoCount /></b><span className="stat-label"><span className="photos-dot" aria-hidden="true" />photos</span></div><div><b>{new Set(photos.map((item) => item.place)).size}</b>places</div><div><b>{since}</b>since</div></div></section>
+      <section className="hero" aria-labelledby="title"><div><h1 id="title">Captures<span className="hero-dot" aria-hidden="true">.</span></h1><p>Things I noticed, mostly on the way somewhere else. Pick one up, flip it over, there&apos;s usually a story.</p></div><div className="stats"><div className="photos-stat"><b><PhotoCount /></b><span className="stat-label"><span className="photos-dot" aria-hidden="true" />photos</span></div><div><b>{placeCounts.size}</b>places</div><div><b>{since}</b>since</div></div></section>
       <nav className="view-switcher" aria-label="Photo views">{([['table', 'Table'], ['trips', 'Trips'], ['rolls', 'Rolls'], ['all', 'Contact sheet']] as const).filter(([value]) => SHOW_ROLLS || value !== "rolls").map(([value, label]) => <button key={value} aria-pressed={view === value} onClick={() => router.push(url({ view: value, trip: null, photo: null }), { scroll: false })}><span className="tab-label">{view === value && <span className="tab-dot" aria-hidden="true" />}{label}</span></button>)}</nav>
       {photos.length === 0 && <p className="py-12 text-sm text-muted-foreground">No published photos yet.</p>}
       {view === "table" && <PrintTable surface={TABLE_SURFACE} open={open} />}
@@ -265,7 +291,8 @@ function FilmRoll({ roll, open }: { roll: Roll; open: (photo: Photo) => void }) 
 }
 
 function ContactSheet({ open }: { open: (photo: Photo) => void }) {
-  type FilterGroup = "Places" | "Tags" | "Years";
+  type FilterGroup = "Trips" | "Places" | "Tags" | "Years";
+  const [showAllPlaces, setShowAllPlaces] = useState(false);
   const [filter, setFilter] = useState<{ group: FilterGroup; value: string } | null>(null);
   const grid = useRef<HTMLDivElement>(null);
   const previousFilter = useRef(filter);
@@ -280,23 +307,20 @@ function ContactSheet({ open }: { open: (photo: Photo) => void }) {
     ], { duration: 200, delay: index * 15, easing: "ease-out", fill: "backwards" }));
     return () => animations.forEach((animation) => animation.cancel());
   }, [filter]);
-  const shortPlace = (place: string) => {
-    const label = place.split(",")[0].trim();
-    return label === "Yosemite National Park" ? "Yosemite" : label === "Southern California coast" ? "SoCal coast" : label;
-  };
   const validValue = (value: string) => value.trim() !== "" && value.trim().toUpperCase() !== "TODO";
   const groups: { label: FilterGroup; values: string[] }[] = [
-    { label: "Places", values: [...new Set(photos.map((photo) => photo.place).filter(validValue))] },
+    { label: "Trips", values: activeRolls.map((roll) => roll.id) },
+    { label: "Places", values: showAllPlaces ? commonPlaces : commonPlaces.slice(0, 8) },
     { label: "Tags", values: [...new Set(photos.flatMap((photo) => photo.collections).filter(validValue))] },
     { label: "Years", values: [...new Set(photos.map((photo) => photo.date.slice(0, 4)).filter((year) => /^\d{4}$/.test(year)))].sort().reverse() }
   ];
-  const matches = (photo: Photo, group: FilterGroup, value: string) => group === "Places" ? photo.place === value : group === "Tags" ? photo.collections.includes(value) : photo.date.slice(0, 4) === value;
+  const matches = (photo: Photo, group: FilterGroup, value: string) => group === "Trips" ? photo.roll === value : group === "Places" ? cityPlace(photo.place) === value : group === "Tags" ? photo.collections.includes(value) : photo.date.slice(0, 4) === value;
   const visible = filter ? photos.filter((photo) => matches(photo, filter.group, filter.value)) : photos;
-  return <section aria-labelledby="sheet-heading"><div className="section-h"><h2 id="sheet-heading">Contact sheet</h2><span aria-live="polite">{visible.length} of {photos.length} frames</span></div><div className="filters" role="group" aria-label="Filter by place, collection or year">
+  return <section aria-labelledby="sheet-heading"><div className="section-h"><h2 id="sheet-heading">Contact sheet</h2><span aria-live="polite">{visible.length} of {photos.length} frames</span></div><div className="filters" role="group" aria-label="Filter by trip, place, collection or year">
     <div><button aria-pressed={filter === null} onClick={() => setFilter(null)}>All<span>{photos.length}</span></button></div>
     {groups.map(({ label, values }) => <div className="filter-row" role="group" aria-labelledby={`filter-${label}`} key={label}>
       <span className="filter-label" id={`filter-${label}`}>{label}</span>
-      <div className="filter-chips">{values.map((value) => <button key={value} aria-pressed={filter?.group === label && filter.value === value} onClick={() => setFilter({ group: label, value })}>{label === "Places" ? shortPlace(value) : value}<span>{photos.filter((photo) => matches(photo, label, value)).length}</span></button>)}</div>
+      <div className="filter-chips">{values.map((value) => <button key={value} aria-pressed={filter?.group === label && filter.value === value} onClick={() => setFilter({ group: label, value })}>{label === "Trips" ? activeRolls.find((roll) => roll.id === value)?.name : value}<span>{photos.filter((photo) => matches(photo, label, value)).length}</span></button>)}{label === "Places" && commonPlaces.length > 8 && <button aria-expanded={showAllPlaces} onClick={() => setShowAllPlaces((expanded) => !expanded)}>{showAllPlaces ? "Show less" : `+ ${commonPlaces.length - 8} more`}</button>}</div>
     </div>)}
-  </div><div ref={grid} className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3 contact-grid">{visible.map((photo) => <button key={photo.slug} className={`contact-frame${photo.favorite ? " is-favorite" : ""}`} aria-label={`Open ${photo.title}`} onClick={() => open(photo)}><PhotoImage photo={photo} sizes="(max-width: 767px) calc((100vw - 104px) / 3), (max-width: 1080px) calc((100vw - 196px) / 6), 147.34px" /><span className="frame-label"><span>{frameNumber(photo)}</span><span>{shortPlace(photo.place)}</span></span></button>)}</div></section>;
+  </div><div ref={grid} className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3 contact-grid">{visible.map((photo) => <button key={photo.slug} className={`contact-frame${photo.favorite ? " is-favorite" : ""}`} aria-label={`Open ${photo.title}`} onClick={() => open(photo)}><PhotoImage photo={photo} sizes="(max-width: 767px) calc((100vw - 104px) / 3), (max-width: 1080px) calc((100vw - 196px) / 6), 147.34px" /><span className="frame-label"><span>{frameNumber(photo)}</span><span>{cityPlace(photo.place)}</span></span></button>)}</div></section>;
 }

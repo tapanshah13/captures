@@ -56,7 +56,8 @@
     "collections": [
       "mountains"
     ],
-    "favorite": true
+    "favorite": true,
+    "pinned": true
   },
   {
     "slug": "img-0490",
@@ -772,7 +773,8 @@
       "water",
       "people"
     ],
-    "favorite": true
+    "favorite": true,
+    "pinned": true
   },
   {
     "slug": "img-1814",
@@ -1159,7 +1161,8 @@
       "city",
       "sunsets"
     ],
-    "favorite": true
+    "favorite": true,
+    "pinned": true
   },
   {
     "slug": "img-4679",
@@ -1551,7 +1554,8 @@
     "collections": [
       "mountains"
     ],
-    "favorite": true
+    "favorite": true,
+    "pinned": true
   },
   {
     "slug": "img-7289",

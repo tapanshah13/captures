@@ -5,8 +5,30 @@ import Link from "next/link";
 import { photos, type Photo } from "@/data/captures";
 import { PhotoImage } from "./photo-image";
 
-const dateValue = (photo: Photo) => Date.parse(photo.date) || 0;
-const pile = photos.filter((photo) => photo.favorite).sort((a, b) => dateValue(b) - dateValue(a));
+const favorites = photos.filter((photo) => photo.favorite);
+function pickPile() {
+  const selected = photos.filter((photo) => photo.pinned).slice(0, 12);
+  const shuffled = favorites.filter((photo) => !photo.pinned);
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  const rollCounts = new Map<string, number>();
+  for (const photo of selected) rollCounts.set(photo.roll, (rollCounts.get(photo.roll) ?? 0) + 1);
+  for (const photo of shuffled) {
+    if (selected.length >= 12) break;
+    const count = rollCounts.get(photo.roll) ?? 0;
+    if (count >= 2) continue;
+    selected.push(photo);
+    rollCounts.set(photo.roll, count + 1);
+  }
+  // Relax the trip limit only when it prevents filling the table.
+  for (const photo of shuffled) {
+    if (selected.length >= 12) break;
+    if (!selected.includes(photo)) selected.push(photo);
+  }
+  return selected;
+}
 type Position = { x: number; y: number; rotation: number; width: number; height: number };
 
 // Reserve space for rotated corners, lifted scale and tape, not just the card rectangle.
@@ -41,6 +63,8 @@ function visibilityScore(positions: Position[]) {
 
 export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | "linen"; open: (photo: Photo) => void }) {
   const board = useRef<HTMLDivElement>(null);
+  const [pile, setPile] = useState<Photo[]>([]);
+  const currentPile = useRef<Photo[]>([]);
   const top = useRef(20);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const [positions, setPositions] = useState<Position[]>([]);
@@ -49,7 +73,7 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
   const [flipped, setFlipped] = useState<Record<string, boolean>>({});
   const [shuffling, setShuffling] = useState(false);
   const animating = useRef(false);
-  const makeScatter = useCallback((order = pile.map((_, i) => i)) => {
+  const makeScatter = useCallback((order = currentPile.current.map((_, i) => i)) => {
     const element = board.current;
     if (!element) return [];
     const width = element.clientWidth, height = element.clientHeight;
@@ -61,7 +85,7 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
       const printsPerRow = Math.max(1, Math.min(order.length, Math.floor(width / (Math.min(mobile ? 160 : 220, width * .65) * scale + 24))));
       const bandWidth = width / printsPerRow;
       for (const [rank, index] of order.entries()) {
-        const photo = pile[index];
+        const photo = currentPile.current[index];
         const landscape = (photo.width ?? 3) > (photo.height ?? 4);
         const cardWidth = Math.min(mobile ? (landscape ? 160 : 120) : (landscape ? 220 : 170), width * .65) * scale;
         let best: Position | undefined, bestScore = Infinity;
@@ -100,7 +124,11 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
     const element = board.current;
     if (!element) return;
     const frame = requestAnimationFrame(() => {
-      if (initialLayout.current === null) initialLayout.current = makeScatter();
+      if (initialLayout.current === null) {
+        currentPile.current = pickPile();
+        initialLayout.current = makeScatter();
+      }
+      setPile(currentPile.current);
       lastWidth.current = element.clientWidth;
       setPositions(initialLayout.current);
     });
@@ -123,7 +151,9 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
   const shuffle = () => {
     if (animating.current || !board.current) return;
     timers.current.forEach(clearTimeout);
-    const order = pile.map((_, i) => i);
+    currentPile.current = pickPile();
+    setPile(currentPile.current);
+    const order = currentPile.current.map((_, i) => i);
     for (let i = order.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [order[i], order[j]] = [order[j], order[i]];
@@ -152,7 +182,7 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
   };
   return <section className="table-board" aria-label={`${surface === "linen" ? "Linen" : surface === "mat-tinted" ? "Tinted mat" : "Cutting mat"} photo pile`}>
     <div ref={board} className={`pile-surface ${surface === "mat-tinted" ? "surface-mat surface-mat-tinted" : `surface-${surface}`}`}><p className="sr-only">Drag prints to move them. Click or tap to flip; double-click or double-tap to open. Space to flip, Enter to open; use arrow keys to move a focused print.</p>
-      <div className={`pile-stack${shuffling ? " is-shuffling" : ""}`} inert={shuffling}>{pile.map((photo, i) => positions[i] && <PilePrint key={photo.slug} photo={photo} index={i} position={positions[i]} busy={shuffling} flipped={!!flipped[photo.slug]} flip={() => flip(photo.slug)} raise={() => ++top.current} open={open} />)}</div>
+      <div className={`pile-stack${shuffling ? " is-shuffling" : ""}`} inert={shuffling}>{pile.map((photo, i) => positions[i] && <PilePrint key={i} photo={photo} index={i} position={positions[i]} busy={shuffling} flipped={!!flipped[photo.slug]} flip={() => flip(photo.slug)} raise={() => ++top.current} open={open} />)}</div>
       {surface !== "linen" && <span className="mat-label">A2 · SELF-HEALING · 1 SQ = 1 IN</span>}
     </div>
     <div className="pile-controls"><button className="shuffle-button" disabled={shuffling} onClick={shuffle}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h3c5 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c2 0 3-2 4-4m4-4c1-2 2-4 4-4h3m-4-4 4 4-4 4" /></svg>shuffle pile</button><button disabled={shuffling} onClick={flipAll}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6" /></svg>flip all</button><span>drag · click to flip · double-click to open</span></div>

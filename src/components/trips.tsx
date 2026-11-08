@@ -2,7 +2,9 @@ import Link from "next/link";
 import { photos, rolls, tripDateRange, frameNumber, type Photo } from "@/data/captures";
 import { PhotoImage } from "./photo-image";
 
-const trips = rolls.filter((trip) => photos.some((photo) => photo.roll === trip.id));
+const newestPhotoDate = (id: string) => Math.max(0, ...photos.filter((photo) => photo.roll === id).map((photo) => Date.parse(photo.date) || 0));
+const trips = rolls.filter((trip) => photos.some((photo) => photo.roll === trip.id))
+  .sort((a, b) => newestPhotoDate(b.id) - newestPhotoDate(a.id));
 const tripUrl = (id: string) => `/?view=trips&trip=${encodeURIComponent(id)}`;
 
 export function Trips({ tripId, open }: { tripId: string | null; open: (photo: Photo) => void }) {
