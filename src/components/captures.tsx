@@ -4,15 +4,16 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type Pointer
 import { flushSync } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { Trips } from "./trips";
 import { PrintTable } from "./print-table";
 import { ThemeToggle } from "./theme-toggle";
 import { BrandMark } from "./brand-mark";
 import { PhotoImage } from "./photo-image";
 import { transitionPhoto, restoreTransitionPrint } from "./photo-transition";
 import { PhotoDialog } from "./photo-dialog";
-import { TABLE_SURFACE, photos, rolls, photoDate, frameNumber, type Photo, type Roll } from "@/data/captures";
+import { TABLE_SURFACE, SHOW_ROLLS, photos, rolls, photoDate, frameNumber, type Photo, type Roll } from "@/data/captures";
 
-type View = "table" | "rolls" | "all";
+type View = "table" | "trips" | "rolls" | "all";
 const activeRolls = rolls.filter((roll) => photos.some((photo) => photo.roll === roll.id));
 const since = photos.map((photo) => photo.date.slice(0, 4)).filter((year) => /^\d{4}$/.test(year)).sort()[0] ?? "—";
 function PhotoCount() {
@@ -40,7 +41,7 @@ export function Captures() {
   const router = useRouter();
   const search = useSearchParams();
   const rawView = search.get("view");
-  const view: View = rawView === "rolls" || rawView === "all" ? rawView : "table";
+  const view: View = rawView === "rolls" ? (SHOW_ROLLS ? "rolls" : "all") : rawView === "trips" ? "trips" : rawView === "all" ? "all" : "table";
   const routePhoto = photos.find((item) => item.slug === search.get("photo"));
   const [closingPhoto, setClosingPhoto] = useState<Photo>();
   const photo = routePhoto ?? closingPhoto;
@@ -66,7 +67,7 @@ export function Captures() {
   const open = (item: Photo) => {
     if (transitionBusy.current) return;
     lastFocus.current = document.activeElement as HTMLElement;
-    const print = lastFocus.current?.closest<HTMLElement>(".pile-print");
+    const print = view === "all" || view === "trips" ? null : lastFocus.current?.closest<HTMLElement>(".pile-print");
     originPrint.current = print && !print.classList.contains("is-flipped") ? print.querySelector<HTMLElement>(".photo-image") : null;
     openedHere.current = true;
     transitionBusy.current = true;
@@ -124,14 +125,15 @@ export function Captures() {
     <header><div className="wrap"><a className="mark" href="https://tapanshah.me" aria-label="Tapan Shah — home"><BrandMark className="h-6 w-10" /></a><nav aria-label="Main navigation"><a href="https://tapanshah.me">Home</a><Link className="on" href="/" aria-current="page">Captures</Link><a href="https://tapanshah.me/blog">Blog</a><ThemeToggle /></nav></div></header>
     <main className="wrap" id="main">
       <section className="hero" aria-labelledby="title"><div><h1 id="title">Captures<span className="hero-dot" aria-hidden="true">.</span></h1><p>Things I noticed, mostly on the way somewhere else. Pick one up, flip it over, there&apos;s usually a story.</p></div><div className="stats"><div className="photos-stat"><b><PhotoCount /></b><span className="stat-label"><span className="photos-dot" aria-hidden="true" />photos</span></div><div><b>{new Set(photos.map((item) => item.place)).size}</b>places</div><div><b>{since}</b>since</div></div></section>
-      <nav className="view-switcher" aria-label="Photo views">{([['table', 'Table'], ['rolls', 'Rolls'], ['all', 'Contact sheet']] as const).map(([value, label]) => <button key={value} aria-pressed={view === value} onClick={() => router.push(url({ view: value }), { scroll: false })}><span className="tab-label">{view === value && <span className="tab-dot" aria-hidden="true" />}{label}</span></button>)}</nav>
+      <nav className="view-switcher" aria-label="Photo views">{([['table', 'Table'], ['trips', 'Trips'], ['rolls', 'Rolls'], ['all', 'Contact sheet']] as const).filter(([value]) => SHOW_ROLLS || value !== "rolls").map(([value, label]) => <button key={value} aria-pressed={view === value} onClick={() => router.push(url({ view: value, trip: null, photo: null }), { scroll: false })}><span className="tab-label">{view === value && <span className="tab-dot" aria-hidden="true" />}{label}</span></button>)}</nav>
       {photos.length === 0 && <p className="py-12 text-sm text-muted-foreground">No published photos yet.</p>}
       {view === "table" && <PrintTable surface={TABLE_SURFACE} open={open} />}
       {view === "rolls" && <section aria-labelledby="rolls-heading"><div className="section-h"><h2 id="rolls-heading">Rolls</h2><span>one roll per trip · swipe or use arrows</span></div>{activeRolls.map((roll) => <FilmRoll key={roll.id} roll={roll} open={open} />)}</section>}
+      {view === "trips" && <Trips key={search.get("trip") ?? "list"} tripId={search.get("trip")} open={open} />}
       {view === "all" && <ContactSheet open={open} />}
       <footer>© 2026 <a href="https://tapanshah.me">Tapan Shah</a> · if you scrolled this far, <a href="https://tapanshah.me/#contact">we should probably talk.</a></footer>
     </main>
-    {photo && <PhotoDialog photo={photo} close={() => close()} navigate={navigate} restoreFocus={restoreFocus} />}
+    {photo && <PhotoDialog photo={photo} develop={view === "table" || view === "rolls"} close={() => close()} navigate={navigate} restoreFocus={restoreFocus} />}
   </>;
 }
 
@@ -265,6 +267,23 @@ function FilmRoll({ roll, open }: { roll: Roll; open: (photo: Photo) => void }) 
 function ContactSheet({ open }: { open: (photo: Photo) => void }) {
   type FilterGroup = "Places" | "Tags" | "Years";
   const [filter, setFilter] = useState<{ group: FilterGroup; value: string } | null>(null);
+  const grid = useRef<HTMLDivElement>(null);
+  const previousFilter = useRef(filter);
+  useEffect(() => {
+    const previous = previousFilter.current;
+    previousFilter.current = filter;
+    if (previous?.group === filter?.group && previous?.value === filter?.value) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const animations = Array.from(grid.current?.children ?? []).map((frame, index) => frame.animate([
+      { opacity: 0, transform: "translateY(4px)" },
+      { opacity: 1, transform: "translateY(0)" },
+    ], { duration: 200, delay: index * 15, easing: "ease-out", fill: "backwards" }));
+    return () => animations.forEach((animation) => animation.cancel());
+  }, [filter]);
+  const shortPlace = (place: string) => {
+    const label = place.split(",")[0].trim();
+    return label === "Yosemite National Park" ? "Yosemite" : label === "Southern California coast" ? "SoCal coast" : label;
+  };
   const validValue = (value: string) => value.trim() !== "" && value.trim().toUpperCase() !== "TODO";
   const groups: { label: FilterGroup; values: string[] }[] = [
     { label: "Places", values: [...new Set(photos.map((photo) => photo.place).filter(validValue))] },
@@ -277,7 +296,7 @@ function ContactSheet({ open }: { open: (photo: Photo) => void }) {
     <div><button aria-pressed={filter === null} onClick={() => setFilter(null)}>All<span>{photos.length}</span></button></div>
     {groups.map(({ label, values }) => <div className="filter-row" role="group" aria-labelledby={`filter-${label}`} key={label}>
       <span className="filter-label" id={`filter-${label}`}>{label}</span>
-      <div className="filter-chips">{values.map((value) => <button key={value} aria-pressed={filter?.group === label && filter.value === value} onClick={() => setFilter({ group: label, value })}>{value}<span>{photos.filter((photo) => matches(photo, label, value)).length}</span></button>)}</div>
+      <div className="filter-chips">{values.map((value) => <button key={value} aria-pressed={filter?.group === label && filter.value === value} onClick={() => setFilter({ group: label, value })}>{label === "Places" ? shortPlace(value) : value}<span>{photos.filter((photo) => matches(photo, label, value)).length}</span></button>)}</div>
     </div>)}
-  </div><div className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3 contact-grid">{visible.map((photo) => <button key={photo.slug} className="contact-frame" aria-label={`Open ${photo.title}`} onClick={() => open(photo)}><PhotoImage develop photo={photo} sizes="(max-width: 767px) calc((100vw - 104px) / 3), (max-width: 1080px) calc((100vw - 196px) / 6), 147.34px" /><span className="frame-label"><span>{frameNumber(photo)}</span><span>{photo.place.split(',')[0]}</span></span></button>)}</div></section>;
+  </div><div ref={grid} className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3 contact-grid">{visible.map((photo) => <button key={photo.slug} className={`contact-frame${photo.favorite ? " is-favorite" : ""}`} aria-label={`Open ${photo.title}`} onClick={() => open(photo)}><PhotoImage photo={photo} sizes="(max-width: 767px) calc((100vw - 104px) / 3), (max-width: 1080px) calc((100vw - 196px) / 6), 147.34px" /><span className="frame-label"><span>{frameNumber(photo)}</span><span>{shortPlace(photo.place)}</span></span></button>)}</div></section>;
 }

@@ -4,8 +4,8 @@ import { useLayoutEffect, useRef } from "react";
 import { PhotoImage } from "./photo-image";
 import { photoDate, type Photo } from "@/data/captures";
 
-type Props = { photo: Photo; close: () => void; navigate: (direction: number) => void; restoreFocus: () => void };
-export function PhotoDialog({ photo, close, navigate, restoreFocus }: Props) {
+type Props = { photo: Photo; develop?: boolean; close: () => void; navigate: (direction: number) => void; restoreFocus: () => void };
+export function PhotoDialog({ photo, develop = true, close, navigate, restoreFocus }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   const pointer = useRef<{ x: number; y: number; moved: boolean; keep: boolean } | null>(null);
   useLayoutEffect(() => {
@@ -47,7 +47,7 @@ export function PhotoDialog({ photo, close, navigate, restoreFocus }: Props) {
     <button data-photo-keep className="lb-btn lb-x" onClick={close} aria-label="Close photo (Escape)">✕</button>
     <button data-photo-keep className="lb-btn lb-prev" onClick={() => navigate(-1)} aria-label="Previous photo (left arrow)">‹</button>
     <button data-photo-keep className="lb-btn lb-next" onClick={() => navigate(1)} aria-label="Next photo (right arrow)">›</button>
-    <div className="lb-card"><div data-photo-keep style={{ display: "contents" }}><PhotoImage develop key={photo.slug} photo={photo} className="lb-img" sizes="(max-width: 760px) calc(100vw - 40px), (max-width: 1168px) calc((100vw - 156px) * 0.615385), 623px" /></div><div data-photo-keep className="lb-meta" aria-live="polite"><h2 id="photo-title">{photo.title}</h2><div className="where">{photo.place} · <time dateTime={photo.date}>{photoDate(photo.date)}</time></div>{fields.length > 0 && <dl className="exif">{fields.map(([label, value]) => <div key={label}><dt className="l">{label}</dt><dd className="v">{value}</dd></div>)}</dl>}<p className="story" id="photo-story">“{photo.story}”</p></div></div>
+    <div className="lb-card"><div data-photo-keep style={{ display: "contents" }}><PhotoImage develop={develop} key={photo.slug} photo={photo} className="lb-img" sizes="(max-width: 760px) calc(100vw - 40px), (max-width: 1168px) calc((100vw - 156px) * 0.615385), 623px" /></div><div data-photo-keep className="lb-meta" aria-live="polite"><h2 id="photo-title">{photo.title}</h2><div className="where">{photo.place} · <time dateTime={photo.date}>{photoDate(photo.date)}</time></div>{fields.length > 0 && <dl className="exif">{fields.map(([label, value]) => <div key={label}><dt className="l">{label}</dt><dd className="v">{value}</dd></div>)}</dl>}<p className="story" id="photo-story">“{photo.story}”</p></div></div>
     </div>
   </dialog>;
 }

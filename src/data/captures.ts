@@ -5,6 +5,7 @@ export const PALETTE = "darkroom" as const;
 
 // Table background. Options: mat (green cutting mat), mat-tinted (palette-tinted mat), linen (palette-tinted woven cloth). See docs/palettes/golden-hour.md → Table surfaces.
 export const TABLE_SURFACE: "mat" | "mat-tinted" | "linen" = "mat-tinted";
+export const SHOW_ROLLS = false; // Rolls view kept for later; set true to show the tab.
 
 export type Photo = {
   slug: string;
@@ -24,7 +25,7 @@ export type Photo = {
   exif?: { camera?: string; lens?: string; aperture?: string; shutter?: string; iso?: number | string };
 };
 
-export type Roll = { id: string; name: string; meta: string };
+export type Roll = { id: string; name: string; meta: string; place: string; tagline: string; intro: string; cover: string };
 
 const importedPhotos: Photo[] = importedData;
 const drafts = importedPhotos.filter((photo) => photo.title === "TODO");
@@ -34,7 +35,7 @@ if (process.env.NODE_ENV === "development" && drafts.length) {
 // A manifest containing only drafts intentionally produces an empty gallery.
 export const photos: Photo[] = importedPhotos.filter((photo) => photo.title !== "TODO");
 
-function rollMeta(id: string, number: number) {
+export function tripDateRange(id: string) {
   const dates = photos.filter((photo) => photo.roll === id)
     .map((photo) => new Date(photo.date.slice(0, 10) + "T00:00:00Z"))
     .filter((date) => Number.isFinite(date.getTime()))
@@ -43,14 +44,18 @@ function rollMeta(id: string, number: number) {
   const first = dates[0];
   const last = dates[dates.length - 1];
   const range = first ? (first.getTime() === last.getTime() ? format.format(first) : `${format.format(first)} – ${format.format(last)}`) : "Date not set";
-  return `${range} · ROLL ${String(number).padStart(2, "0")}`;
+  return range;
+}
+
+function rollMeta(id: string, number: number) {
+  return `${tripDateRange(id)} · ROLL ${String(number).padStart(2, "0")}`;
 }
 
 export const rolls: Roll[] = [
-  { id: "yosemite", name: "Yosemite", meta: rollMeta("yosemite", 1) },
-  { id: "coast", name: "Saltwater Hours", meta: rollMeta("coast", 2) },
-  { id: "yard", name: "Around the Block", meta: rollMeta("yard", 3) },
-  { id: "postcards", name: "Postcards", meta: rollMeta("postcards", 4) }
+  { id: "yosemite", name: "Yosemite", meta: rollMeta("yosemite", 1), place: "California, USA", tagline: "Three days, one granite wall, a lot of waterfalls.", intro: "Three days, one granite wall, a lot of waterfalls. Snow on the peaks, mist on my hoodie, and the same view everyone takes. Worth it every time.", cover: "img-0469" },
+  { id: "coast", name: "Saltwater Hours", meta: rollMeta("coast", 2), place: "SoCal coast", tagline: "Not one trip — a habit.", intro: "Not one trip — a habit. Most evenings that ended near the ocean, waiting for the sun to do its thing and everyone else to stop and watch.", cover: "img-3022" },
+  { id: "yard", name: "Around the Block", meta: rollMeta("yard", 3), place: "Long Beach & LA", tagline: "Skies from parking lots, street corners and the walk out of class.", intro: "Skies from parking lots, street corners and the walk out of class. Proof you don't need to travel for a good sunset.", cover: "img-5603" },
+  { id: "postcards", name: "Postcards", meta: rollMeta("postcards", 4), place: "Seattle · Udaipur", tagline: "One-offs from far away.", intro: "One-offs from far away. A beer flight by the water in Seattle, a lake sunset back home in Udaipur.", cover: "img-7873" }
 ];
 
 // Preserve the capture's local wall time regardless of the viewer's timezone.
