@@ -2,6 +2,10 @@ import importedData from "./photos.json";
 
 // Site palette. Options: darkroom. See docs/palettes/ for saved palettes like golden-hour.
 export const PALETTE = "darkroom" as const;
+export const PALETTE_COLORS = {
+  dark: { bg: "#100c0b", accent: "#ff4b3a", text: "#ece3df" },
+  light: { bg: "#f7f1ee", accent: "#d93a2b", text: "#2b1f1c" },
+} as const;
 
 // Table background. Options: mat (green cutting mat), mat-tinted (palette-tinted mat), linen (palette-tinted woven cloth). See docs/palettes/golden-hour.md → Table surfaces.
 export const TABLE_SURFACE: "mat" | "mat-tinted" | "linen" = "mat-tinted";
@@ -29,6 +33,10 @@ export type Photo = {
 };
 
 export type Roll = { id: string; name: string; meta: string; place: string; tagline: string; intro: string; cover: string; coverPosition?: string };
+
+export function photoAlt(photo: Photo) {
+  return [photo.title.trim(), photo.place.trim()].filter(Boolean).join(", ");
+}
 
 const importedPhotos: Photo[] = importedData;
 const drafts = importedPhotos.filter((photo) => photo.title === "TODO");
@@ -66,7 +74,7 @@ export const rolls: Roll[] = [
   { id: "pnw", name: "Pacific Northwest", meta: rollMeta("pnw", 5), place: "Washington", tagline: "Waterfalls, glacier lakes and one very famous market.", intro: "Waterfalls, glacier lakes and one very famous market. Rainier wearing a cloud hat, Diablo Lake doing its unreal blue, and neon at Pike Place after closing.", cover: "img-1814" },
   { id: "chicago", name: "Chicago", meta: rollMeta("chicago", 6), place: "Chicago, IL", tagline: "Tall buildings, long sunsets, one coffee flight.", intro: "Tall buildings, long sunsets, one coffee flight. The grid lighting up from 100 floors, and rush hour that looked better than it felt.", cover: "img-4663" },
   { id: "tahoe", name: "Lake Tahoe", meta: rollMeta("tahoe", 7), place: "Lake Tahoe, CA", tagline: "Water this blue shouldn't be legal.", intro: "Water this blue shouldn't be legal. Emerald Bay through the pines, one tiny island, and a sign that was very clear about the dress code.", cover: "img-7302" },
-  { id: "river", name: "River Evenings", meta: rollMeta("river", 8), place: "Northern California", tagline: "Slow rivers, loud sunsets.", intro: "Slow rivers, loud sunsets. A red footbridge, an old iron one, and a sky that kept changing its mind.", cover: "img-5644" },
+  { id: "river", name: "River Evenings", meta: rollMeta("river", 8), place: "Sacramento, CA", tagline: "Slow rivers, loud sunsets.", intro: "Slow rivers, loud sunsets. A red footbridge, an old iron one, and a sky that kept changing its mind.", cover: "img-5644" },
   { id: "sedona", name: "Sedona", meta: rollMeta("sedona", 9), place: "Sedona, AZ", tagline: "Red rocks, big sky, no subtlety.", intro: "Red rocks, big sky, no subtlety. Cathedral Rock in the afternoon, then a sunset that split in two behind the ridge.", cover: "img-1474" },
   { id: "disney", name: "Disneyland", meta: rollMeta("disney", 10), place: "Anaheim, CA", tagline: "Mickey never sleeps.", intro: "Mickey never sleeps. Pixar Pier at night, lit up like a birthday cake.", cover: "img-3563" }
 ];

@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import { photos, type Photo } from "@/data/captures";
+import { photos, photoAlt, type Photo } from "@/data/captures";
 
-export function PhotoImage({ photo, className = "", sizes = "260px", loading, objectPosition = "center" }: { photo: Photo; className?: string; sizes?: string; objectPosition?: string; loading?: "eager" | "lazy" }) {
+export function PhotoImage({ photo, className = "", sizes = "260px", loading, objectPosition = "center", decorative = false }: { photo: Photo; className?: string; decorative?: boolean; sizes?: string; objectPosition?: string; loading?: "eager" | "lazy" }) {
   const ref = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const isPhotoView = className.includes("lb-img");
@@ -39,9 +39,9 @@ export function PhotoImage({ photo, className = "", sizes = "260px", loading, ob
       <img
       ref={imageRef}
       src={photo.sizes![isPhotoView ? 2048 : 640]} srcSet={srcSet} sizes={sizes}
-      alt={photo.title} loading={loading ?? (isPhotoView ? "eager" : "lazy")} decoding="async"
+      alt={decorative ? "" : photoAlt(photo)} loading={loading ?? (isPhotoView ? "eager" : "lazy")} decoding="async"
       style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectPosition }}
       onLoad={() => { ref.current?.classList.add("image-loaded"); }}
-    />) : <Image style={{ objectPosition }} ref={imageRef} onLoad={() => { ref.current?.classList.add("image-loaded"); }} src={photo.src} alt={photo.title} fill sizes={sizes} loading={loading ?? (isPhotoView ? "eager" : "lazy")} unoptimized />) : <span className="sr-only">Sample image: {photo.title}</span>}
+    />) : <Image style={{ objectPosition }} ref={imageRef} onLoad={() => { ref.current?.classList.add("image-loaded"); }} src={photo.src} alt={decorative ? "" : photoAlt(photo)} fill sizes={sizes} loading={loading ?? (isPhotoView ? "eager" : "lazy")} unoptimized />) : <span className="sr-only">Sample image: {photo.title}</span>}
   </div>;
 }

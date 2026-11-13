@@ -85,7 +85,7 @@ function PhotoTile({ photo, open, style, duplicate = false, wall = false }: {
   return <button type="button" className="everything-tile" style={style}
     tabIndex={duplicate ? -1 : 0} aria-hidden={duplicate ? true : undefined} aria-label={`view ${photo.title}${photo.favorite ? ", favorite" : ""}`}
     onClick={(event) => open(photo, event.currentTarget)}>
-    <div className="everything-image-clip"><PhotoImage photo={photo} sizes={wall ? "(max-width: 760px) 215px, 358px" : `${Math.ceil(Number(style?.width) || 640)}px`} loading={wall ? "eager" : "lazy"} /></div>
+    <div className="everything-image-clip"><PhotoImage photo={photo} decorative={duplicate} sizes={wall ? "(max-width: 760px) 215px, 358px" : `${Math.ceil(Number(style?.width) || 640)}px`} loading={wall ? "eager" : "lazy"} /></div>
     {date && <time className="everything-date" dateTime={photo.date.slice(0, 10)}>{date}</time>}
   </button>;
 }

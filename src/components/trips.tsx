@@ -21,7 +21,7 @@ export function Trips({ tripId, open }: { tripId: string | null; open: (photo: P
         <div className="trip-cover">
           <PhotoImage photo={cover} objectPosition={item.coverPosition} sizes="(width < 600px) calc(100vw - 40px), (width < 860px) calc((100vw - 58px) / 2), (max-width: 1080px) calc((100vw - 76px) / 3), 335px" />
           <div className="trip-cover-caption"><h3>{item.name} <span aria-hidden="true">▲</span></h3><p>{tripDateRange(item.id)} · {frames.length} frames</p></div>
-          <div className="trip-thumbs" aria-hidden="true">{[...frames.filter((photo) => photo.slug !== cover.slug), cover].slice(0, 3).map((photo) => <div className="trip-thumb" key={photo.slug}><PhotoImage photo={photo} sizes="34px" /></div>)}</div>
+          <div className="trip-thumbs" aria-hidden="true">{[...frames.filter((photo) => photo.slug !== cover.slug), cover].slice(0, 3).map((photo) => <div className="trip-thumb" key={photo.slug}><PhotoImage photo={photo} sizes="34px" decorative /></div>)}</div>
         </div>
         <div className="trip-card-note"><p>{item.tagline}</p><span className="trip-stamp">{item.place.split(/[,·&]/)[0].trim()}<br />trip {String(index + 1).padStart(2, "0")}</span></div>
       </Link>;
