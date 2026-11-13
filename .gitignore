@@ -40,8 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Local photo originals and generated renditions
-/photos/originals/
-/public/captures/
+# Raw photos and import artifacts
+/photos/
 /photos/.import.lock
 /src/data/photos.json.*.tmp
