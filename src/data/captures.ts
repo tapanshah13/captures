@@ -6,6 +6,8 @@ export const PALETTE = "darkroom" as const;
 // Table background. Options: mat (green cutting mat), mat-tinted (palette-tinted mat), linen (palette-tinted woven cloth). See docs/palettes/golden-hour.md → Table surfaces.
 export const TABLE_SURFACE: "mat" | "mat-tinted" | "linen" = "mat-tinted";
 export const SHOW_ROLLS = false; // Rolls view kept for later; set true to show the tab.
+export const SHOW_CONTACT_SHEET = false;
+export const SHOW_DRIFT_WALL = false;
 
 export type Photo = {
   slug: string;
@@ -13,7 +15,7 @@ export type Photo = {
   place: string;
   date: string;
   story: string;
-  roll: string;
+  roll?: string | null;
   collections: string[];
   favorite?: boolean;
   pinned?: boolean;
@@ -34,7 +36,11 @@ if (process.env.NODE_ENV === "development" && drafts.length) {
   console.warn(`[Captures] ${drafts.length} unpublished photo(s) with TODO titles: ${drafts.map((photo) => photo.slug).join(", ")}`);
 }
 // A manifest containing only drafts intentionally produces an empty gallery.
-export const photos: Photo[] = importedPhotos.filter((photo) => photo.title !== "TODO");
+export const photos: Photo[] = importedPhotos.filter((photo) => photo.title !== "TODO")
+  .map((photo) => photo.title.trim() ? photo : {
+    ...photo,
+    title: photo.place.trim() || photoDate(photo.date),
+  });
 
 export function tripDateRange(id: string) {
   const dates = photos.filter((photo) => photo.roll === id)

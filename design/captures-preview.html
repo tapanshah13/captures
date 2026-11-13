@@ -10,7 +10,7 @@
 :root{
   --bg:#09090b;--surface:#0f0f12;--line:#232327;--text:#e4e4e7;--muted:#a1a1aa;--dim:#71717a;--hi:#fafafa;
   --sans:"Geist",system-ui,sans-serif;--mono:"Geist Mono",ui-monospace,monospace;--hand:"Caveat","Bradley Hand",cursive;
-  --paper:#f4f1ea;--ink:#3b3530;--safelight:#ff4b3a;
+  --paper:#f4f1ea;--ink:#3b3530;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -55,9 +55,6 @@ nav a{text-decoration:none}nav a.on{color:var(--hi)}
 .back .m{font-family:var(--mono);font-size:10px;color:#8a7f73;line-height:1.5}
 .tape{position:absolute;top:-9px;left:50%;width:54px;height:18px;margin-left:-27px;background:rgba(240,230,200,.55);transform:rotate(-4deg);z-index:2;backface-visibility:hidden}
 
-/* develop effect (signature) */
-.develop{filter:invert(1) sepia(.65) hue-rotate(165deg) brightness(.5) contrast(1.1);transition:filter 2.2s cubic-bezier(.3,.6,.2,1)}
-.develop.done{filter:none}
 
 /* collections */
 .section-h{display:flex;justify-content:space-between;align-items:baseline;margin:72px 0 6px;gap:12px;flex-wrap:wrap}
@@ -90,8 +87,8 @@ nav a{text-decoration:none}nav a.on{color:var(--hi)}
 .lb{position:fixed;inset:0;z-index:100;background:rgba(5,5,6,.94);display:none;align-items:center;justify-content:center;padding:24px}
 .lb.open{display:flex}
 .lb-card{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:28px;max-width:1040px;width:100%;align-items:center}
-.lb-img{width:100%;aspect-ratio:3/2;border-radius:4px;animation:pop .45s cubic-bezier(.2,.8,.2,1)}
-@keyframes pop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+.lb-img{width:100%;aspect-ratio:3/2;border-radius:4px;animation:photo-reveal 250ms ease}
+@keyframes photo-reveal{from{opacity:0}to{opacity:1}}
 .lb-meta h4{margin:0;font-size:22px;font-weight:500;color:var(--hi)}
 .lb-meta .where{margin-top:6px;color:var(--muted);font-size:13px}
 .exif{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:8px;margin-top:18px;overflow:hidden}
@@ -134,7 +131,6 @@ footer{margin:90px 0 40px;text-align:center;font-family:var(--mono);font-size:12
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .print.in{animation:none;opacity:1;transform:rotate(var(--r))}
-  .develop{transition:none}
   .inner,.cell{transition:none}
   .lb-img{animation:none}
 }
@@ -170,7 +166,7 @@ footer{margin:90px 0 40px;text-align:center;font-family:var(--mono);font-size:12
   <button class="lb-btn lb-prev" id="lbp" aria-label="Previous photo">‹</button>
   <button class="lb-btn lb-next" id="lbn" aria-label="Next photo">›</button>
   <div class="lb-card">
-    <div class="lb-img develop" id="lbimg"></div>
+    <div class="lb-img" id="lbimg"></div>
     <div class="lb-meta">
       <h4 id="lbt"></h4>
       <div class="where" id="lbw"></div>
@@ -203,8 +199,6 @@ const ROLLS=[
 ];
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* develop-on-view (signature effect) */
-const devObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const el=e.target;setTimeout(()=>el.classList.add('done'),reduce?0:150+Math.random()*450);devObs.unobserve(el)}}),{threshold:.35});
 
 /* table of prints */
 const table=document.getElementById('table');
@@ -216,7 +210,7 @@ favs.forEach((idx,i)=>{
   const r=((i*53)%19-9);el.style.setProperty('--r',r+'deg');el.style.transform='rotate('+r+'deg)';
   el.style.left=spots[i][0]+'%';el.style.top=spots[i][1]+'%';el.style.zIndex=++z;
   el.setAttribute('tabindex','0');el.setAttribute('role','button');el.setAttribute('aria-label',p.t+'. Press Enter to flip, O to open.');
-  el.innerHTML='<div class="inner"><div class="face"><span class="tape"></span><div class="img develop '+p.g+'"></div><div class="cap">'+p.p.split(',')[0]+'</div></div><div class="face back"><div class="t">'+p.s+'</div><div class="m">'+p.t+'<br>'+p.d+'</div></div></div>';
+  el.innerHTML='<div class="inner"><div class="face"><span class="tape"></span><div class="img '+p.g+'"></div><div class="cap">'+p.p.split(',')[0]+'</div></div><div class="face back"><div class="t">'+p.s+'</div><div class="m">'+p.t+'<br>'+p.d+'</div></div></div>';
   let sx=null,sy,ox,oy,moved=false;
   el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId);sx=e.clientX;sy=e.clientY;ox=el.offsetLeft;oy=el.offsetTop;moved=false;el.style.zIndex=++z});
   el.addEventListener('pointermove',e=>{if(sx==null)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(!moved&&Math.abs(dx)+Math.abs(dy)>5){moved=true;el.classList.add('dragging')}
@@ -225,7 +219,6 @@ favs.forEach((idx,i)=>{
   el.addEventListener('dblclick',()=>openLB(idx));
   el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.classList.toggle('flip')}if(e.key==='o'||e.key==='O')openLB(idx)});
   table.appendChild(el);
-  devObs.observe(el.querySelector('.develop'));
 });
 const tableObs=new IntersectionObserver(es=>{if(es[0].isIntersecting){[...table.querySelectorAll('.print')].forEach((el,i)=>setTimeout(()=>el.classList.add('in'),reduce?0:i*140));tableObs.disconnect()}},{threshold:.2});
 tableObs.observe(table);
@@ -237,7 +230,7 @@ ROLLS.forEach(roll=>{
   const sec=document.createElement('section');sec.className='roll';
   sec.innerHTML='<div class="roll-head"><h3>'+roll.name+'</h3><span class="meta">'+items.length+' frames · '+roll.meta+'</span></div><div class="film"><span class="edge">KODAK PORTRA 400 · '+roll.meta.split('·')[1].trim()+'</span><div class="strip" tabindex="0" aria-label="'+roll.name+' photos"></div></div><div class="strip-caption"></div><div class="roll-nav"><button aria-label="Previous frame">‹</button><button aria-label="Next frame">›</button></div>';
   const strip=sec.querySelector('.strip'),cap=sec.querySelector('.strip-caption');
-  items.forEach((p,k)=>{const c=document.createElement('div');c.className='cell develop '+p.g;c.innerHTML='<span class="no">'+String(k+1).padStart(2,'0')+'A</span>';c.onclick=()=>{if(c.classList.contains('mid'))openLB(p.i);else c.scrollIntoView({behavior:reduce?'auto':'smooth',inline:'center',block:'nearest'})};strip.appendChild(c);devObs.observe(c)});
+  items.forEach((p,k)=>{const c=document.createElement('div');c.className='cell '+p.g;c.innerHTML='<span class="no">'+String(k+1).padStart(2,'0')+'A</span>';c.onclick=()=>{if(c.classList.contains('mid'))openLB(p.i);else c.scrollIntoView({behavior:reduce?'auto':'smooth',inline:'center',block:'nearest'})};strip.appendChild(c)});
   let cur=0;
   const mid=()=>{const r=strip.getBoundingClientRect(),cx=r.left+r.width/2;let best=0,bd=1e9;[...strip.children].forEach((c,i)=>{const b=c.getBoundingClientRect(),d=Math.abs(b.left+b.width/2-cx);if(d<bd){bd=d;best=i}});cur=best;[...strip.children].forEach((c,i)=>c.classList.toggle('mid',i===best));const p=items[best];cap.innerHTML='<b>'+p.t+'</b><small>'+p.p+' · '+p.d+'</small>'};
   strip.addEventListener('scroll',()=>requestAnimationFrame(mid),{passive:true});
@@ -250,7 +243,7 @@ ROLLS.forEach(roll=>{
 
 /* lightbox */
 const lb=document.getElementById('lb'),lbimg=document.getElementById('lbimg');let lbi=0,lastFocus=null;
-function renderLB(){const p=PHOTOS[lbi];lbimg.className='lb-img develop '+p.g;void lbimg.offsetWidth;setTimeout(()=>lbimg.classList.add('done'),reduce?0:60);
+function renderLB(){const p=PHOTOS[lbi];lbimg.className='lb-img '+p.g;void lbimg.offsetWidth;
   document.getElementById('lbt').textContent=p.t;document.getElementById('lbw').textContent=p.p+' · '+p.d;
   const L=['Camera','Lens','Exposure','ISO'];document.getElementById('lbe').innerHTML=p.e.map((v,i)=>'<div><div class="l">'+L[i]+'</div><div class="v">'+v+'</div></div>').join('');
   document.getElementById('lbs').textContent='“'+p.s+'”'}

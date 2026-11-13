@@ -12,8 +12,7 @@ const tripUrl = (id: string) => `/?view=trips&trip=${encodeURIComponent(id)}`;
 
 export function Trips({ tripId, open }: { tripId: string | null; open: (photo: Photo) => void }) {
   const trip = trips.find((item) => item.id === tripId);
-  if (!trip) return <section className="trips-enter" aria-labelledby="trips-heading">
-    <div className="section-h"><h2 id="trips-heading">Trips</h2><span>{trips.length} stories · {photos.length} frames</span></div>
+  if (!trip) return <section className="trips-enter" aria-label="Trips">
     {tripId && <p className="trip-missing">That trip isn’t here. Explore the trips below.</p>}
     <div className="trips-grid">{trips.map((item, index) => {
       const frames = photos.filter((photo) => photo.roll === item.id);
@@ -22,7 +21,7 @@ export function Trips({ tripId, open }: { tripId: string | null; open: (photo: P
         <div className="trip-cover">
           <PhotoImage photo={cover} objectPosition={item.coverPosition} sizes="(width < 600px) calc(100vw - 40px), (width < 860px) calc((100vw - 58px) / 2), (max-width: 1080px) calc((100vw - 76px) / 3), 335px" />
           <div className="trip-cover-caption"><h3>{item.name} <span aria-hidden="true">▲</span></h3><p>{tripDateRange(item.id)} · {frames.length} frames</p></div>
-          <div className="trip-thumbs" aria-hidden="true">{frames.filter((photo) => photo.slug !== cover.slug).slice(0, 3).map((photo) => <div className="trip-thumb" key={photo.slug}><PhotoImage photo={photo} sizes="34px" /></div>)}</div>
+          <div className="trip-thumbs" aria-hidden="true">{[...frames.filter((photo) => photo.slug !== cover.slug), cover].slice(0, 3).map((photo) => <div className="trip-thumb" key={photo.slug}><PhotoImage photo={photo} sizes="34px" /></div>)}</div>
         </div>
         <div className="trip-card-note"><p>{item.tagline}</p><span className="trip-stamp">{item.place.split(/[,·&]/)[0].trim()}<br />trip {String(index + 1).padStart(2, "0")}</span></div>
       </Link>;

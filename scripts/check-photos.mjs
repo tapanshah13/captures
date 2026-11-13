@@ -56,13 +56,14 @@ async function main() {
     if (!/^[a-f0-9]{64}$/.test(entry.hash ?? '')) fail('Missing or invalid SHA-256 hash.');
     if (hashes.has(entry.hash)) fail('Duplicate content hash.');
     hashes.add(entry.hash);
-    if (!rolls.has(entry.roll)) fail(`Unknown roll "${entry.roll}"; assign an ID defined in captures.ts (including drafts).`);
+    if (entry.roll != null && !rolls.has(entry.roll)) fail(`Unknown roll "${entry.roll}"; assign an ID defined in captures.ts (including drafts).`);
     const isPublished = entry.title !== 'TODO';
     if (isPublished) {
       published++;
       const pending = todoFields(entry);
       if (pending.length) fail(`Published photo still has TODO: ${pending.join(', ')}.`);
-      for (const key of ['title', 'place', 'story', 'date', 'roll']) if (typeof entry[key] !== 'string' || !entry[key].trim()) fail(`Published photo needs ${key}.`);
+      if (typeof entry.title !== 'string' || (entry.roll != null && !entry.title.trim())) fail('Published trip photo needs a title; loose photos may use an empty string.');
+      for (const key of ['place', 'story', 'date']) if (typeof entry[key] !== 'string' || !entry[key].trim()) fail(`Published photo needs ${key}.`);
       if (!/^\d{4}-\d{2}-\d{2}T/.test(entry.date ?? '') || !Number.isFinite(Date.parse(entry.date))) fail('Published photo needs a valid ISO date.');
     }
     if (!Array.isArray(entry.collections) || entry.collections.some((value) => typeof value !== 'string')) fail('collections must be a string array.');

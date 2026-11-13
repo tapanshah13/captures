@@ -61,7 +61,7 @@ function waitForPhotoDialog() {
 
 export async function transitionPhoto(change: () => void | Promise<void>, print: HTMLElement | null, opening: boolean) {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const printCard = print?.closest<HTMLElement>('.pile-print');
+  const printCard = print?.closest<HTMLElement>('.pile-print, .everything-tile');
   const rect = print?.getBoundingClientRect();
   const morph = !reduced && print?.isConnected && printCard && !printCard.classList.contains('is-flipped') && rect && rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < innerHeight;
   if (!morph || !print || !printCard) {

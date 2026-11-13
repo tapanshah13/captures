@@ -14,13 +14,13 @@ function pickPile() {
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   const rollCounts = new Map<string, number>();
-  for (const photo of selected) rollCounts.set(photo.roll, (rollCounts.get(photo.roll) ?? 0) + 1);
+  for (const photo of selected) if (photo.roll != null) rollCounts.set(photo.roll, (rollCounts.get(photo.roll) ?? 0) + 1);
   for (const photo of shuffled) {
     if (selected.length >= 12) break;
-    const count = rollCounts.get(photo.roll) ?? 0;
+    const count = photo.roll == null ? 0 : rollCounts.get(photo.roll) ?? 0;
     if (count >= 2) continue;
     selected.push(photo);
-    rollCounts.set(photo.roll, count + 1);
+    if (photo.roll != null) rollCounts.set(photo.roll, count + 1);
   }
   // Relax the trip limit only when it prevents filling the table.
   for (const photo of shuffled) {
@@ -76,8 +76,10 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
   const makeScatter = useCallback((order = currentPile.current.map((_, i) => i)) => {
     const element = board.current;
     if (!element) return [];
-    const width = element.clientWidth, height = element.clientHeight;
+    const width = element.clientWidth;
     const mobile = window.matchMedia("(max-width: 760px)").matches;
+    const proportional = window.matchMedia("(max-width: 640px)").matches;
+    const height = element.clientHeight - (proportional ? 28 : 0);
     let next: Position[] = [];
     // Thirty candidates per print; shrink only when the mat cannot fit readable prints.
     for (let scale = 1; scale >= .5; scale -= .04) {
@@ -88,9 +90,11 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
         const photo = currentPile.current[index];
         const landscape = (photo.width ?? 3) > (photo.height ?? 4);
         const cardWidth = Math.min(mobile ? (landscape ? 160 : 120) : (landscape ? 220 : 170), width * .65) * scale;
+        const desktopWidth = landscape ? 220 : 170;
+        const frameScale = proportional ? cardWidth / desktopWidth : 1;
         let best: Position | undefined, bestScore = Infinity;
         for (let attempt = 0; attempt < 30; attempt++) {
-          const p = { x: 0, y: 0, width: cardWidth, height: (cardWidth - 18) / (landscape ? 1.5 : .8) + 43, rotation: Math.random() * 28 - 14 };
+          const p = { x: 0, y: 0, width: cardWidth, height: (cardWidth - 18 * frameScale) / (landscape ? 1.5 : .8) + 43 * frameScale, rotation: Math.random() * 28 - 14 };
           const min = clampPosition(-width, -height, p, width, height);
           const max = clampPosition(width, height, p, width, height);
           // Distribute print centers across every band before starting another row.
@@ -105,6 +109,19 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
         if (best) next.push(best);
       }
       if (visibilityScore(next).penalty === 0) break;
+    }
+    if (proportional && next.length) {
+      // Center the rotated paper bounds as one pile, preserving the overlaps.
+      const edges = next.map((p) => {
+        const angle = Math.abs(p.rotation) * Math.PI / 180;
+        const halfWidth = (p.width * Math.cos(angle) + p.height * Math.sin(angle)) / 2;
+        const center = p.x + p.width / 2;
+        return { left: center - halfWidth, right: center + halfWidth };
+      });
+      const left = Math.min(...edges.map((edge) => edge.left));
+      const right = Math.max(...edges.map((edge) => edge.right));
+      const shift = (width - left - right) / 2;
+      next = next.map((p) => ({ ...p, x: p.x + shift }));
     }
     const positionsByPhoto: Position[] = [];
     order.forEach((index, rank) => { positionsByPhoto[index] = next[rank]; });
@@ -185,7 +202,7 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
       <div className={`pile-stack${shuffling ? " is-shuffling" : ""}`} inert={shuffling}>{pile.map((photo, i) => positions[i] && <PilePrint key={i} photo={photo} index={i} position={positions[i]} busy={shuffling} flipped={!!flipped[photo.slug]} flip={() => flip(photo.slug)} raise={() => ++top.current} open={open} />)}</div>
       {surface !== "linen" && <span className="mat-label">A2 · SELF-HEALING · 1 SQ = 1 IN</span>}
     </div>
-    <div className="pile-controls"><button className="shuffle-button" disabled={shuffling} onClick={shuffle}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h3c5 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c2 0 3-2 4-4m4-4c1-2 2-4 4-4h3m-4-4 4 4-4 4" /></svg>shuffle pile</button><button disabled={shuffling} onClick={flipAll}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6" /></svg>flip all</button><span>drag · click to flip · double-click to open</span></div>
+    <div className="pile-controls"><button className="shuffle-button" disabled={shuffling} onClick={shuffle}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h3c5 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c2 0 3-2 4-4m4-4c1-2 2-4 4-4h3m-4-4 4 4-4 4" /></svg>shuffle pile</button><button disabled={shuffling} onClick={flipAll}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6" /></svg>flip all</button><span><span className="pile-hint-pointer">drag · click to flip · double-click to open</span><span className="pile-hint-touch">drag · tap to flip · double-tap to open</span></span></div>
   </section>;
 }
 
@@ -193,6 +210,48 @@ function PilePrint({ photo, index, position, busy, flipped, flip, raise, open }:
   const drag = useRef<{ id: number; x: number; y: number; left: number; top: number; moved: boolean } | null>(null);
   const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const print = elementRef.current;
+    const title = print?.querySelector<HTMLElement>(".pile-title");
+    const front = print?.querySelector<HTMLElement>(".pile-front");
+    if (!print || !title || !front) return;
+    let active = true;
+    const fit = () => {
+      if (!active) return;
+      title.classList.remove("is-multiline");
+      title.style.removeProperty("font-size");
+      front.style.removeProperty("padding-bottom");
+      const proportional = matchMedia("(max-width: 640px)").matches;
+      const bottomStrip = parseFloat(getComputedStyle(front).paddingBottom);
+      const captionOffset = parseFloat(getComputedStyle(title).bottom);
+      if (title.scrollWidth <= title.clientWidth) return;
+      title.classList.add("is-multiline");
+      let size = parseFloat(getComputedStyle(title).fontSize);
+      const minimum = proportional ? 11 : 1;
+      while (title.offsetHeight > parseFloat(getComputedStyle(title).lineHeight) * 2 + 1 && size > minimum) {
+        size = Math.max(minimum, size - .5);
+        title.style.fontSize = `${size}px`;
+      }
+      // Grow only this print's caption band; its outer size and position stay fixed.
+      front.style.paddingBottom = `${Math.max(bottomStrip, title.offsetHeight + captionOffset * 2)}px`;
+    };
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(print, { box: "border-box" });
+    const mobile = matchMedia("(max-width: 760px)");
+    const proportional = matchMedia("(max-width: 640px)");
+    mobile.addEventListener("change", fit);
+    proportional.addEventListener("change", fit);
+    document.fonts.ready.then(fit);
+    document.fonts.addEventListener("loadingdone", fit);
+    return () => {
+      active = false;
+      observer.disconnect();
+      mobile.removeEventListener("change", fit);
+      proportional.removeEventListener("change", fit);
+      document.fonts.removeEventListener("loadingdone", fit);
+    };
+  }, [photo.title, position.width]);
   useLayoutEffect(() => {
     const element = elementRef.current;
     if (!element) return;
@@ -242,10 +301,11 @@ function PilePrint({ photo, index, position, busy, flipped, flip, raise, open }:
     elementRef.current?.classList.remove("is-pressed");
     return cancelClick;
   }, [busy, position, cancelClick]);
-  const style = { visibility: "hidden", left: position.x, top: position.y, width: position.width, height: position.height, "--rotation": `${position.rotation}deg` } as CSSProperties;
+  const style = { visibility: "hidden", left: position.x, top: position.y, width: position.width, height: position.height, "--desktop-print-width": (photo.width ?? 3) > (photo.height ?? 4) ? 220 : 170, "--rotation": `${position.rotation}deg` } as CSSProperties;
   const move = (element: HTMLElement, x: number, y: number) => {
     const parent = element.parentElement!;
-    const point = clampPosition(x, y, position, parent.clientWidth, parent.clientHeight);
+    const bottomInset = window.matchMedia("(max-width: 640px)").matches ? 28 : 0;
+    const point = clampPosition(x, y, position, parent.clientWidth, parent.clientHeight - bottomInset);
     element.style.left = `${point.x}px`; element.style.top = `${point.y}px`;
   };
   const stampDate = /^\d{4}-\d{2}-\d{2}/.test(photo.date) ? `${photo.date.slice(5, 7)}.${photo.date.slice(8, 10)}.${photo.date.slice(2, 4)}` : "UNDATED";
