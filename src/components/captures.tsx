@@ -42,7 +42,6 @@ const commonPlaces = [...placeCounts.keys()].sort((a, b) => placeCounts.get(b)! 
 
 type View = "table" | "trips" | "rolls" | "sheet" | "dump";
 const activeRolls = rolls.filter((roll) => photos.some((photo) => photo.roll === roll.id));
-const since = photos.map((photo) => photo.date.slice(0, 4)).filter((year) => /^\d{4}$/.test(year)).sort()[0] ?? "—";
 function PhotoCount() {
   const countRef = useRef<HTMLSpanElement>(null);
   useLayoutEffect(() => {
@@ -157,9 +156,9 @@ export function Captures() {
   const restoreFocus = useCallback(() => { lastFocus.current?.focus({ preventScroll: true }); }, []);
   return <>
     <a className="skip-link" href="#main">Skip to captures</a>
-    <header><div className="wrap"><a className="mark" href="https://tapanshah.me" aria-label="Tapan Shah — home"><BrandMark className="h-6 w-10" /></a><nav aria-label="Main navigation"><a href="https://tapanshah.me">Home</a><Link className="on" href="/" aria-current="page">Captures</Link><a href="https://tapanshah.me/blog">Blog</a><ThemeToggle /></nav></div></header>
+    <header><div className="wrap"><Link className="mark" href="/" aria-label="Captures — home"><BrandMark className="h-6 w-10" /></Link><ThemeToggle /></div></header>
     <main className="wrap" id="main">
-      {!isTripPage && <section className="hero" aria-labelledby="title"><div><h1 id="title">Captures<span className="hero-dot" aria-hidden="true">.</span></h1><p>Things I noticed, mostly on the way somewhere else. Pick one up, flip it over, there&apos;s usually a story.</p></div><div className="stats"><div className="photos-stat"><b><PhotoCount /></b><span className="stat-label"><span className="photos-dot" aria-hidden="true" />photos</span></div><div><b>{placeCounts.size}</b>places</div><div><b>{since}</b>since</div></div></section>}
+      {!isTripPage && <section className="hero" aria-labelledby="title"><div><h1 id="title">Captures<span className="hero-dot" aria-hidden="true">.</span></h1><p>Things I noticed, mostly on the way somewhere else. Pick one up, flip it over, there&apos;s usually a story.</p></div><div className="stats"><div className="photos-stat"><b><PhotoCount /></b><span className="stat-label"><span className="photos-dot" aria-hidden="true" />photos</span></div><div><b>{placeCounts.size}</b>places</div></div></section>}
       <div className="view-bar">
       <nav className="view-switcher" aria-label="Photo views">{([['table', 'Table'], ['trips', 'Trips'], ['rolls', 'Rolls'], ['sheet', 'Contact sheet'], ['dump', 'Dump']] as const).filter(([value]) => (SHOW_ROLLS || value !== "rolls") && (SHOW_CONTACT_SHEET || value !== "sheet")).map(([value, label]) => <button key={value} aria-pressed={view === value} onClick={() => router.push(url({ view: value, trip: null, photo: null }), { scroll: false })}><span className="tab-label">{view === value && <span className="tab-dot" aria-hidden="true" />}{label}</span></button>)}</nav>
       </div>
