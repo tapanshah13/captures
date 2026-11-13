@@ -31,6 +31,29 @@ function pickPile() {
 }
 type Position = { x: number; y: number; rotation: number; width: number; height: number };
 
+function PrintTape({ photo, seed }: { photo: Photo; seed: number }) {
+  // Each property is stable across renders, resizes, flips and dragging.
+  let hash = 2166136261;
+  for (const char of `${photo.slug}:${seed}`) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619);
+  const random = () => {
+    hash += 0x6d2b79f5;
+    let value = Math.imul(hash ^ (hash >>> 15), 1 | hash);
+    value ^= value + Math.imul(value ^ (value >>> 7), 61 | value);
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+  };
+  const show = random() < .25;
+  if (!photo.pinned && !show) return null;
+  const shapes = [[76, 20], [48, 24], [104, 15], [54, 22], [60, 18]] as const;
+  const shape = Math.floor(random() * shapes.length);
+  const [width, height] = shapes[shape];
+  const left = `${30 + random() * 40}%`;
+  const rotation = -10 + random() * 18;
+  return <span className="pile-tape" aria-hidden="true" style={{ left, "--tape-width": width, "--tape-height": height, "--tape-angle": `${shape === 4 ? 0 : rotation}deg` } as CSSProperties}>
+    <span className="pile-tape-piece" style={shape === 4 ? { transform: "rotate(7deg)" } : undefined} />
+    {shape === 4 && <span className="pile-tape-piece" style={{ transform: "rotate(-11deg)" }} />}
+  </span>;
+}
+
 // Reserve space for rotated corners, lifted scale and tape, not just the card rectangle.
 function clampPosition(x: number, y: number, p: Position, width: number, height: number) {
   const angle = Math.abs(p.rotation) * Math.PI / 180;
@@ -72,6 +95,7 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
   const lastWidth = useRef<number | null>(null);
   const [flipped, setFlipped] = useState<Record<string, boolean>>({});
   const [shuffling, setShuffling] = useState(false);
+  const [tapeSeed, setTapeSeed] = useState(0);
   const animating = useRef(false);
   const makeScatter = useCallback((order = currentPile.current.map((_, i) => i)) => {
     const element = board.current;
@@ -169,6 +193,7 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
     if (animating.current || !board.current) return;
     timers.current.forEach(clearTimeout);
     currentPile.current = pickPile();
+    setTapeSeed((seed) => seed + 1);
     setPile(currentPile.current);
     const order = currentPile.current.map((_, i) => i);
     for (let i = order.length - 1; i > 0; i--) {
@@ -199,14 +224,14 @@ export function PrintTable({ surface, open }: { surface: "mat" | "mat-tinted" | 
   };
   return <section className="table-board" aria-label={`${surface === "linen" ? "Linen" : surface === "mat-tinted" ? "Tinted mat" : "Cutting mat"} photo pile`}>
     <div ref={board} className={`pile-surface ${surface === "mat-tinted" ? "surface-mat surface-mat-tinted" : `surface-${surface}`}`}><p className="sr-only">Drag prints to move them. Click or tap to flip; double-click or double-tap to open. Space to flip, Enter to open; use arrow keys to move a focused print.</p>
-      <div className={`pile-stack${shuffling ? " is-shuffling" : ""}`} inert={shuffling}>{pile.map((photo, i) => positions[i] && <PilePrint key={i} photo={photo} index={i} position={positions[i]} busy={shuffling} flipped={!!flipped[photo.slug]} flip={() => flip(photo.slug)} raise={() => ++top.current} open={open} />)}</div>
+      <div className={`pile-stack${shuffling ? " is-shuffling" : ""}`} inert={shuffling}>{pile.map((photo, i) => positions[i] && <PilePrint key={i} tapeSeed={tapeSeed} photo={photo} index={i} position={positions[i]} busy={shuffling} flipped={!!flipped[photo.slug]} flip={() => flip(photo.slug)} raise={() => ++top.current} open={open} />)}</div>
       {surface !== "linen" && <span className="mat-label">A2 · SELF-HEALING · 1 SQ = 1 IN</span>}
     </div>
     <div className="pile-controls"><button className="shuffle-button" disabled={shuffling} onClick={shuffle}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h3c5 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c2 0 3-2 4-4m4-4c1-2 2-4 4-4h3m-4-4 4 4-4 4" /></svg>shuffle pile</button><button disabled={shuffling} onClick={flipAll}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6" /></svg>flip all</button><span><span className="pile-hint-pointer">drag · click to flip · double-click to open</span><span className="pile-hint-touch">drag · tap to flip · double-tap to open</span></span></div>
   </section>;
 }
 
-function PilePrint({ photo, index, position, busy, flipped, flip, raise, open }: { photo: Photo; index: number; position: Position; busy: boolean; flipped: boolean; flip: () => void; raise: () => number; open: (photo: Photo) => void }) {
+function PilePrint({ photo, tapeSeed, index, position, busy, flipped, flip, raise, open }: { photo: Photo; tapeSeed: number; index: number; position: Position; busy: boolean; flipped: boolean; flip: () => void; raise: () => number; open: (photo: Photo) => void }) {
   const drag = useRef<{ id: number; x: number; y: number; left: number; top: number; moved: boolean } | null>(null);
   const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
@@ -345,7 +370,7 @@ function PilePrint({ photo, index, position, busy, flipped, flip, raise, open }:
     <span id={instructionId} className="sr-only">Space to flip, Enter to open</span>
     <div className="pile-lift">
     <div className="pile-inner">
-      <div className="pile-face pile-front" aria-hidden={flipped}><PhotoImage photo={photo} sizes={`${position.width - 18}px`} /><span className="pile-title">{photo.title}</span>{index % 3 === 2 && <span className="pile-tape" />}</div>
+      <div className="pile-face pile-front" aria-hidden={flipped}><PhotoImage photo={photo} sizes={`${position.width - 18}px`} /><span className="pile-title">{photo.title}</span><PrintTape photo={photo} seed={tapeSeed} /></div>
       <div className="pile-face pile-back" aria-hidden={!flipped} inert={!flipped}>
         <div className="pile-note"><strong>{photo.title}</strong><p>{photo.story}</p></div>
         <Link href={`/?view=table&photo=${encodeURIComponent(photo.slug)}`} tabIndex={flipped ? 0 : -1} onClick={(event) => { cancelClick(); if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); open(photo); } }}>open →</Link>

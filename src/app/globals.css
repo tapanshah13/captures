@@ -324,7 +324,9 @@ footer a:hover { text-decoration: underline; text-underline-offset: 4px; color: 
 .pile-front { background:var(--paper); padding:9px 9px 34px; }
 .pile-title { position:absolute; bottom:7px; left:9px; right:9px; font:20px var(--hand); color:var(--ink); white-space:nowrap; }
 .pile-title.is-multiline { white-space:normal; overflow-wrap:anywhere; line-height:1.05; }
-.pile-tape { position:absolute; width:55px; height:18px; top:-8px; left:calc(50% - 27px); background:rgba(240,230,200,.55); transform:rotate(-4deg); backface-visibility:hidden; -webkit-backface-visibility:hidden; }
+.pile-tape { position:absolute; width:calc(var(--tape-width) * var(--print-unit,1px)); height:calc(var(--tape-height) * var(--print-unit,1px)); top:0; transform:translate(-50%,-50%) rotate(var(--tape-angle)); pointer-events:none; backface-visibility:hidden; -webkit-backface-visibility:hidden; filter:drop-shadow(0 1px 2px rgba(0,0,0,.12)); }
+.pile-tape-piece { position:absolute; inset:0; background:rgba(240,230,200,.55); clip-path:polygon(2% 0,98% 0,97% 13%,100% 25%,97% 38%,99% 52%,96% 66%,99% 80%,97% 91%,98% 100%,2% 100%,3% 87%,0 74%,3% 62%,1% 48%,4% 34%,1% 20%); }
+.pile-print.is-flipped .pile-tape { visibility:hidden; }
 .pile-back { transform:rotateY(180deg); padding:10px; color:var(--ink); background:repeating-linear-gradient(0deg,transparent 0 23px,rgba(74,114,150,.14) 23px 24px),var(--paper-back); display:flex; flex-direction:column; gap:5px; }
 .pile-note { flex:1; min-height:0; overflow:auto; font:17px/1.1 var(--hand); scrollbar-width:thin; }
 .pile-note strong { display:block; font-weight:600; margin-bottom:3px; }
@@ -617,7 +619,6 @@ a:hover { color:var(--accent); }
   .pile-face{--print-unit:calc(100cqw / var(--desktop-print-width));border-radius:calc(3 * var(--print-unit))}
   .pile-front{padding:calc(9 * var(--print-unit)) calc(9 * var(--print-unit)) calc(34 * var(--print-unit))}
   .pile-title{bottom:calc(7 * var(--print-unit));left:calc(9 * var(--print-unit));right:calc(9 * var(--print-unit));font-size:max(11px,calc(20 * var(--print-unit)))}
-  .pile-tape{width:calc(55 * var(--print-unit));height:calc(18 * var(--print-unit));top:calc(-8 * var(--print-unit));left:calc(50% - 27 * var(--print-unit))}
   .pile-back{padding:calc(10 * var(--print-unit));gap:calc(5 * var(--print-unit));background:repeating-linear-gradient(0deg,transparent 0 calc(23 * var(--print-unit)),rgba(74,114,150,.14) calc(23 * var(--print-unit)) calc(24 * var(--print-unit))),var(--paper-back)}
   .pile-note{font-size:calc(17 * var(--print-unit))}
   .pile-note strong{margin-bottom:calc(3 * var(--print-unit))}
